@@ -1,13 +1,16 @@
 import Router from 'express'
-import UserController from '../Controller/User';
+import UserView from '../View/User';
 const userRouter = Router();
 
-const controller = new UserController();
+const view = new UserView();
 
-userRouter.use('/', controller.Create);
-userRouter.use('/', controller.Index);
-userRouter.use('/:id', controller.Get);
-userRouter.use('/:id', controller.Update);
-userRouter.use('/', controller.Delete);
+userRouter.post('/create',      view.CreateUser);
+userRouter.get('/',             view.GetAllUsers);
+userRouter.get('/:id',          view.GetUser);
+userRouter.put('/update',       view.UpdateUser);
+userRouter.delete('/destroy',   view.DeleteUser);
+userRouter.post('/login',        view.Login);
+
+
 
 export default userRouter;
