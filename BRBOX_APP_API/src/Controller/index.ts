@@ -1,9 +1,9 @@
-import {Request, Response} from 'express'
+import {Request} from 'express'
 
 export default interface Controller {
-    Create  (req: Request, res: Response): Promise<Object>;
-    Index   (req: Request, res: Response): Promise<Object>;
-    Get     (req: Request, res: Response): Promise<Object>;
-    Update  (req: Request, res: Response): Promise<Object>;
-    Delete  (req: Request, res: Response): Promise<Object>;
+    Create  (req: Request): Promise<Object> | never;
+    Index   (            ): Promise<Object> | never;
+    Get     (req: Request): Promise<Object> | never;
+    Update  (req: Request): Promise<Object> | never;
+    Delete  (req: Request): Promise<Object> | never;
 }

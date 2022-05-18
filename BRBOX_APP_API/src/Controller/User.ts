@@ -1,5 +1,7 @@
-import { Request, Response } from "express";
+import { Request } from "express";
 import bcrypt from "bcrypt";
+import jwt, { JsonWebTokenError } from "jsonwebtoken";
+import 'dotenv/config';
 
 import Controller from "./";
 import User from "../Model/User";
@@ -8,6 +10,9 @@ import { Timestamp } from "typeorm";
 
 export default class UserController implements Controller {
 
+    constructor(){
+
+    }
 
     /**
      * 
@@ -15,39 +20,39 @@ export default class UserController implements Controller {
      * @param res 
      * @returns 
      */
-    async Create(req: Request, res: Response) {
+    Create = async (req: Request) => {
         try {
-            const {username, password, confirm_password, email} = req.body;
+            const {username, email, password, confirm_password} = req.body;
             let hash = null;
 
-            const usedEmail = await AppDataSource.getRepository(User).findBy({Email: email});
+            const usedEmail = await AppDataSource.getRepository(User).findOneBy({Email: email});
             console.log(usedEmail);
 
             if(usedEmail)
-                return res.json(400).json({error: "this e-mail is already in user"});
+                return { status: 400, value: "this e-mail is already in use"};
 
             if (password != confirm_password)
-                return res.json(401).json({error: "password and password confirmation do not match"});
+                return {status: 401, value: "password and password confirmation do not match"};
 
             hash = await bcrypt.hash(password, 10);
 
             if(hash) {
-                const newUser = new User();
+                const newUser = await new User();
                 newUser.username    = username;
                 newUser.Password    = hash;
                 newUser.Email       = email;
                 AppDataSource.getRepository(User).save(newUser);
 
-                return res.status(200).json({Successful: "user created successfully :" + {
+                return {status: 200, Successful: "user created successfully :", value: {
                     username: username,
                     email: email
-                }});
+                }};
             }
         }
         catch (e) {
-            return res.status(500).json("somethin went wrong: " + e);
+            return {status: 500, value: "something went wrong: " + e};
         }
-        return res.status(500).json("an unexpected error ocurred");
+        return {status: 500, value: "an unexpected error ocurred"};
     }
     /**
      * 
@@ -55,12 +60,20 @@ export default class UserController implements Controller {
      * @param res 
      * @returns 
      */
-    async Index(req: Request, res: Response) {
+    Index = async () => {
         try {
             const users = await AppDataSource.getRepository(User).find();
-            return res.status(200).json(users);
+            const usersToReturn = new Array();
+            users.forEach((user) => {
+                usersToReturn.push({
+                    id: user.id,
+                    username: user.username,
+                    Email: user.Email
+                })
+            })
+            return {status: 200, value: usersToReturn};
         } catch (e) {
-            return res.status(500).json("somethin went wrong: " + e);
+            return {status: 500, value: "something went wrong: " + e};
         }
     }
     /**
@@ -69,15 +82,26 @@ export default class UserController implements Controller {
      * @param res 
      * @returns 
      */
-    async Get(req: Request, res: Response) {
+    Get = async (req: Request) => {
         try {
             const id = req.params.id;
-            const users = await AppDataSource.getRepository(User).findOneBy({
+            if(!id) 
+                return {status: 500, value: "id not sent"}
+            const user = await AppDataSource.getRepository(User).findOneBy({
                 id: Number(id)
             });
-            return res.status(200).json(users);
+
+            if(!user) 
+                return { status: 404, value: "User not found" };
+        
+            const userToReturn = {
+                id: user.id,
+                username: user.username,
+                Email: user.Email
+            }
+            return {status: 200, value: userToReturn};
         } catch (e) {
-            return res.status(500).json("somethin went wrong: " + e);
+            return {status: 500, value: "something went wrong: " + e};
         }
     }
     /**
@@ -86,8 +110,48 @@ export default class UserController implements Controller {
      * @param res 
      * @returns 
      */
-    async Update(req: Request, res: Response) {
-        return res.status(200).json({teste: "funcionou :D "});
+    Update = async (req: Request) => {
+        try {
+            let {username, email, password, new_username, new_email, new_password, confirm_new_password} = req.body;
+            let hash = null;
+            const userRef = await AppDataSource.getRepository(User).findOneBy({Email: email});
+
+            const isValidUser = await this.Login(email, password);
+
+            if (isValidUser.status != 200) {
+                return isValidUser;
+            }
+
+            const usedEmail = await AppDataSource.getRepository(User).findOneBy({Email: new_email});
+
+            if(new_email && usedEmail && usedEmail.id != userRef?.id)
+                return {status: 400, value: "his e-mail is already in use"};
+
+            if (new_password && confirm_new_password != new_password)
+                return {status: 400, value: "password and password confirmation do not match"};
+
+
+
+            hash = await bcrypt.hash(new_password, 10);
+
+            if(hash) {
+                if(userRef) {
+                    userRef.username    = new_username || username;
+                    userRef.Password    = hash         || password;
+                    userRef.Email       = new_email    || email;
+                    AppDataSource.getRepository(User).save(userRef);
+
+                    return {status: 200, Successful: "user updated successfully", value: {
+                        username: new_username || username,
+                        email: new_email    || email
+                    }};
+                }
+            }
+        }
+        catch (e) {
+            return {status: 500, value: "something went wrong: " + e};
+        }
+        return {status: 500, value: "an unexpected error ocurred"};
     }
     /**
      * 
@@ -95,7 +159,59 @@ export default class UserController implements Controller {
      * @param res 
      * @returns 
      */
-    async Delete(req: Request, res: Response) {
-        return res.status(200).json({teste: "funcionou :D "});
+    Delete = async (req: Request) => {
+        let {email, password} = req.body;
+
+        const isValidUser = await this.Login(email, password);
+
+        if (isValidUser.status != 200) {
+            return isValidUser;
+        }
+        AppDataSource.getRepository(User).delete({
+            Email: email
+        });
+        return {status: 200, value: "Success! user with email: " + email + " was deleted successfully"}
+
+    }
+
+    Login = async (email: string, password: string) => {
+        try {
+            const user = await AppDataSource.getRepository(User).findOneBy({
+                Email: email
+            });
+
+            if(!user) {
+                return {status: 404, value: "User not found"};
+            }
+
+            
+            const foundPassword: string = user.Password;
+            if(!await bcrypt.compare(password, foundPassword)) {
+                return {status: 401, value: "authentication failure"};
+            }
+
+            const token = this.GenerateJWT(user.id, user.Email);
+
+            return {
+                status: 200,
+                value: {
+                    _id: user.id,
+                    name: user.username,
+                    email: user.Email,
+                    auth_token: token
+                }
+              };
+        } catch (e) {
+            return {status: 500, value: "something went wrong: " + e};
+        }
+    }
+
+    GenerateJWT(id :number, email :string) {
+        const tokenSecret: string = process.env.TOKEN_SECRET!;
+        if(!tokenSecret)
+            throw "cannot load token secret from env"
+        return jwt.sign({
+            _id: id, email
+        }, tokenSecret);
     }
 }
