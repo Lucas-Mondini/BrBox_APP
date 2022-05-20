@@ -87,7 +87,7 @@ export default class UserController implements Controller {
             });
             
             if(!user) 
-            return { status: 404, value: {message: "User not found" }};
+                return { status: 404, value: {message: "User not found" }};
             
             
             const userToReturn = this.getUserAttributes(req.user.admin, user);
@@ -106,18 +106,25 @@ export default class UserController implements Controller {
     */
     Update = async (req: Request) => {
         try {
-            const {username, email, password, confirm_password} = req.body;
-            
+            const {_id, username, email, password, confirm_password} = req.body;
+
+            const id = req.user.admin? _id || req.user._id : req.user._id;
             let hash = null;
-            const userRef = await AppDataSource.getRepository(User).findOneBy({id: req.user._id});
+            const userRef = await AppDataSource.getRepository(User).findOneBy({
+                id:  id,
+            });
+
+
+            if(!userRef)
+                return { status: 404, value: {message: "User not found" }};
             
             const usedEmail = await AppDataSource.getRepository(User).findOneBy({Email: email});
             
             if(email && usedEmail && usedEmail.id != userRef?.id)
-            return {status: 400, value: {message: "his e-mail is already in use"}};
+                return {status: 400, value: {message: "his e-mail is already in use"}};
             
             if (password && confirm_password != password)
-            return {status: 400, value: {message: "password and password confirmation do not match"}};
+                return {status: 400, value: {message: "password and password confirmation do not match"}};
             
             
             
@@ -154,11 +161,23 @@ export default class UserController implements Controller {
         try {
             const {_id, password} = req.body
             
+            const user = await AppDataSource.getRepository(User).findOneBy({
+                id: req.user.admin? _id : req.user._id,
+            });
+            
+            const login = await this.Login((<User>user).Email, password);
+            if(login.status != 200)
+                return {status: 401, value: {message: "authentication failed"}}
+            
+            
             const dead = await AppDataSource.getRepository(User).delete({
                 id: req.user.admin? _id : req.user._id,
             });
+
+
+
             if(dead.affected)
-            return {status: 200, value: {message: "deleted " + dead.affected + " users"}}   
+                return {status: 200, value: {message: "deleted " + dead.affected + " users"}}   
             return {status: 400, value: {message: "user not found"}}
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
