@@ -27,6 +27,6 @@ export default async function(req: Request, res: Response, next: NextFunction) {
     next();
 
   } catch(error) {
-    res.status(400).json({message: "Unauthorized"});
+      res.status(400).json({message: "Unauthorized"});
   }
 }

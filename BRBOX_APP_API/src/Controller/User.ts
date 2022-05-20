@@ -42,9 +42,12 @@ export default class UserController implements Controller {
                 newUser.Email       = email;
                 AppDataSource.getRepository(User).save(newUser);
                 
-                return {status: 200, Successful: "user created successfully :", value: {
-                    username: username,
-                    email: email
+                return {status: 200, value: {
+                    Success: "user created successfully :",
+                    user: {
+                        username: username,
+                        email: email
+                    }
                 }};
             }
         }
@@ -60,6 +63,8 @@ export default class UserController implements Controller {
     * @returns 
     */
     Index = async (req: Request) => {
+        if(!req.user.admin)
+            return {status: 401, value: {message: "Unauthorized"}};
         try {
             const users = await AppDataSource.getRepository(User).find();
             const usersToReturn = new Array();
@@ -137,9 +142,12 @@ export default class UserController implements Controller {
                     userRef.Email       = email     || userRef.Email;
                     AppDataSource.getRepository(User).save(userRef);
                     
-                    return {status: 200, Successful: "user updated successfully", value: {
-                        username: username  || userRef.username,
-                        email: email        || userRef.Email
+                    return {status: 200, value: {
+                        Success: "user updated successfully",
+                        user: {
+                            username: username  || userRef.username,
+                            email: email        || userRef.Email
+                        }
                     }};
                 }
             }
@@ -164,6 +172,9 @@ export default class UserController implements Controller {
             const user = await AppDataSource.getRepository(User).findOneBy({
                 id: req.user.admin? _id : req.user._id,
             });
+
+            if(!user)
+                return { status: 404, value: {message: "User not found" }};
             
             const login = await this.Login((<User>user).Email, password);
             if(login.status != 200)
@@ -177,7 +188,12 @@ export default class UserController implements Controller {
 
 
             if(dead.affected)
-                return {status: 200, value: {message: "deleted " + dead.affected + " users"}}   
+                return {
+                    status: 200, value: {
+                        Success: "user deleted successfully",
+                        message: "deleted " + dead.affected + " users"
+                    }
+                }   
             return {status: 400, value: {message: "user not found"}}
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
