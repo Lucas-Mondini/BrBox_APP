@@ -1,4 +1,11 @@
 {
   "mainColor":"",
-  "defaultLanguage":"pt_BR"
+  "defaultLanguage":"pt_BR",
+  "fontFamily":"Poppins-Regular",
+  "greenBar":"#4E9F3D",
+  "salmonBar":"#F3BFBF",
+  "redBar":"#FF3636",
+  "yellow":"#F7D716",
+  "mainFontColor":"#686868",
+  "mainIconColor":"#686868"
 }

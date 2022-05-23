@@ -12,11 +12,19 @@ const AppRoutes: React.FC = () => {
       screenOptions={{headerShown: false}}
     >
       <App.Screen
-        name="Main"
+        name="Home"
         component={Home}
       />
       <App.Screen
         name="GameInfo"
+        component={GameInfo}
+      />
+      <App.Screen
+        name="SearchGame"
+        component={GameInfo}
+      />
+      <App.Screen
+        name="Share"
         component={GameInfo}
       />
     </App.Navigator>

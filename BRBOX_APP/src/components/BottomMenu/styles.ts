@@ -10,9 +10,11 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     width: "100%",
-    height: 40,
+    height: 55,
     paddingHorizontal: "15%",
-    backgroundColor: "#E5E5E5"
+    backgroundColor: "#fff",
+    borderTopWidth: 1,
+    borderTopColor: "#e5e5e5"
   },
   button: {
     height: 40,
