@@ -19,6 +19,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 import BottomMenu from '../../components/BottomMenu';
+import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
 import { useTerm } from '../../Contexts/TermProvider';
 import styles from './styles';
@@ -68,10 +69,32 @@ const Home = () => {
 
   return (
     <MainView>
-        <ScrollView style={styles.container}>
-          <Text style={styles.title}>{getTerm(100008)}</Text>
-        </ScrollView>
-        <BottomMenu/>
+      <ScrollView style={styles.container}>
+        <Text style={styles.title}>{getTerm(100008)}</Text>
+
+        <GameCard
+          title="Halo Infinite"
+          year="2021"
+          tag1="Tiro"
+          tag2="FPS"
+          moreTags={2}
+          evaluations={10}
+        />
+        <GameCard
+          title="Minecraft"
+          year="2011"
+          tag1="Sobrevivência"
+          tag2="Terror"
+          moreTags={2}
+          evaluations={10}
+        />
+        <GameCard
+          title={"18 wheels \nof steel"}
+          year="2002"
+          evaluations={99}
+        />
+      </ScrollView>
+      <BottomMenu/>
     </MainView>
   );
 };
