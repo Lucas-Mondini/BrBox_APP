@@ -16,7 +16,6 @@ export default async function(req: Request, res: Response, next: NextFunction) {
       id: (<any>tokenValue)._id
     });
   
-    console.log("\n\n\tUSER: " + user?.id)
     if(!user) 
       throw "!user"
     
