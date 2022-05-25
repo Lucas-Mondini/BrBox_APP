@@ -4,9 +4,12 @@ import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import 'dotenv/config';
 
 import Controller from "./";
+
 import User from "../Model/User";
+import Admin from "../Model/Admin";
 import { AppDataSource } from "../data-source";
-import { Timestamp } from "typeorm";
+import { FindOptionsUtils, Timestamp } from "typeorm";
+import { Console } from "console";
 
 export default class UserController implements Controller {
     
@@ -17,7 +20,6 @@ export default class UserController implements Controller {
     /**
     * 
     * @param req = {username, password, confirm_password, email}
-    * @param res 
     * @returns 
     */
     Create = async (req: Request) => {
@@ -59,7 +61,6 @@ export default class UserController implements Controller {
     /**
     * 
     * @param req 
-    * @param res 
     * @returns 
     */
     Index = async (req: Request) => {
@@ -79,7 +80,6 @@ export default class UserController implements Controller {
     /**
     * 
     * @param req 
-    * @param res 
     * @returns 
     */
     Get = async (req: Request) => {
@@ -106,7 +106,6 @@ export default class UserController implements Controller {
     /**
     * 
     * @param req 
-    * @param res 
     * @returns 
     */
     Update = async (req: Request) => {
@@ -161,7 +160,6 @@ export default class UserController implements Controller {
     /**
     * 
     * @param req 
-    * @param res 
     * @returns 
     */
     
@@ -218,12 +216,18 @@ export default class UserController implements Controller {
             if(!await bcrypt.compare(password, foundPassword)) {
                 return {status: 401, value: {message: "authentication failure"}};
             }
+
+            const admin = await AppDataSource.getRepository(Admin)
+                                            .createQueryBuilder("adm")
+                                            .innerJoin(User, "user", "user.id = adm.userId")
+                                            .where("user.id = :id", { id: user.id})
+                                            .getOne();
             
             const TokenStruct = {
                 _id: user.id,
                 name: user.username,
                 email: user.Email,
-                admin: true
+                admin: admin? true : false
             };
             const token = jwt.sign(TokenStruct, tokenSecret);
             

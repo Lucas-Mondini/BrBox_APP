@@ -11,27 +11,27 @@ export default class UserView {
         this.userController = new UserController();
     }
     
-    CreateUser = async(req: Request, res: Response) => {
+    Create = async(req: Request, res: Response) => {
         const user = await this.userController.Create(req);
         return res.status(user.status).json(user.value);
     }
     
-    GetAllUsers = async(req: Request, res: Response) => {
+    GetAll = async(req: Request, res: Response) => {
         const users = await this.userController.Index(req);
         return res.status(users.status).json(users.value);
     }
     
-    GetUser = async(req: Request, res: Response) => {
+    Get = async(req: Request, res: Response) => {
         const user = await this.userController.Get(req);
         return res.status(user.status).json(user.value);
     }
     
-    UpdateUser = async(req: Request, res: Response) => {
+    Update = async(req: Request, res: Response) => {
         const user = await this.userController.Update(req);
         return res.status(user.status).json(user.value);
     }
 
-    DeleteUser = async(req: Request, res: Response)=> {
+    Delete = async(req: Request, res: Response)=> {
         const user = await this.userController.Delete(req);
         return res.status(user.status).json(user.value)
     }
