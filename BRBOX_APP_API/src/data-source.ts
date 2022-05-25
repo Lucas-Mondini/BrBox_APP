@@ -1,7 +1,7 @@
 import 'reflect-metadata'
 import { DataSource } from "typeorm"
-import User from "./Model/User"
-import Admin from './Model/Admin';
+import User from './Model/User';
+import Admin from './Model/User/Admin';
 import 'dotenv/config';
 
 const host = process.env.DATABASE_HOST;

@@ -6,7 +6,7 @@ import 'dotenv/config';
 import Controller from "./";
 
 import User from "../Model/User";
-import Admin from "../Model/Admin";
+import Admin from "../Model/User/Admin";
 import { AppDataSource } from "../data-source";
 import { FindOptionsUtils, Timestamp } from "typeorm";
 import { Console } from "console";

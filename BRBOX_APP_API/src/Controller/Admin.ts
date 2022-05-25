@@ -3,8 +3,8 @@ import { Request } from "express";
 import 'dotenv/config';
 
 import Controller from "./";
-import Admin from "../Model/Admin";
-import User from "../Model/User";
+import Admin from "../Model/User/Admin";
+import User from "../Model/User/";
 import { AppDataSource } from "../data-source";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
