@@ -7,5 +7,6 @@
   "redBar":"#FF3636",
   "yellow":"#F7D716",
   "mainFontColor":"#686868",
-  "mainIconColor":"#686868"
+  "mainIconColor":"#686868",
+  "apiUrl":"http://10.0.2.2:8080/"
 }

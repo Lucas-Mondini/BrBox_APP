@@ -1,7 +1,9 @@
 import React, {useEffect} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import Home from '../pages/Home';
+import Main from '../pages/Main';
+import Login from '../pages/Login';
+import Register from '../pages/Register';
 
 const App = createStackNavigator();
 
@@ -12,7 +14,15 @@ const AuthRoutes: React.FC = () => {
     >
       <App.Screen
         name="Main"
-        component={Home}
+        component={Main}
+      />
+      <App.Screen
+        name="Login"
+        component={Login}
+      />
+      <App.Screen
+        name="Register"
+        component={Register}
       />
     </App.Navigator>
   );

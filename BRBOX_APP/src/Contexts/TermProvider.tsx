@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { NativeModules, Platform } from 'react-native';
-import config from '../../../brbox.config.json';
+import config from '../../brbox.config.json';
 
 type TermData = {
   getTerm: (code: number) => string;
@@ -22,7 +22,7 @@ export const TermProvider: React.FC<TermProviderProps> = ({children}) =>
 
   function getAllTherms()
   {
-    const terms = require(`../../term`);
+    const terms = require(`../term`);
 
     if (!terms.default[locale]) {
       return setTerms(terms.default[config.defaultLanguage]);

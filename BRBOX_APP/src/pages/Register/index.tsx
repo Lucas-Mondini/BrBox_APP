@@ -25,9 +25,9 @@ import MainView from '../../components/MainView';
 import { useAuth } from '../../Contexts/Auth';
 import { useTerm } from '../../Contexts/TermProvider';
 
- const Login = () => {
+ const Register = () => {
    const navigation = useNavigation<any>();
-   const {signIn} = useAuth();
+   const {register} = useAuth();
    const {getTerm} = useTerm();
 
    const [username, setUserName] = useState("");
@@ -37,7 +37,8 @@ import { useTerm } from '../../Contexts/TermProvider';
 
    async function registerUser()
    {
-     await signIn(mail, password, () => {
+     await register(username, mail, password, confirmPassword, () => {
+       console.log("Register")
        Alert.alert("Deu bode");
      });
    }
@@ -45,6 +46,11 @@ import { useTerm } from '../../Contexts/TermProvider';
    return (
      <MainView>
        <View>
+        <TextInput
+          placeholder={getTerm(100013)}
+          value={username}
+          onChangeText={setUserName}
+        />
         <TextInput
           placeholder={getTerm(100011)}
           value={mail}
@@ -55,12 +61,17 @@ import { useTerm } from '../../Contexts/TermProvider';
           value={password}
           onChangeText={setPassword}
         />
+        <TextInput
+          placeholder={getTerm(100014)}
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+        />
         <TouchableOpacity onPress={registerUser} style={{width: 50, height: 30}}>
-          <Text>{getTerm(100009)}</Text>
+          <Text>{getTerm(100010)}</Text>
         </TouchableOpacity>
        </View>
      </MainView>
    );
  };
 
- export default Login;
+ export default Register;

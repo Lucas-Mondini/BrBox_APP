@@ -30,7 +30,7 @@ export default function BottomMenu()
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
         <Icon name="thumbs-up" size={35} color={config.mainIconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Share")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Profile")}>
         <Icon name="share-square" size={35} color={config.mainIconColor}/>
       </TouchableOpacity>
     </View>

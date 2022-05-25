@@ -8,6 +8,14 @@ let term = {
   100006: "Ajuda",
   100007: "Home",
   100008: "Game Score",
+  100009: "Login",
+  100010: "Registrar",
+  100011: "E-mail",
+  100012: "Senha",
+  100013: "Nome",
+  100014: "Confirme sua senha",
+  100015: "Atualizar",
+  100016: "Excluir conta",
 };
 
 export default term;
