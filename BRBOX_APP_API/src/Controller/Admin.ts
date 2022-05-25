@@ -33,7 +33,7 @@ export default class AdminController implements Controller {
             
             return {status: 200, value: {
                 Success: "user now is adm :",
-                user: {
+                value: {
                     username: user.username,
                     email: user.Email,
                     admin: true
@@ -57,7 +57,13 @@ export default class AdminController implements Controller {
                                             .innerJoin(Admin, "adm", "adm.userId = usr.id")
                                             .getMany();
 
-            return {status: 200, value: {users: users}};
+            return {
+                status: 200, 
+                value: {
+                    Success: "Users found successfully",
+                    value: users
+                }
+            };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
@@ -85,7 +91,13 @@ export default class AdminController implements Controller {
             
             
             
-            return {status: 200, value: {user: user}};
+            return {
+                status: 200, 
+                value: {
+                    Success: "User found successfully",
+                    value: user
+                }
+            };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
@@ -124,7 +136,7 @@ export default class AdminController implements Controller {
                 return {
                     status: 200, value: {
                         Success: "admin deleted successfully",
-                        message: "removed admin from " + dead.affected + " users"
+                        value: "removed admin from " + dead.affected + " users"
                     }
                 }   
             return {status: 400, value: {message: "user not found"}}

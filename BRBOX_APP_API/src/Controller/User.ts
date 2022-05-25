@@ -46,7 +46,7 @@ export default class UserController implements Controller {
                 
                 return {status: 200, value: {
                     Success: "user created successfully :",
-                    user: {
+                    value: {
                         username: username,
                         email: email
                     }
@@ -72,14 +72,20 @@ export default class UserController implements Controller {
             users.forEach((user) => {
                 usersToReturn.push(this.getUserAttributes(req.user.admin, user))
             })
-            return {status: 200, value: usersToReturn};
+            return  {
+                        status: 200, 
+                        value: {
+                            Success: "users found successfully :",
+                            value: [...usersToReturn]
+                        }
+                    };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
     /**
     * 
-    * @param req 
+    * @param req req.params.id
     * @returns 
     */
     Get = async (req: Request) => {
@@ -98,24 +104,30 @@ export default class UserController implements Controller {
             const userToReturn = this.getUserAttributes(req.user.admin, user);
             
             
-            return {status: 200, value: userToReturn};
+            return  {
+                status: 200, 
+                value: {
+                    Success: "user found successfully :",
+                    value: {...userToReturn}
+                }
+            };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
     /**
     * 
-    * @param req 
+    * @param req body {id, username, email, password, confirm_password}
     * @returns 
     */
     Update = async (req: Request) => {
         try {
-            const {_id, username, email, password, confirm_password} = req.body;
+            const {id, username, email, password, confirm_password} = req.body;
 
-            const id = req.user.admin? _id || req.user._id : req.user._id;
+            const _id = req.user.admin? id || req.user.id : req.user.id;
             let hash = null;
             const userRef = await AppDataSource.getRepository(User).findOneBy({
-                id:  id,
+                id:  _id,
             });
 
 
@@ -124,7 +136,7 @@ export default class UserController implements Controller {
             
             const usedEmail = await AppDataSource.getRepository(User).findOneBy({Email: email});
             
-            if(email && usedEmail && usedEmail.id != userRef?.id)
+            if(email && usedEmail && usedEmail.id != userRef.id)
                 return {status: 400, value: {message: "his e-mail is already in use"}};
             
             if (password && confirm_password != password)
@@ -143,7 +155,7 @@ export default class UserController implements Controller {
                     
                     return {status: 200, value: {
                         Success: "user updated successfully",
-                        user: {
+                        value: {
                             username: username  || userRef.username,
                             email: email        || userRef.Email
                         }
@@ -165,10 +177,10 @@ export default class UserController implements Controller {
     
     Delete = async(req: Request) => { 
         try {
-            const {_id, password} = req.body
+            const {id, password} = req.body
             
             const user = await AppDataSource.getRepository(User).findOneBy({
-                id: req.user.admin? _id : req.user._id,
+                id: req.user.admin? id : req.user.id,
             });
 
             if(!user)
@@ -180,7 +192,7 @@ export default class UserController implements Controller {
             
             
             const dead = await AppDataSource.getRepository(User).delete({
-                id: req.user.admin? _id : req.user._id,
+                id: req.user.admin? id : req.user.id,
             });
 
 
@@ -189,7 +201,7 @@ export default class UserController implements Controller {
                 return {
                     status: 200, value: {
                         Success: "user deleted successfully",
-                        message: "deleted " + dead.affected + " users"
+                        value: "deleted " + dead.affected + " users"
                     }
                 }   
             return {status: 400, value: {message: "user not found"}}
@@ -224,7 +236,7 @@ export default class UserController implements Controller {
                                             .getOne();
             
             const TokenStruct = {
-                _id: user.id,
+                id: user.id,
                 name: user.username,
                 email: user.Email,
                 admin: admin? true : false
@@ -234,8 +246,11 @@ export default class UserController implements Controller {
             return {
                 status: 200,
                 value: {
-                    ...TokenStruct,
-                    auth_token: token
+                    Success: "Login successfully",
+                    value: {
+                        ...TokenStruct,
+                        auth_token: token
+                    }
                 }
             };
         } catch (e) {
@@ -256,6 +271,5 @@ export default class UserController implements Controller {
             id: user.id,
             username: user.username,
         }
-        
     }
 }
