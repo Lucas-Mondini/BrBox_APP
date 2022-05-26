@@ -1,6 +1,4 @@
 import { Request } from "express";
-import { ParamsDictionary } from "express-serve-static-core";
-import { ParsedQs } from "qs";
 import Controller from "../..";
 
 export default class ExternalLinkListController implements Controller {
@@ -19,5 +17,4 @@ export default class ExternalLinkListController implements Controller {
     Delete = async (req: Request) => {
         throw new Error("Method not implemented.");
     }
-
 }

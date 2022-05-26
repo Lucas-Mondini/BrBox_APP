@@ -9,6 +9,8 @@ import 'dotenv/config';
 import { AppDataSource } from './data-source';
 import 'reflect-metadata'
 
+import initialization from './services/initialization';
+
 //router import
 import mainRouter from './Routes';
 
@@ -19,23 +21,24 @@ const corsOptions = {
 }
 
 //Establish database connection
-AppDataSource
-    .initialize()
-    .then(()=>{
-        console.log("Data source has benn initializated!")
+AppDataSource.initialize()
+.then(async ()=>{
+    await initialization();
+    console.log("Data source has benn initializated!")
+
+
+    const app = express();
+
+    app.use(cors(corsOptions));
+    app.use(express.json());
+    app.use(mainRouter);
+
+    const PORT = process.env.PORT;
+
+    app.listen(PORT , () => {
+        console.log("server started at port: " + PORT);
     })
-    .catch((error)=>{
-    console.log("error during database initialization :"+error);
 })
-
-const app = express();
-
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use(mainRouter);
-
-const PORT = process.env.PORT;
-
-app.listen(PORT , () => {
-    console.log("server started at port: " + PORT);
+.catch((error)=>{
+console.log("error during database initialization :"+error);
 })
