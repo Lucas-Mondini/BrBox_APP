@@ -7,6 +7,12 @@ export default class ExternalLink {
     id: number
 
     @Column()
+    platform_name: string
+
+    @Column()
+    thumbnail: string
+
+    @Column()
     link: string
 
 }

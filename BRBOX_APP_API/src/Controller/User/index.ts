@@ -3,11 +3,11 @@ import bcrypt from "bcrypt";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import 'dotenv/config';
 
-import Controller from "./";
+import Controller from ".";
 
-import User from "../Model/User";
-import Admin from "../Model/User/Admin";
-import { AppDataSource } from "../data-source";
+import User from "../../Model/User";
+import Admin from "../../Model/User/Admin";
+import { AppDataSource } from "../../data-source";
 import { FindOptionsUtils, Timestamp } from "typeorm";
 import { Console } from "console";
 
@@ -64,8 +64,6 @@ export default class UserController implements Controller {
     * @returns 
     */
     Index = async (req: Request) => {
-        if(!req.user.admin)
-            return {status: 401, value: {message: "Unauthorized"}};
         try {
             const users = await AppDataSource.getRepository(User).find();
             const usersToReturn = new Array();

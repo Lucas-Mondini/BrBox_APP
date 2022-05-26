@@ -3,7 +3,7 @@ import externalLink from "../externalLink";
 
 @Entity()
 export default class Image {
-    @Column()
+    @PrimaryGeneratedColumn()
     id: number
 
     @Column()

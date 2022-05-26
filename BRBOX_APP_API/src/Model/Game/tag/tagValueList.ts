@@ -1,5 +1,5 @@
 import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne } from "typeorm";
-import Game from "../game";
+import Game from "..";
 import TagValue from "./tagValue";
 
 @Entity()

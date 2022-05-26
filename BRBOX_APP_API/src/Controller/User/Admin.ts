@@ -2,10 +2,10 @@ import { Request } from "express";
 
 import 'dotenv/config';
 
-import Controller from "./";
-import Admin from "../Model/User/Admin";
-import User from "../Model/User/";
-import { AppDataSource } from "../data-source";
+import Controller from "..";
+import Admin from "../../Model/User/Admin";
+import User from "../../Model/User";
+import { AppDataSource } from "../../data-source";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 
@@ -15,10 +15,6 @@ export default class AdminController implements Controller {
      * @param req {id: number}
      */
     Create = async (req: Request) => {
-        if (!req.user.admin) {
-            return {status: 401, value: {message: "Unauthorized"}};
-        }
-
         try {
             const {id} = req.body;
             
@@ -49,8 +45,6 @@ export default class AdminController implements Controller {
      * @param req 
      */
     Index = async (req: Request) => {
-        if(!req.user.admin)
-            return {status: 401, value: {message: "Unauthorized"}};
         try {
             const users = await AppDataSource.getRepository(User)
                                             .createQueryBuilder("usr")
@@ -73,8 +67,6 @@ export default class AdminController implements Controller {
      * @param req 
      */
     Get = async (req: Request) => {
-        if(!req.user.admin)
-            return {status: 401, value: {message: "Unauthorized"}};
         try {
             const id = req.params.id;
             if(!id) 
@@ -114,8 +106,6 @@ export default class AdminController implements Controller {
      * @param req 
      */
     Delete = async (req: Request) => {
-        if(!req.user.admin)
-            return {status: 401, value: {message: "Unauthorized"}};
         try {
             const {_id} = req.body
             

@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import AdminController from "../Controller/Admin";
+import AdminController from "../../Controller/User/Admin";
 
 
 export default class AdminView {

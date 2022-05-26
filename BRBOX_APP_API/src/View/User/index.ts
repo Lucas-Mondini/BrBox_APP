@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from 'jsonwebtoken';
 
-import UserController from "../Controller/User";
+import UserController from "../../Controller/User";
 
 
 export default class UserView {

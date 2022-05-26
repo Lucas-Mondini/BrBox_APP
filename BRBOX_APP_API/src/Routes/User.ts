@@ -1,17 +1,17 @@
 import Router from 'express'
 import UserView from '../View/User';
-import auth from '../Middleware/auth';
+import Auth from '../Middleware/auth';
 const userRouter = Router();
 
 const view = new UserView();
 
-userRouter.post('/login',               view.Login);
-userRouter.post('/create',              view.Create);
-userRouter.get('/:id',          auth,   view.Get);
-userRouter.put('/update',       auth,   view.Update);
-userRouter.delete('/destroy',   auth,   view.Delete);
+userRouter.post('/login',                   view.Login);
+userRouter.post('/create',                  view.Create);
+userRouter.get('/:id',          Auth.user,  view.Get);
+userRouter.put('/update',       Auth.user,  view.Update);
+userRouter.delete('/destroy',   Auth.user,  view.Delete);
 
-userRouter.get('/',             auth,   view.GetAll);
+userRouter.get('/',             Auth.admin,  view.GetAll);
 
 
 

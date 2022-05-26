@@ -6,12 +6,6 @@ export default class Tag {
     id: number
 
     @Column()
-    platform_name: string
-
-    // @Column()
-    // thumbnail: string
-
-    @Column()
-    link: string
+    name: string
 
 }

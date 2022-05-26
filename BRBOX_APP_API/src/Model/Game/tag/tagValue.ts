@@ -1,5 +1,7 @@
-import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne } from "typeorm";
-import Tag from "./tag";
+import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, OneToMany } from "typeorm";
+import Tag from ".";
+import User from "../../User";
+import Value from "./value";
 
 @Entity()
 export default class TagValue {
@@ -10,7 +12,11 @@ export default class TagValue {
     @JoinColumn({referencedColumnName: "id"})
     tag: Tag;
 
-    @Column()
-    tag_value: number;
+    @OneToOne(()=> User)
+    @JoinColumn({referencedColumnName: "id"})
+    user: User
 
+    @OneToMany(() => Value, Object)
+    @JoinColumn({referencedColumnName: "id"})
+    value: Value;
 }
