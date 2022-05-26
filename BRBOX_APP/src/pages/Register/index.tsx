@@ -37,10 +37,9 @@ import { useTerm } from '../../Contexts/TermProvider';
 
    async function registerUser()
    {
-     await register(username, mail, password, confirmPassword, () => {
-       console.log("Register")
-       Alert.alert("Deu bode");
-     });
+     await register(username, mail, password, confirmPassword);
+
+     navigation.navigate("Login");
    }
 
    return (

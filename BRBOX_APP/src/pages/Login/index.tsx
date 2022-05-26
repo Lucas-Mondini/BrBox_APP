@@ -37,9 +37,7 @@ import { useTerm } from '../../Contexts/TermProvider';
 
    async function registerUser()
    {
-     await signIn(mail, password, () => {
-       Alert.alert("Deu bode");
-     });
+     await signIn(mail, password);
    }
 
    return (

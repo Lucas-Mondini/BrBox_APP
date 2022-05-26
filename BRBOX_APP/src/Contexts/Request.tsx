@@ -46,7 +46,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       return result.data;
     } catch (error: any) {
       setLoading(false);
-      console.log(error.message);
+
       throw new Error(error.response.status);
     }
   }
@@ -67,8 +67,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       return result.data;
     } catch (error: any) {
       setLoading(false);
-      console.log(error);
-      //throw new Error(error.response.status);
+      throw new Error(error.response.status);
     }
   }
 
@@ -85,7 +84,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       const result = await api.put(route, data, {headers: {auth_token: user?.auth_token ? user?.auth_token : temporaryToken}});
 
       setLoading(false);
-      return result.data;
+      return result.data.value;
     } catch (error: any) {
       setLoading(false);
       throw new Error(error.response.status);
