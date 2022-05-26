@@ -28,12 +28,9 @@ export default class AdminController implements Controller {
             AppDataSource.getRepository(Admin).save(admin);
             
             return {status: 200, value: {
-                Success: "user now is adm :",
-                value: {
                     username: user.username,
                     email: user.Email,
                     admin: true
-                }
             }};
         }
         catch (e) {
@@ -53,10 +50,7 @@ export default class AdminController implements Controller {
 
             return {
                 status: 200, 
-                value: {
-                    Success: "Users found successfully",
-                    value: users
-                }
+                value: users
             };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
@@ -85,10 +79,7 @@ export default class AdminController implements Controller {
             
             return {
                 status: 200, 
-                value: {
-                    Success: "User found successfully",
-                    value: user
-                }
+                value: user
             };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
@@ -124,10 +115,8 @@ export default class AdminController implements Controller {
 
             if(dead.affected)
                 return {
-                    status: 200, value: {
-                        Success: "admin deleted successfully",
-                        value: "removed admin from " + dead.affected + " users"
-                    }
+                    status: 200, 
+                    value: {message:  "removed admin from " + dead.affected + " users"}
                 }   
             return {status: 400, value: {message: "user not found"}}
         } catch (e) {

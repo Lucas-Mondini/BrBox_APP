@@ -45,11 +45,8 @@ export default class UserController implements Controller {
                 AppDataSource.getRepository(User).save(newUser);
                 
                 return {status: 200, value: {
-                    Success: "user created successfully :",
-                    value: {
                         username: username,
                         email: email
-                    }
                 }};
             }
         }
@@ -72,10 +69,7 @@ export default class UserController implements Controller {
             })
             return  {
                         status: 200, 
-                        value: {
-                            Success: "users found successfully :",
-                            value: [...usersToReturn]
-                        }
+                        value: [...usersToReturn]
                     };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
@@ -104,10 +98,7 @@ export default class UserController implements Controller {
             
             return  {
                 status: 200, 
-                value: {
-                    Success: "user found successfully :",
-                    value: {...userToReturn}
-                }
+                value: {...userToReturn}
             };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
@@ -152,11 +143,8 @@ export default class UserController implements Controller {
                     AppDataSource.getRepository(User).save(userRef);
                     
                     return {status: 200, value: {
-                        Success: "user updated successfully",
-                        value: {
                             username: username  || userRef.username,
                             email: email        || userRef.Email
-                        }
                     }};
                 }
             }
@@ -197,10 +185,8 @@ export default class UserController implements Controller {
 
             if(dead.affected)
                 return {
-                    status: 200, value: {
-                        Success: "user deleted successfully",
-                        value: "deleted " + dead.affected + " users"
-                    }
+                    status: 200,
+                    value: {message: "deleted " + dead.affected + " users"}
                 }   
             return {status: 400, value: {message: "user not found"}}
         } catch (e) {
@@ -243,12 +229,9 @@ export default class UserController implements Controller {
             
             return {
                 status: 200,
-                value: {
-                    Success: "Login successfully",
                     value: {
                         ...TokenStruct,
                         auth_token: token
-                    }
                 }
             };
         } catch (e) {
