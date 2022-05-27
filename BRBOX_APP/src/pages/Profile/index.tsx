@@ -28,36 +28,61 @@ import { useTerm } from '../../Contexts/TermProvider';
 
 const Profile = () => {
   const navigation = useNavigation<any>();
-  const {user, setUser} = useAuth();
+  const {user, setUser, signOut} = useAuth();
   const {getTerm} = useTerm();
-  const {get, put} = useRequest();
+  const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(false);
   const [username, setUserName] = useState(user?.name);
-  const [mail, setMail] = useState(user?.email);
+  const [email, setEmail] = useState(user?.email);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
   async function loadUser()
   {
-    console.log(user)
-    const response = await get(`/user/${user?.id}`, setLoading);
+    try {
+      const response = await get(`/user/${user?.id}`, setLoading);
 
-    console.log(response);
+    } catch (error) {
+      signOut();
+    }
+  }
+
+  async function deleteUser()
+  {
+    try {
+      if (!password) {
+        return Alert.alert("Faltou a senha cabaço");
+      }
+
+      await post(`user/destroy`, setLoading, {
+        id: user?.id,
+        password
+      });
+
+      signOut();
+    } catch (error) {
+      console.log(error);
+      //signOut();
+    }
   }
 
   async function updateUser()
   {
-    console.log(user)
-    const response = await put(`/user/update`, setLoading, {
-
-    });
-
-    console.log(response);
+    try {
+      const response = await put(`/user/update`, setLoading, {
+        username, email, password, confirmPassword
+      });
+  
+      setUser({...response, id: user?.id});
+      console.log(response);
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   useEffect(() => {
-    //loadUser();
+    loadUser();
   }, []);
 
   return (
@@ -70,8 +95,8 @@ const Profile = () => {
       />
       <TextInput
         placeholder={getTerm(100011)}
-        value={mail}
-        onChangeText={setMail}
+        value={email}
+        onChangeText={setEmail}
       />
       <TextInput
         placeholder={getTerm(100012)}
@@ -86,7 +111,7 @@ const Profile = () => {
       <TouchableOpacity onPress={updateUser} style={{width: 50, height: 30}}>
         <Text>{getTerm(100015)}</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={()=>{}} style={{marginTop: 50, width: "100%", height: 30}}>
+      <TouchableOpacity onPress={deleteUser} style={{marginTop: 50, width: "100%", height: 30}}>
         <Text>{getTerm(100016)}</Text>
       </TouchableOpacity>
       </View>

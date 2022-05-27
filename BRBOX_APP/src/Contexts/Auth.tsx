@@ -10,8 +10,8 @@ type AuthData = {
   temporaryToken: string;
   loading: boolean;
   setLoading: (value: boolean) => void;
-  signIn: (email: string, pass: string, errorCallback: Function) => void;
-  register: (name: string, email: string, pass: string, confPass: string, errorCallback: Function) => void;
+  signIn: (email: string, pass: string, errorCallback?: Function) => void;
+  register: (name: string, email: string, pass: string, confPass: string, errorCallback?: Function) => void;
   signOut: () => void;
   checkLogin: () => void;
   string: string;
@@ -52,7 +52,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
     }
   }
 
-  async function signIn(email: string, password: string, errorCallback: Function) {
+  async function signIn(email: string, password: string, errorCallback?: Function) {
     try {
       setLoading(true);
 
@@ -60,24 +60,24 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
         email, password
       });
 
-      setUser(response.data);
+      setUser(response.data.value);
       await AsyncStorage.setItem("user", JSON.stringify(response.data));
 
       setLoading(false);
     } catch (err) {
       signOut();
       setLoading(false);
-      errorCallback();
+      if ( errorCallback) errorCallback();
     }
   }
 
-  async function register(username: string, email: string, password: string, confirm_password: string, errorCallback: Function) {
+  async function register(username: string, email: string, password: string, confirm_password: string, errorCallback?: Function) {
     try {
       setLoading(true);
 
       if (password !== confirm_password) {
         setLoading(false);
-        return errorCallback(401);
+        if (errorCallback) return errorCallback(401);
       }
 
       const response = await api.post(`/user/create`,{
@@ -85,14 +85,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
         confirm_password
       });
 
-      setUser(response.data.user);
-      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+      //setUser(response.data);
+      //await AsyncStorage.setItem('user', JSON.stringify(response.data));
 
       setLoading(false);
     } catch (err: any) {
       signOut();
       setLoading(false);
-      errorCallback(err.response.data.status);
+      if (errorCallback) errorCallback(err.response.data.status);
     }
   }
 
