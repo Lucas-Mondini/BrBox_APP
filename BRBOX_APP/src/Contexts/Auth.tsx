@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
         email, password
       });
 
-      setUser(response.data.value);
+      setUser(response.data);
       await AsyncStorage.setItem("user", JSON.stringify(response.data));
 
       setLoading(false);
@@ -85,8 +85,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
         confirm_password
       });
 
-      //setUser(response.data);
-      //await AsyncStorage.setItem('user', JSON.stringify(response.data));
+      setUser(response.data);
+      await AsyncStorage.setItem('user', JSON.stringify(response.data));
 
       setLoading(false);
     } catch (err: any) {

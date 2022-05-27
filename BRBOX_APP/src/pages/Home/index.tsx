@@ -1,56 +1,18 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
-  SafeAreaView,
   ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
   useColorScheme,
-  View,
-  TouchableOpacity
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 import BottomMenu from '../../components/BottomMenu';
 import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
 import { useTerm } from '../../Contexts/TermProvider';
 import styles from './styles';
 
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-};
+import config from "../../../brbox.config.json";
 
 const Home = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -64,12 +26,12 @@ const Home = () => {
   }
 
   const backgroundStyle = {
-    backgroundColor: "#000",
+    backgroundColor: isDarkMode ? config.dark : "#fff",
   };
 
   return (
     <MainView>
-      <ScrollView style={styles.container}>
+      <ScrollView style={[styles.container, backgroundStyle]}>
         <Text style={styles.title}>{getTerm(100008)}</Text>
 
         <GameCard

@@ -6,11 +6,11 @@ const styles = StyleSheet.create({
     height: 95,
     borderBottomWidth: 2,
     borderBottomColor: config.yellow,
-    marginBottom: 15
+    marginBottom: 15,
+    width: "100%",
   },
   container: {
-    flexDirection: "row",
-    //backgroundColor: "#000",
+    flexDirection: "row"
   },
   img: {
     width: 168,
@@ -18,7 +18,8 @@ const styles = StyleSheet.create({
     marginRight: 5
   },
   info: {
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent: "space-between"
   },
   title: {
     fontFamily: config.fontFamily,
@@ -45,8 +46,7 @@ const styles = StyleSheet.create({
   moreTags: {
     marginRight: 5,
     padding: 3,
-    fontSize: 10,
-    color: config.mainFontColor
+    fontSize: 10
   },
   barsContainer:{
     height: "100%",

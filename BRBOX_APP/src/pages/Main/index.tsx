@@ -1,68 +1,49 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
+  Image,
   Text,
   TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
 import MainView from '../../components/MainView';
 import { useTerm } from '../../Contexts/TermProvider';
 
- const Main = () => {
-   const isDarkMode = useColorScheme() === 'dark';
-   const navigation = useNavigation<any>();
+import game from "../../../assets/img/game.png";
 
-   const {getTerm} = useTerm();
+import config from "../../../brbox.config.json";
 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
+import styles from './styles';
 
-   return (
-     <MainView>
-       <View>
-        <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}style={{width: 150, height: 30}}>
-          <Text>{getTerm(100009)}</Text>
+const Main = () => {
+  const isDarkMode = useColorScheme() === 'dark';
+  const navigation = useNavigation<any>();
+
+  const {getTerm} = useTerm();
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? config.dark : config.greenLight,
+  };
+
+  const fontColorStyle = {
+    color: !isDarkMode ? config.dark : "#fff",
+  };
+
+  return (
+    <MainView>
+      <View style={[backgroundStyle, styles.container]}>
+        <Image source={game} style={styles.gameImg}/>
+        <TouchableOpacity onPress={()=>{navigation.navigate("Login")}} style={styles.loginButton}>
+          <Text style={styles.loginButtonText}>{getTerm(100009)}</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>{navigation.navigate("Register")}}style={{width: 150, height: 30}}>
-          <Text>{getTerm(100010)}</Text>
+        <TouchableOpacity style={styles.registerButton} onPress={()=>{navigation.navigate("Register")}}>
+          <Text style={[styles.registerButtonText, fontColorStyle]}>{getTerm(100010)}</Text>
         </TouchableOpacity>
-       </View>
-     </MainView>
-   );
- };
+      </View>
+    </MainView>
+  );
+}
 
- const styles = StyleSheet.create({
-   sectionContainer: {
-     marginTop: 32,
-     paddingHorizontal: 24,
-   },
-   sectionTitle: {
-     fontSize: 24,
-     fontWeight: '600',
-   },
-   sectionDescription: {
-     marginTop: 8,
-     fontSize: 18,
-     fontWeight: '400',
-   },
-   highlight: {
-     fontWeight: '700',
-   },
- });
-
- export default Main;
+export default Main;

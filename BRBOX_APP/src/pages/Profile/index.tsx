@@ -33,10 +33,10 @@ const Profile = () => {
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(false);
-  const [username, setUserName] = useState(user?.name);
+  const [username, setUserName] = useState(user?.username);
   const [email, setEmail] = useState(user?.email);
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState(user?.auth_token);
 
   async function loadUser()
   {
