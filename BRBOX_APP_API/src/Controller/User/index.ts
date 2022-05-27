@@ -110,18 +110,24 @@ export default class UserController implements Controller {
     }
     /**
     * 
-    * @param req body {id, username, email, password, confirm_password}
+    * @param req body {id, username, email, new_password, confirm_new_password, password}
     * @returns 
     */
     Update = async (req: Request) => {
         try {
-            const {id, username, email, password, confirm_password} = req.body;
+            const {id, username, email, new_password, confirm_new_password, password} = req.body;
 
             const _id = req.user.admin? (id || req.user.id) : req.user.id;
             let hash = null;
             const userRef = await AppDataSource.getRepository(User).findOneBy({
                 id:  _id,
             });
+
+            if(!req.user.admin) {
+                const login = await this.Login(req.user.email, password);
+                if(login.status != 200)
+                    return {status: 401, value: {message: "authentication failed"}}
+            }
 
 
             if(!userRef)
@@ -132,12 +138,12 @@ export default class UserController implements Controller {
             if(email && usedEmail && usedEmail.id != userRef.id)
                 return {status: 400, value: {message: "his e-mail is already in use"}};
             
-            if (password && confirm_password != password)
-                return {status: 400, value: {message: "password and password confirmation do not match"}};
+            if (new_password && confirm_new_password != new_password)
+                return {status: 400, value: {message: "new_password and confirm_new_password confirmation do not match"}};
             
             
             
-            hash = await bcrypt.hash(password, 10);
+            hash = await bcrypt.hash(new_password, 10);
             
             if(hash) {
                 if(userRef) {
