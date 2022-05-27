@@ -143,7 +143,7 @@ export default class UserController implements Controller {
             
             
             
-            hash = await bcrypt.hash(new_password, 10);
+            hash = await bcrypt.hash(new_password || password, 10);
             
             if(hash) {
                 if(userRef) {
