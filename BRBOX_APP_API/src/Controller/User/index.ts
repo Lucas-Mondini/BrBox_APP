@@ -37,23 +37,27 @@ export default class UserController implements Controller {
             
             hash = await bcrypt.hash(password, 10);
             
-            if(hash) {
-                const newUser = await new User();
-                newUser.username    = username;
-                newUser.Password    = hash;
-                newUser.Email       = email;
-                AppDataSource.getRepository(User).save(newUser);
-                
-                return {status: 200, value: {
-                        username: username,
-                        email: email
-                }};
+            if(!hash) {
+                return {status: 500, value: {message: "an unexpected error ocurred"}};
             }
+            const newUser = await new User();
+            newUser.username    = username;
+            newUser.Password    = hash;
+            newUser.Email       = email;
+            await AppDataSource.getRepository(User).save(newUser);
+            const jwt = await this.generateJwt(newUser)
+            
+            return {status: 200, value: {
+                    id: newUser.id,
+                    username: newUser.username,
+                    email: newUser.Email,
+                    auth_token: jwt.token
+            }};
+        
         }
         catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
-        return {status: 500, value: {message: "an unexpected error ocurred"}};
     }
     /**
     * 
@@ -93,7 +97,7 @@ export default class UserController implements Controller {
                 return { status: 404, value: {message: "User not found" }};
             
             
-            const userToReturn = this.getUserAttributes(req.user.admin, user);
+            const userToReturn = this.getUserAttributes(req.user.admin || (user.id == req.user.id), user);
             
             
             return  {
@@ -113,7 +117,7 @@ export default class UserController implements Controller {
         try {
             const {id, username, email, password, confirm_password} = req.body;
 
-            const _id = req.user.admin? id || req.user.id : req.user.id;
+            const _id = req.user.admin? (id || req.user.id) : req.user.id;
             let hash = null;
             const userRef = await AppDataSource.getRepository(User).findOneBy({
                 id:  _id,
@@ -141,10 +145,14 @@ export default class UserController implements Controller {
                     userRef.Password    = hash      || userRef.Password;
                     userRef.Email       = email     || userRef.Email;
                     AppDataSource.getRepository(User).save(userRef);
+
+                    const jwt = await this.generateJwt(userRef)
                     
                     return {status: 200, value: {
+                            id: userRef.id,
                             username: username  || userRef.username,
-                            email: email        || userRef.Email
+                            email: email        || userRef.Email,
+                            auth_token: jwt.token
                     }};
                 }
             }
@@ -157,6 +165,7 @@ export default class UserController implements Controller {
     
     /**
     * 
+    * @request POST [React não suporta body em request de DELETE]
     * @param req 
     * @returns 
     */
@@ -172,9 +181,12 @@ export default class UserController implements Controller {
             if(!user)
                 return { status: 404, value: {message: "User not found" }};
             
-            const login = await this.Login((<User>user).Email, password);
-            if(login.status != 200)
-                return {status: 401, value: {message: "authentication failed"}}
+
+            if(!req.user.admin) {
+                const login = await this.Login((<User>user).Email, password);
+                if(login.status != 200)
+                    return {status: 401, value: {message: "authentication failed"}}
+            }
             
             
             const dead = await AppDataSource.getRepository(User).delete({
@@ -195,9 +207,6 @@ export default class UserController implements Controller {
     }
     
     Login = async (email: string, password: string) => {
-        const tokenSecret: string = process.env.TOKEN_SECRET!;
-        if(!tokenSecret)
-        throw "cannot load token secret from env"
         try {
             const user = await AppDataSource.getRepository(User).findOneBy({
                 Email: email
@@ -212,30 +221,41 @@ export default class UserController implements Controller {
             if(!await bcrypt.compare(password, foundPassword)) {
                 return {status: 401, value: {message: "authentication failure"}};
             }
-
-            const admin = await AppDataSource.getRepository(Admin)
-                                            .createQueryBuilder("adm")
-                                            .innerJoin(User, "user", "user.id = adm.userId")
-                                            .where("user.id = :id", { id: user.id})
-                                            .getOne();
             
-            const TokenStruct = {
-                id: user.id,
-                name: user.username,
-                email: user.Email,
-                admin: admin? true : false
-            };
-            const token = jwt.sign(TokenStruct, tokenSecret);
+            const jwt = await this.generateJwt(user);
             
             return {
                 status: 200,
                     value: {
-                        ...TokenStruct,
-                        auth_token: token
+                        ...jwt.TokenStruct,
+                        auth_token: jwt.token
                 }
             };
         } catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
+        }
+    }
+
+    generateJwt = async (user: User) => {
+        const tokenSecret: string = process.env.TOKEN_SECRET!;
+        if(!tokenSecret)
+            throw "cannot load token secret from env"
+        const admin = await AppDataSource.getRepository(Admin)
+        .createQueryBuilder("adm")
+        .innerJoin(User, "user", "user.id = adm.userId")
+        .where("user.id = :id", { id: user.id})
+        .getOne();
+
+        const TokenStruct = {
+            id: user.id,
+            username: user.username,
+            email: user.Email,
+            admin: admin? true : false
+        };
+        const token = jwt.sign(TokenStruct, tokenSecret);
+        return {
+            TokenStruct: TokenStruct,
+            token: token
         }
     }
     
@@ -244,7 +264,7 @@ export default class UserController implements Controller {
         return {
             id: user.id,
             username: user.username,
-            Email: user.Email,
+            email: user.Email,
             Password: user.Password
         }
         else

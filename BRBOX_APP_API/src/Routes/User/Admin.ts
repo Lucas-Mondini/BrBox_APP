@@ -1,6 +1,6 @@
 import Router from 'express'
-import AdminView from '../View/User/Admin';
-import Auth from '../Middleware/auth';
+import AdminView from '../../View/User/Admin';
+import Auth from '../../Middleware/auth';
 const adminRouter = Router();
 
 const view = new AdminView();
