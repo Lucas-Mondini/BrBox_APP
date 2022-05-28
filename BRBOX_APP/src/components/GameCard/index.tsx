@@ -8,7 +8,7 @@ import config from "../../../brbox.config.json";
 
 interface GameCardProps {
   title: string;
-  year: string;
+  year: number;
   tag1?: string;
   tag2?: string;
   moreTags?: number;
@@ -34,9 +34,9 @@ export default function GameCard({title, year, tag1, tag2, moreTags, evaluations
             <Text style={[styles.title, textColor]}>{title}</Text>
             <Text style={[styles.year, textColor]}>{year}</Text>
             <View style={styles.tagsContainer}>
-              {tag1 && <Text style={styles.tag}>{tag1}</Text>}
-              {tag2 && <Text style={styles.tag}>{tag2}</Text>}
-              {moreTags && <Text style={[styles.moreTags, textColor]}>+{moreTags} Tags</Text>}
+              {Boolean(tag1) && <Text style={styles.tag}>{tag1}</Text>}
+              {Boolean(tag2) && <Text style={styles.tag}>{tag2}</Text>}
+              {Boolean(moreTags) && <Text style={[styles.moreTags, textColor]}>+{moreTags} Tags</Text>}
             </View>
           </View>
 

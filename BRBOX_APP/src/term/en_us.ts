@@ -16,6 +16,15 @@ let term = {
   100014: "Confirm your password",
   100015: "Update",
   100016: "Delete account",
+  100017: "Change password?",
+  100018: "New password",
+  100019: "Confirm new password",
+  100020: "Welcome back",
+  100021: "Sign up to enjoy",
+  100022: "Edit your profile information",
+  100023: "Dark zone",
+  100024: "Here you got the option for you to delete your information.\n This action cannot be undone",
+  100025: "Exit",
 };
 
 export default term;

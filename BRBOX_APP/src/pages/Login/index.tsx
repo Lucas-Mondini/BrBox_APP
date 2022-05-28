@@ -1,64 +1,73 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Alert,
-  SafeAreaView,
   ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Input from '../../components/Input';
 
 import MainView from '../../components/MainView';
 import { useAuth } from '../../Contexts/Auth';
 import { useTerm } from '../../Contexts/TermProvider';
 
- const Login = () => {
-   const navigation = useNavigation<any>();
-   const {signIn} = useAuth();
-   const {getTerm} = useTerm();
+import config from "../../../brbox.config.json";
 
-   const [username, setUserName] = useState("");
-   const [mail, setMail] = useState("");
-   const [password, setPassword] = useState("");
-   const [confirmPassword, setConfirmPassword] = useState("");
+import styles from './styles';
+import Button from '../../components/Button';
 
-   async function registerUser()
-   {
-     await signIn(mail, password);
-   }
+const Login = () => {
+  const {signIn} = useAuth();
+  const {getTerm} = useTerm();
+  const isDarkMode = useColorScheme() === 'dark';
 
-   return (
-     <MainView>
-       <View>
-        <TextInput
-          placeholder={getTerm(100011)}
-          value={mail}
-          onChangeText={setMail}
-        />
-        <TextInput
-          placeholder={getTerm(100012)}
-          value={password}
-          onChangeText={setPassword}
-        />
-        <TouchableOpacity onPress={registerUser} style={{width: 50, height: 30}}>
-          <Text>{getTerm(100009)}</Text>
-        </TouchableOpacity>
-       </View>
-     </MainView>
-   );
- };
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? config.dark : "#fff",
+  };
+
+  const titleColorStyle = {
+    color: isDarkMode ? "#fff" : config.dark,
+  };
+
+  async function login()
+  {
+    await signIn(mail, password);
+  }
+
+  return (
+    <MainView>
+      <View style={[styles.container, backgroundStyle]}>
+        <ScrollView>
+          <Text
+            style={[styles.title, titleColorStyle]}
+          >
+            {getTerm(100020)}
+          </Text>
+
+          <Input
+            placeholderText={100011}
+            value={mail}
+            onChangeText={setMail}
+          />
+          <Input
+            placeholderText={100012}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+
+          <Button
+            text={100009}
+            onPress={login}
+          />
+        </ScrollView>
+      </View>
+    </MainView>
+  );
+};
 
  export default Login;

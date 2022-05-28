@@ -1,14 +1,23 @@
 import { StyleSheet } from "react-native";
 
+import config from "../../../brbox.config.json";
+
 const styles = StyleSheet.create({
   container: {
     paddingTop: 32,
-    paddingHorizontal: "3%"
+    paddingLeft: "2%",
+    paddingRight: "2%",
+    height: "100%",
+  },
+  list: {
+    paddingBottom: 100
   },
   title: {
-    fontSize: 24,
+    fontSize: 35,
     textAlign: "center",
     fontWeight: '600',
+    fontFamily: config.fontFamily,
+    paddingBottom: 20
   },
   sectionDescription: {
     marginTop: 8,

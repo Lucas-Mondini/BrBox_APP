@@ -84,7 +84,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       const result = await api.put(route, data, {headers: {auth_token: user?.auth_token ? user?.auth_token : temporaryToken}});
 
       setLoading(false);
-      return result.data.value;
+      return result.data;
     } catch (error: any) {
       setLoading(false);
       throw new Error(error.response.status);

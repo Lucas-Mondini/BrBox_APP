@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
       if(userData) {
         const userJson = JSON.parse(userData);
 
-        let response = await api.get(`/user/${userJson._id}`, {headers: {auth_token: userJson.auth_token}});
+        let response = await api.get(`/user/${userJson.id}`, {headers: {auth_token: userJson.auth_token}});
 
         setUser({...response.data, auth_token: userJson.auth_token});
     }
