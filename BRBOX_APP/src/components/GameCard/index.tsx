@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Image, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
@@ -8,7 +8,7 @@ import config from "../../../brbox.config.json";
 
 interface GameCardProps {
   title: string;
-  year: string;
+  year: number;
   tag1?: string;
   tag2?: string;
   moreTags?: number;
@@ -17,8 +17,11 @@ interface GameCardProps {
 
 export default function GameCard({title, year, tag1, tag2, moreTags, evaluations}:GameCardProps)
 {
+  const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<any>();
   const {getTerm} = useTerm();
+
+  const textColor = {color: isDarkMode ? "#fff" : config.dark}
 
   return (
     <TouchableOpacity style={styles.gameCard}>
@@ -28,12 +31,12 @@ export default function GameCard({title, year, tag1, tag2, moreTags, evaluations
         </View>
         <View style={styles.info}>
           <View>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.year}>{year}</Text>
+            <Text style={[styles.title, textColor]}>{title}</Text>
+            <Text style={[styles.year, textColor]}>{year}</Text>
             <View style={styles.tagsContainer}>
-              {tag1 && <Text style={styles.tag}>{tag1}</Text>}
-              {tag2 && <Text style={styles.tag}>{tag2}</Text>}
-              {moreTags && <Text style={styles.moreTags}>+{moreTags} Tags</Text>}
+              {Boolean(tag1) && <Text style={styles.tag}>{tag1}</Text>}
+              {Boolean(tag2) && <Text style={styles.tag}>{tag2}</Text>}
+              {Boolean(moreTags) && <Text style={[styles.moreTags, textColor]}>+{moreTags} Tags</Text>}
             </View>
           </View>
 
@@ -43,7 +46,7 @@ export default function GameCard({title, year, tag1, tag2, moreTags, evaluations
             <View style={[styles.bar, {backgroundColor: config.redBar}]} />
           </View>
           <View style={styles.evaluationsContainer}>
-            <Text style={styles.evaluations}>{evaluations}</Text>
+            <Text style={[styles.evaluations, textColor]}>{evaluations}</Text>
           </View>
         </View>
       </View>

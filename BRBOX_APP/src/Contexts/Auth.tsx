@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
       if(userData) {
         const userJson = JSON.parse(userData);
 
-        let response = await api.get(`/user/${userJson._id}`, {headers: {auth_token: userJson.auth_token}});
+        let response = await api.get(`/user/${userJson.id}`, {headers: {auth_token: userJson.auth_token}});
 
         setUser({...response.data, auth_token: userJson.auth_token});
     }
@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
         email, password
       });
 
-      setUser(response.data.value);
+      setUser(response.data);
       await AsyncStorage.setItem("user", JSON.stringify(response.data));
 
       setLoading(false);
@@ -85,8 +85,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
         confirm_password
       });
 
-      //setUser(response.data);
-      //await AsyncStorage.setItem('user', JSON.stringify(response.data));
+      setUser(response.data);
+      await AsyncStorage.setItem('user', JSON.stringify(response.data));
 
       setLoading(false);
     } catch (err: any) {

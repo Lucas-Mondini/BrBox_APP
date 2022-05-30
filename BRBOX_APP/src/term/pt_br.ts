@@ -16,6 +16,15 @@ let term = {
   100014: "Confirme sua senha",
   100015: "Atualizar",
   100016: "Excluir conta",
+  100017: "Mudar senha?",
+  100018: "Nova senha",
+  100019: "Confirme a nova senha",
+  100020: "Bem vindo de volta",
+  100021: "Inscreva-se e aproveite",
+  100022: "Edite as informações do seu perfil",
+  100023: "Zona cega",
+  100024: "Aqui você tem a opção de excluir os dados da sua conta.\n Essa ação não poderá ser revertida",
+  100025: "Sair",
 };
 
 export default term;

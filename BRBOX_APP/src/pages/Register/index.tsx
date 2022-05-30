@@ -1,76 +1,81 @@
-import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import {
   Alert,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   useColorScheme,
   View,
 } from 'react-native';
-
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+import Input from '../../components/Input';
 
 import MainView from '../../components/MainView';
 import { useAuth } from '../../Contexts/Auth';
 import { useTerm } from '../../Contexts/TermProvider';
 
- const Register = () => {
-   const navigation = useNavigation<any>();
-   const {register} = useAuth();
-   const {getTerm} = useTerm();
+import config from "../../../brbox.config.json";
 
-   const [username, setUserName] = useState("");
-   const [mail, setMail] = useState("");
-   const [password, setPassword] = useState("");
-   const [confirmPassword, setConfirmPassword] = useState("");
+import styles from './styles';
+import Button from '../../components/Button';
 
-   async function registerUser()
-   {
-     await register(username, mail, password, confirmPassword);
+const Register = () => {
+  const {register} = useAuth();
+  const {getTerm} = useTerm();
 
-     navigation.navigate("Login");
-   }
+  const isDarkMode = useColorScheme() === 'dark';
 
-   return (
-     <MainView>
-       <View>
-        <TextInput
-          placeholder={getTerm(100013)}
+  const backgroundStyle = {
+    backgroundColor: isDarkMode ? config.dark : "#fff",
+  };
+
+  const titleColorStyle = {
+    color: isDarkMode ? "#fff" : config.dark,
+  };
+
+  const [username, setUserName] = useState("");
+  const [mail, setMail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  async function registerUser()
+  {
+    await register(username, mail, password, confirmPassword);
+  }
+
+  return (
+    <MainView>
+      <View style={[styles.container, backgroundStyle]}>
+        <Text
+          style={[styles.title, titleColorStyle]}
+        >
+          {getTerm(100021)}
+        </Text>
+
+        <Input
+          placeholderText={100013}
           value={username}
           onChangeText={setUserName}
         />
-        <TextInput
-          placeholder={getTerm(100011)}
+        <Input
+          placeholderText={100011}
           value={mail}
           onChangeText={setMail}
         />
-        <TextInput
-          placeholder={getTerm(100012)}
+        <Input
+          placeholderText={100012}
           value={password}
           onChangeText={setPassword}
+          secureTextEntry
         />
-        <TextInput
-          placeholder={getTerm(100014)}
+        <Input
+          placeholderText={100014}
           value={confirmPassword}
           onChangeText={setConfirmPassword}
+          secureTextEntry
         />
-        <TouchableOpacity onPress={registerUser} style={{width: 50, height: 30}}>
-          <Text>{getTerm(100010)}</Text>
-        </TouchableOpacity>
-       </View>
-     </MainView>
-   );
- };
 
- export default Register;
+        <Button text={100010} onPress={registerUser} />
+      </View>
+    </MainView>
+  );
+};
+
+export default Register;
