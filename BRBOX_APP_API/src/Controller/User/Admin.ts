@@ -98,7 +98,7 @@ export default class AdminController implements Controller {
      */
     Delete = async (req: Request) => {
         try {
-            const {_id} = req.body
+            const _id = req.params.id
             
             const admin = await await AppDataSource.getRepository(Admin)
                                                     .createQueryBuilder("admin")
