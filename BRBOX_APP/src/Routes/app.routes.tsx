@@ -4,6 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import Home from '../pages/Home';
 import GameInfo from '../pages/GameInfo';
 import Profile from '../pages/Profile';
+import TagRegister from '../pages/TagRegister';
 
 const App = createStackNavigator();
 
@@ -31,6 +32,10 @@ const AppRoutes: React.FC = () => {
       <App.Screen
         name="Profile"
         component={Profile}
+      />
+      <App.Screen
+        name="TagRegister"
+        component={TagRegister}
       />
     </App.Navigator>
   );

@@ -25,6 +25,10 @@ let term = {
   100023: "Zona cega",
   100024: "Aqui você tem a opção de excluir os dados da sua conta.\n Essa ação não poderá ser revertida",
   100025: "Sair",
+  100026: "Salvar",
+  100027: "Cadastre uma nova tag",
+  100028: "Edite sua tag",
+  100029: "Descrição",
 };
 
 export default term;
