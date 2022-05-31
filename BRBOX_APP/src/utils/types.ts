@@ -19,7 +19,7 @@ export type User = {
 
 
 export type Params = {
-  id: string | null;
+  id: number | null;
 }
 
 export type Evaluation = {
@@ -30,4 +30,11 @@ export type Evaluation = {
 
 export type PhotoType = {
   uri: string | undefined
+}
+
+export type Tag = {
+  id: number;
+  name: string;
+  description?: string;
+  color: string;
 }

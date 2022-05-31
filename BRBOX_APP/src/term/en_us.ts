@@ -25,6 +25,10 @@ let term = {
   100023: "Dark zone",
   100024: "Here you got the option for you to delete your information.\n This action cannot be undone",
   100025: "Exit",
+  100026: "Save",
+  100027: "Register new tag",
+  100028: "Edit your tag",
+  100029: "Description",
 };
 
 export default term;

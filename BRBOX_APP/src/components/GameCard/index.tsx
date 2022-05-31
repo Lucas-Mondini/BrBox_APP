@@ -13,9 +13,10 @@ interface GameCardProps {
   tag2?: string;
   moreTags?: number;
   evaluations: number;
+  imgUri: string;
 }
 
-export default function GameCard({title, year, tag1, tag2, moreTags, evaluations}:GameCardProps)
+export default function GameCard({title, year, tag1, tag2, moreTags, evaluations, imgUri}:GameCardProps)
 {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<any>();
@@ -27,7 +28,7 @@ export default function GameCard({title, year, tag1, tag2, moreTags, evaluations
     <TouchableOpacity style={styles.gameCard}>
       <View style={styles.container}>
         <View>
-          <Image style={styles.img} source={require("../../../assets/img/gameimg.jpg")} />
+          <Image style={styles.img} source={{uri: imgUri}} />
         </View>
         <View style={styles.info}>
           <View>

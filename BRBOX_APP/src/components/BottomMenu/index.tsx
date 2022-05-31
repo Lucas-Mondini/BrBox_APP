@@ -24,7 +24,7 @@ export default function BottomMenu()
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
         <Icon name="search" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("GameInfo")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TagRegister")}>
         <Icon name="check-square" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
