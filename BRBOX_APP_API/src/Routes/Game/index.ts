@@ -1,15 +1,16 @@
 import Router from 'express'
-import UserView from '../../View/User';
+import GameView from '../../View/Game';
+import tagRouter from './Tag';
 const gameRouter = Router();
 
-const view = new UserView();
+const view = new GameView();
 
-gameRouter.post('/create',      view.Create);
-gameRouter.get('/:id',          view.Get);
-gameRouter.put('/update',       view.Update);
-gameRouter.post('/destroy',     view.Delete);
+gameRouter.post('/create',              view.Create);
+gameRouter.get('/:id',                  view.Get);
+gameRouter.put('/update',               view.Update);
+gameRouter.delete('/destroy/:id',       view.Delete);
 
-gameRouter.get('/',             view.GetAll);
+gameRouter.get('/',                     view.GetAll);
 
 
 

@@ -11,7 +11,7 @@ export default class User {
     @Column()
     Password: string
 
-    @Column()
+    @Column({unique: true})
     Email: string
 
     @CreateDateColumn()

@@ -25,7 +25,7 @@ export default class AdminController implements Controller {
             
             const admin = await new Admin();
             admin.user    = user;
-            AppDataSource.getRepository(Admin).save(admin);
+            await AppDataSource.getRepository(Admin).save(admin);
             
             return {status: 200, value: {
                     username: user.username,

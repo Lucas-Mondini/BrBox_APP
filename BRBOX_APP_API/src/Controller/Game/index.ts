@@ -1,28 +1,20 @@
-import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
-import Game_ExternalLinkList from "./externalLink/game_externallinklist";
-import Game_ImageList from "./image/game_imageList";
-import Game_TagValueList from "./tag/game_tagValueList";
+import { Request } from "express";
+import Controller from "../";
 
-@Entity()
-export default class Game {
-    @PrimaryGeneratedColumn()
-    id: number
-
-    @Column()
-    name: string;
-
-    @OneToOne(() => Game_ExternalLinkList)
-    @JoinColumn({referencedColumnName: "id"})
-    externalLinks: Game_ExternalLinkList;
-
-    @OneToOne(() => Game_ImageList)
-    @JoinColumn({referencedColumnName: "id"})
-    imageList: Game_ImageList;
-
-    @OneToOne(() => Game_TagValueList)
-    @JoinColumn({referencedColumnName: "id"})
-    tagList: Game_TagValueList;
-
-    @CreateDateColumn()
-    createdDate: Date
+export default class GameController implements Controller {
+    Create = async (req: Request) => {
+        throw new Error("Method not implemented.");
+    }
+    Index = async (req: Request) => {
+        throw new Error("Method not implemented.");
+    }
+    Get = async (req: Request) => {
+        throw new Error("Method not implemented.");
+    }
+    Update = async (req: Request) => {
+        throw new Error("Method not implemented.");
+    }
+    Delete = async (req: Request) => {
+        throw new Error("Method not implemented.");
+    }
 }

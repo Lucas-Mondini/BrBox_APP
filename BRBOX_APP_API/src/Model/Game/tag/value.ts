@@ -7,7 +7,4 @@ export default class Value {
 
     @Column()
     name: string
-
-    @Column()
-    description: string
 }
