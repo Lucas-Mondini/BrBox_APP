@@ -38,10 +38,13 @@ export default class TagController implements Controller {
     Get = async (req: Request) => {
         try {
             const id = req.params.id
-            const tags = await AppDataSource.getRepository(Tag).findOneBy({id: Number(id)});
+            const tag = await AppDataSource.getRepository(Tag).findOneBy({id: Number(id)});
+
+            if(!tag)
+                return { status: 404, value: {message: "tag not found" }};
             
             return {status: 200, value: {
-                    tags
+                    tag
             }};
         }
         catch (e) {
@@ -49,9 +52,52 @@ export default class TagController implements Controller {
         }
     }
     Update = async (req: Request) => {
-        throw new Error("Method not implemented.");
+        try {
+            const {name, new_name, new_description } = req.body
+            const tag = await AppDataSource.getRepository(Tag).findOneBy({name: name});
+
+            if(!tag)
+                return { status: 404, value: {message: "tag not found" }};
+
+            tag.name = new_name || tag.name;
+            tag.description = new_description || tag.description;
+            
+            AppDataSource.getRepository(Tag).save(tag);
+            
+            return {status: 200, value: {
+                    tag
+            }};
+        }
+        catch (e) {
+            return {status: 500, value: {message: "something went wrong: " + e}};
+        }
     }
+    
     Delete = async (req: Request) => {
-        throw new Error("Method not implemented.");
+        try {
+            const id = req.params.id
+            const tag = await AppDataSource.getRepository(Tag).findOneBy({id: Number(id)});
+
+            if(!tag)
+                return { status: 404, value: {message: "tag not found" }};
+            
+            
+            const dead = await AppDataSource.getRepository(Tag).delete(tag);
+    
+    
+    
+            if(dead.affected)
+                return {
+                    status: 200,
+                    value: {message: "deleted " + dead.affected + " tag"}
+                }
+            return {
+                status: 501,
+                value: {message: "unhandled error"}
+                }
+        }
+        catch (e) {
+            return {status: 500, value: {message: "something went wrong: " + e}};
+        }
     }
 }
