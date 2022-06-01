@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import jwt, { JsonWebTokenError } from "jsonwebtoken";
 import 'dotenv/config';
 
-import Controller from ".";
+import {IController} from "..";
 
 import User from "../../Model/User";
 import Admin from "../../Model/User/Admin";
@@ -11,7 +11,7 @@ import { AppDataSource } from "../../data-source";
 import { FindOptionsUtils, Timestamp } from "typeorm";
 import { Console } from "console";
 
-export default class UserController implements Controller {
+export default class UserController implements IController {
     
     constructor(){
         

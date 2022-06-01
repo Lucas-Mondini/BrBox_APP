@@ -1,18 +1,6 @@
-import Router from 'express'
+import RouterConstructor from '../RouterConstructor';
 import GameView from '../../View/Game';
-import tagRouter from './Tag';
-const gameRouter = Router();
 
-const view = new GameView();
-
-gameRouter.post('/create',              view.Create);
-gameRouter.get('/:id',                  view.Get);
-gameRouter.put('/update',               view.Update);
-gameRouter.delete('/destroy/:id',       view.Delete);
-
-gameRouter.get('/',                     view.GetAll);
-
-
-
+const gameRouter = RouterConstructor.getCRUD(new GameView());
 
 export default gameRouter;

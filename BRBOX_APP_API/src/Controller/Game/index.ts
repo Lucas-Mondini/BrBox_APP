@@ -1,7 +1,7 @@
 import { Request } from "express";
-import Controller from "../";
+import {IController} from "../";
 
-export default class GameController implements Controller {
+export default class GameController implements IController {
     Create = async (req: Request) => {
         throw new Error("Method not implemented.");
     }

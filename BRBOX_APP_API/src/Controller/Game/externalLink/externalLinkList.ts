@@ -1,7 +1,7 @@
 import { Request } from "express";
-import Controller from "../..";
+import {IController} from "../..";
 
-export default class ExternalLinkListController implements Controller {
+export default class ExternalLinkListController implements IController {
     Create = async (req: Request) => {
         throw new Error("Method not implemented.");
     }

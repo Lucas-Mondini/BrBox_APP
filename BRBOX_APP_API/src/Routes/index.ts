@@ -7,13 +7,15 @@ import adminRouter from './User/Admin';
 
 import gameRouter from './Game';
 import tagRouter from './Game/Tag';
+import valueRouter from './Game/Tag/value'
 
 const mainRouter = Router();
 
 mainRouter.use('/user', userRouter);
-mainRouter.use('/admin', Auth.admin, adminRouter);
-mainRouter.use('/game', Auth.admin, gameRouter);
+mainRouter.use('/admin', Auth.admin,    adminRouter);
+mainRouter.use('/game', Auth.admin,     gameRouter);
 
-mainRouter.use('/tag', Auth.admin,  tagRouter);
+mainRouter.use('/tag', Auth.admin,      tagRouter);
+mainRouter.use('/value', Auth.admin,    valueRouter);
 
 export default mainRouter;

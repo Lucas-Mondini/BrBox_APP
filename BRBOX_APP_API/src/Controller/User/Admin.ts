@@ -2,14 +2,14 @@ import { Request } from "express";
 
 import 'dotenv/config';
 
-import Controller from "..";
+import {IController} from "..";
 import Admin from "../../Model/User/Admin";
 import User from "../../Model/User";
 import { AppDataSource } from "../../data-source";
 import { ParamsDictionary } from "express-serve-static-core";
 import { ParsedQs } from "qs";
 
-export default class AdminController implements Controller {
+export default class AdminController implements IController {
     /**
      * 
      * @param req {id: number}
