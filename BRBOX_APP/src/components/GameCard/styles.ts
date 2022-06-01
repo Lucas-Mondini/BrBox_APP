@@ -22,12 +22,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   title: {
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     fontSize: 22
   },
   year: {
     fontFamily: config.fontFamily,
     fontStyle: 'italic',
+    fontWeight: '700',
   },
   tagsContainer: {
     flexDirection: "row",

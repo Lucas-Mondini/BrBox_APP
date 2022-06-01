@@ -8,7 +8,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   title: {
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     fontSize: 30,
     textAlign: "center",
     marginBottom: 15

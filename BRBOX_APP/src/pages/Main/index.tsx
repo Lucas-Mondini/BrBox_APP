@@ -1,21 +1,20 @@
 import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import {
-  Image,
+  ImageBackground,
   Text,
   TouchableOpacity,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import MainView from '../../components/MainView';
 import { useTerm } from '../../Contexts/TermProvider';
 
-import game from "../../../assets/img/game.png";
-
+import bg from "../../../assets/img/loginbackground.png";
 import config from "../../../brbox.config.json";
 
 import styles from './styles';
+import Button from '../../components/Button';
 
 const Main = () => {
   const isDarkMode = useColorScheme() === 'dark';
@@ -24,24 +23,26 @@ const Main = () => {
   const {getTerm} = useTerm();
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : config.greenLight,
+    backgroundColor: isDarkMode ? config.dark : config.light,
   };
 
-  const fontColorStyle = {
-    color: !isDarkMode ? config.dark : "#fff",
+  const registerTextColorStyle = {
+    color: !isDarkMode ? config.dark : config.mediumGreen,
   };
 
   return (
     <MainView>
-      <View style={[backgroundStyle, styles.container]}>
-        <Image source={game} style={styles.gameImg}/>
-        <TouchableOpacity onPress={()=>{navigation.navigate("Login")}} style={styles.loginButton}>
-          <Text style={styles.loginButtonText}>{getTerm(100009)}</Text>
-        </TouchableOpacity>
+      <ImageBackground source={bg} style={[backgroundStyle, styles.container]} resizeMode='cover'>
+        <Button
+          text={100009}
+          onPress={()=>{navigation.navigate("Login")}}
+          extraStyle={{marginTop: "70%"}}
+        />
+
         <TouchableOpacity style={styles.registerButton} onPress={()=>{navigation.navigate("Register")}}>
-          <Text style={[styles.registerButtonText, fontColorStyle]}>{getTerm(100010)}</Text>
+          <Text style={[styles.buttonText, registerTextColorStyle]}>{getTerm(100010)}</Text>
         </TouchableOpacity>
-      </View>
+      </ImageBackground>
     </MainView>
   );
 }

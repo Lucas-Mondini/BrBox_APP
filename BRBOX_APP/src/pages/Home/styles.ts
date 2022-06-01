@@ -15,8 +15,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 35,
     textAlign: "center",
-    fontWeight: '600',
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     paddingBottom: 20
   },
   sectionDescription: {

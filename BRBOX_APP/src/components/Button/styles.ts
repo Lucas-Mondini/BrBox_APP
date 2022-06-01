@@ -8,17 +8,16 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 40,
-    width: "70%",
+    width: "50%",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: 40
+    borderRadius: 5
   },
   buttonText: {
-    color: "#fff",
+    color: "#000",
     fontSize: 18,
     lineHeight: 20,
-    fontWeight: '400',
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
   },
 });
 
