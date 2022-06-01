@@ -11,9 +11,10 @@ interface ButtonProps {
   onPress: () => void;
   buttonColor?: string;
   extraStyle?: object;
+  extraTextStyle?: object;
 }
 
-export default function Button({text, onPress, buttonColor, extraStyle}: ButtonProps)
+export default function Button({text, onPress, buttonColor, extraStyle, extraTextStyle}: ButtonProps)
 {
   const {getTerm} = useTerm();
 
@@ -26,7 +27,7 @@ export default function Button({text, onPress, buttonColor, extraStyle}: ButtonP
         style={[styles.button, buttonColorStyle]}
       >
         <Text
-          style={styles.buttonText}
+          style={[styles.buttonText, extraTextStyle]}
         >
           {getTerm(text)}
         </Text>

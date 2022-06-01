@@ -10,13 +10,13 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     marginBottom:30,
     textAlign: "center"
   },
   changePassText: {
     fontSize: 15,
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     marginBottom:5,
     marginTop: 15,
     textAlign: "center"
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight:28,
     marginLeft: 10,
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
   },
   darkZone: {
     marginTop: 15,
@@ -48,19 +48,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF363655",
     borderRadius: 8,
     alignItems: "center",
-    paddingVertical: 15,
+    padding: 15,
     marginBottom: "30%",
   },
   darkZoneTitle: {
     fontSize: 15,
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     marginBottom:5,
     marginTop: 15,
     textAlign: "center"
   },
   darkZoneText: {
     fontSize: 15,
-    fontFamily: config.fontFamily,
+    fontFamily: config.fontFamilyBold,
     marginBottom:5,
     marginTop: 15,
     textAlign: "center"

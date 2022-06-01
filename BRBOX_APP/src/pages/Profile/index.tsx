@@ -144,9 +144,9 @@ const Profile = () => {
             style={styles.exitButton}
             onPress={signOut}
           >
-            <Icon name="exit-run" size={20}/>
+            <Icon name="exit-run" size={20} color={isDarkMode ? "#fff" : config.dark}/>
             <Text
-              style={styles.exitButtonText}
+              style={[styles.exitButtonText, textColorStyle]}
             >
               {getTerm(100025)}
             </Text>
@@ -170,7 +170,8 @@ const Profile = () => {
           <Button
             text={100016}
             onPress={deleteUser}
-            extraStyle={{width: '70%'}}
+            extraStyle={{width: '70%', marginTop: 15}}
+            extraTextStyle={{color: "#fff"}}
             buttonColor={config.redBar}
           />
         </View>
