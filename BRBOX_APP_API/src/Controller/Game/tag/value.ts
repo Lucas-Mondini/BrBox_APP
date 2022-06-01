@@ -9,7 +9,7 @@ export default class ValueController extends Controller {
         super(Value);
     }
 
-    
+
     Create = async (req: Request) => {
         try {
             const {name} = req.body;
@@ -19,7 +19,7 @@ export default class ValueController extends Controller {
             await AppDataSource.getRepository(Value).save(value);
             
             return {status: 200, value: {
-                    name:           value.name,
+                    ...value
             }};
         }
         catch (e) {
@@ -28,8 +28,8 @@ export default class ValueController extends Controller {
     }
     Update = async (req: Request) => {
         try {
-            const {name, new_name} = req.body
-            const value = await AppDataSource.getRepository(Value).findOneBy({name: name});
+            const {id, new_name} = req.body
+            const value = await AppDataSource.getRepository(Value).findOneBy({id: Number(id)});
 
             if(!value)
                 return { status: 404, value: {message: "value not found" }};

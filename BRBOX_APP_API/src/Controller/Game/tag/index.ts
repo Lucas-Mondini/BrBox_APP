@@ -20,8 +20,7 @@ export default class TagController extends Controller {
             await AppDataSource.getRepository(Tag).save(tag);
             
             return {status: 200, value: {
-                    name:           tag.name,
-                    description:    tag.description
+                    ...tag
             }};
         }
         catch (e) {
@@ -43,7 +42,7 @@ export default class TagController extends Controller {
             await AppDataSource.getRepository(Tag).save(tag);
             
             return {status: 200, value: {
-                    tag
+                    ...tag
             }};
         }
         catch (e) {
