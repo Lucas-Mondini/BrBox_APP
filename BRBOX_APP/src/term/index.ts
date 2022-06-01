@@ -3,7 +3,7 @@ import enUs from "./en_us";
 
 const terms = {
   "pt_BR": ptBr,
-  "en_U": enUs
+  "en_US": enUs
 };
 
 export default terms;
