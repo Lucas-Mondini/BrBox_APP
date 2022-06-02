@@ -42,7 +42,11 @@ class Controller implements IController {
     Get = async (req: Request) => {
         try {
             const id = req.params.id
-            const value = await AppDataSource.getRepository(this.model).findOneByOrFail({id: Number(id)});
+            var value: any;
+            if(this.relations)
+                value = await AppDataSource.getRepository(this.model).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+            else
+                value = await AppDataSource.getRepository(this.model).findOneByOrFail({id: Number(id)});
 
             if(!value)
                 return { status: 404, value: {message: "value not found" }};
