@@ -22,10 +22,6 @@ const Register = () => {
 
   const isDarkMode = useColorScheme() === 'dark';
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : "#fff",
-  };
-
   const titleColorStyle = {
     color: isDarkMode ? "#fff" : config.dark,
   };
@@ -42,7 +38,7 @@ const Register = () => {
 
   return (
     <MainView>
-      <View style={[styles.container, backgroundStyle]}>
+      <View style={[styles.container]}>
         <Text
           style={[styles.title, titleColorStyle]}
         >

@@ -13,7 +13,6 @@ import Button from '../../components/Button';
 import Input from '../../components/Input';
 
 import MainView from '../../components/MainView';
-import { useAuth } from '../../Contexts/Auth';
 import { useRequest } from '../../Contexts/Request';
 import { useTerm } from '../../Contexts/TermProvider';
 
@@ -27,59 +26,62 @@ const TagRegister = () => {
   const params = route.params as Params;
 
   const isFocused = useIsFocused();
-  const {user, signOut} = useAuth();
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Boolean(params));
   const [tag, setTag] = useState({} as Tag);
 
   const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : "#fff",
-  };
 
   const textColorStyle = {
     color: isDarkMode ? "#fff" : config.dark,
   };
 
-  async function loadColor()
+  async function loadTag()
   {
     try {
       if (!params) {
         return;
       }
+      const response = await get(`/tag/${params.id}`, setLoading);
 
-      const response = require("../../../mockdata.json").tags.filter((tag: Tag) => tag.id === params.id);
-                      //await get(`/user/${user?.id}`, setLoading);
-
-      setTag(response[0]);
-    } catch (error) {
-      signOut();
+      setTag(response);
+    } catch (error: any) {
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
-  async function updateColor()
-  {/* 
+  async function saveTag()
+  {
     try {
-      const response = await put(`/user/update`, setLoading, {
-        username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
-      });
+      let response;
 
-      setUser(response);
+      if (!params && !tag.id) {
+        response = await post(`/tag/create`, setLoading, {
+          name: tag.name, description: tag.description
+        });
+      } else {
+        response = await put(`/tag/update`, setLoading, {
+          id: tag.id,
+          new_name: tag.name,
+          new_description: tag.description
+        });
+      }
+
+      setTag(response);
     } catch (error) {
-      signOut();
-    } */
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+    }
   }
 
   useEffect(() => {
-    if (isFocused) loadColor();
+    if (isFocused) loadTag();
   }, [isFocused]);
 
   return (
-    <MainView>
-      <ScrollView style={[styles.container, backgroundStyle]}>
+    <MainView loading={loading}>
+      <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
         >
@@ -114,8 +116,8 @@ const TagRegister = () => {
 
         <View style={styles.buttonView}>
           <Button
-            text={!params ? 100026 : 100015}
-            onPress={updateColor}
+            text={!params && !tag.id ? 100026 : 100015}
+            onPress={saveTag}
           />
         </View>
       </ScrollView>

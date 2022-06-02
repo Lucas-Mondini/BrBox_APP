@@ -22,17 +22,13 @@ const Main = () => {
 
   const {getTerm} = useTerm();
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : config.light,
-  };
-
   const registerTextColorStyle = {
     color: !isDarkMode ? config.dark : config.mediumGreen,
   };
 
   return (
     <MainView>
-      <ImageBackground source={bg} style={[backgroundStyle, styles.container]} resizeMode='cover'>
+      <ImageBackground source={bg} style={[styles.container]} resizeMode='cover'>
         <Button
           text={100009}
           onPress={()=>{navigation.navigate("Login")}}

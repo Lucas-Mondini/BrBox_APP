@@ -1,8 +1,9 @@
 {
-  "mainColor":"",
   "defaultLanguage":"pt_BR",
+
   "fontFamilyBold":"Montserrat-ExtraBold",
   "fontFamily":"Montserrat",
+
   "dark":"#191A19",
   "light":"#e7e7e7",
   "greenLight":"#D8E9A8",
@@ -14,5 +15,6 @@
   "yellow":"#F7D716",
   "mainIconColor":"#686868",
   "placeholdersColor":"#7f7f7f",
+
   "apiUrl":"http://10.0.2.2:8080/"
 }

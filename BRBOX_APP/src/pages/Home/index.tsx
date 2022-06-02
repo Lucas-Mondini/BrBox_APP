@@ -14,7 +14,6 @@ import { useTerm } from '../../Contexts/TermProvider';
 import styles from './styles';
 
 import config from "../../../brbox.config.json";
-import {games} from "../../../mockdata.json";
 import { useAuth } from '../../Contexts/Auth';
 import { Game } from '../../utils/types';
 
@@ -27,10 +26,6 @@ const Home = () => {
   const {signOut} = useAuth();
 
   const {getTerm} = useTerm();
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : "#fff",
-  };
 
   const titleColorStyle = {
     color: !isDarkMode ? config.dark : "#fff",
@@ -73,7 +68,7 @@ const Home = () => {
 
   return (
     <MainView>
-      <ScrollView style={[styles.container, backgroundStyle]}>
+      <ScrollView style={[styles.container]}>
         <Text style={[styles.title, titleColorStyle]}>{getTerm(100008)}</Text>
 
         <ScrollView horizontal style={{width: "100%", height: "100%"}}>

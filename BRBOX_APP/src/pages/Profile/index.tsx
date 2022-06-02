@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -27,7 +27,8 @@ const Profile = () => {
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const isFocused = useIsFocused();
   const [username, setUserName] = useState(user?.username);
   const [email, setEmail] = useState(user?.email);
   const [password, setPassword] = useState("");
@@ -35,10 +36,6 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
 
   const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : "#fff",
-  };
 
   const textColorStyle = {
     color: isDarkMode ? "#fff" : config.dark,
@@ -50,7 +47,7 @@ const Profile = () => {
       const response = await get(`/user/${user?.id}`, setLoading);
 
     } catch (error) {
-      signOut();
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
@@ -81,17 +78,17 @@ const Profile = () => {
 
       setUser(response);
     } catch (error) {
-      signOut();
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
   useEffect(() => {
-    loadUser();
-  }, []);
+    if (isFocused) loadUser();
+  }, [isFocused]);
 
   return (
-    <MainView>
-      <ScrollView style={[styles.container, backgroundStyle]}>
+    <MainView loading={loading}>
+      <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
         >
