@@ -25,10 +25,6 @@ const Login = () => {
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? config.dark : "#fff",
-  };
-
   const titleColorStyle = {
     color: isDarkMode ? "#fff" : config.dark,
   };
@@ -40,7 +36,7 @@ const Login = () => {
 
   return (
     <MainView>
-      <View style={[styles.container, backgroundStyle]}>
+      <View style={[styles.container]}>
         <ScrollView>
           <Text
             style={[styles.title, titleColorStyle]}

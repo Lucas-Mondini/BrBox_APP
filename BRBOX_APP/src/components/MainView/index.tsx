@@ -1,12 +1,16 @@
 import React from "react";
 import { SafeAreaView, StatusBar, useColorScheme } from "react-native";
 import { Colors } from "react-native/Libraries/NewAppScreen";
+import Loading from "../Loading";
+
+import config from "../../../brbox.config.json";
 
 interface MainViewProps {
   children: React.ReactElement | React.ReactElement[];
+  loading?: boolean;
 }
 
-export default function MainView({children}: MainViewProps)
+export default function MainView({children, loading}: MainViewProps)
 {
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -14,10 +18,10 @@ export default function MainView({children}: MainViewProps)
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
+        backgroundColor: isDarkMode ? config.dark : "#fff",
       }}>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      {children}
+      {loading ? <Loading /> : children}
     </SafeAreaView>
   );
 }

@@ -13,7 +13,7 @@ export type User = {
   id: number;
   username: string;
   email: string;
-  admin: true;
+  admin: boolean;
   auth_token: string;
 }
 
