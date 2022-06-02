@@ -16,7 +16,7 @@ export default class TagValue {
     @JoinColumn({referencedColumnName: "id"})
     user: User
 
-    @OneToMany(() => Value, Object)
+    @OneToMany(() => Value, Object => Object,{ cascade: true})
     @JoinColumn({referencedColumnName: "id"})
-    value: Value;
+    value: Value[];
 }

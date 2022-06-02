@@ -39,7 +39,7 @@ export default class ValueController extends Controller {
             AppDataSource.getRepository(Value).save(value);
             
             return {status: 200, value: {
-                    value
+                    ...value
             }};
         }
         catch (e) {

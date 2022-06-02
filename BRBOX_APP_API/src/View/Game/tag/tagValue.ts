@@ -1,6 +1,10 @@
-import { Request, Response } from "express";
+import View from "../..";
+import TagValueController from "../../../Controller/Game/tag/tagValue";
 
 
-export default class TagValueView {
-
+export default class TagValueView extends View{
+    constructor(){
+        super();
+        this.controllerObject = new TagValueController();
+    }
 }

@@ -25,11 +25,9 @@ class Controller implements IController {
     }
     Index = async (req: Request) => {
         try {
-            const tags = await AppDataSource.getRepository(this.model).find({});
+            const value: any = await AppDataSource.getRepository(this.model).find({});
             
-            return {status: 200, value: {
-                    tags
-            }};
+            return {status: 200, value};
         }
         catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
@@ -38,14 +36,12 @@ class Controller implements IController {
     Get = async (req: Request) => {
         try {
             const id = req.params.id
-            const value = await AppDataSource.getRepository(this.model).findOneBy({id: Number(id)});
+            const value = await AppDataSource.getRepository(this.model).findOneByOrFail({id: Number(id)});
 
             if(!value)
                 return { status: 404, value: {message: "value not found" }};
             
-            return {status: 200, value: {
-                    value
-            }};
+            return {status: 200, value};
         }
         catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
