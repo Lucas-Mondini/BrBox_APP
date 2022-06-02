@@ -9,7 +9,7 @@ import User from "../../../Model/User";
 
 export default class TagValueController extends Controller {
     constructor() {
-        super(TagValue);
+        super(TagValue, ["user", "value", "tag"]);
     }
 
     Create = async (req: Request) => {
@@ -25,7 +25,7 @@ export default class TagValueController extends Controller {
 
             tagValue.user = await _user;
             tagValue.tag = await _tag;
-            tagValue.value = [await _value];
+            tagValue.value = await _value;
 
 
             await AppDataSource.getRepository(TagValue).save(tagValue);
@@ -45,11 +45,11 @@ export default class TagValueController extends Controller {
             const _user =   await AppDataSource.getRepository(User).findOneByOrFail({id: Number(req.user.id)})
             const tagValue = await AppDataSource.getRepository(TagValue).findOneByOrFail({id: Number(id), user: _user});
 
-            const _tag =    AppDataSource.getRepository(Tag).findOneByOrFail({id: Number(tag)})
-            const _value =  AppDataSource.getRepository(Value).findOneByOrFail({id: Number(value)})
+            const _tag =    AppDataSource.getRepository(Tag).findOneBy({id: Number(tag)})
+            const _value =  AppDataSource.getRepository(Value).findOneBy({id: Number(value)})
 
             tagValue.tag    = await _tag  || tagValue.tag ;
-            tagValue.value  = [await _value] || tagValue.value;
+            tagValue.value  = await _value || tagValue.value;
 
             
             await AppDataSource.getRepository(TagValue).save(tagValue);

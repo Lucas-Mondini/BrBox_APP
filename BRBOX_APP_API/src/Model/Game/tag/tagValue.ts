@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, OneToMany } from "typeorm";
+import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, OneToMany, ManyToMany } from "typeorm";
 import Tag from ".";
 import User from "../../User";
 import Value from "./value";
@@ -16,7 +16,7 @@ export default class TagValue {
     @JoinColumn({referencedColumnName: "id"})
     user: User
 
-    @OneToMany(() => Value, Object => Object,{ cascade: true})
+    @ManyToOne(() => Value)
     @JoinColumn({referencedColumnName: "id"})
-    value: Value[];
+    value: Value;
 }

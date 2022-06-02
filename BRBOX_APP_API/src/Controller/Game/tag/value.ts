@@ -6,7 +6,7 @@ import Value from "../../../Model/Game/tag/value";
 
 export default class ValueController extends Controller {
     constructor() {
-        super(Value);
+        super(Value, []);
     }
 
 

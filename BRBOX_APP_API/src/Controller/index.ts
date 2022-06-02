@@ -15,8 +15,10 @@ interface IController {
 
 class Controller implements IController {
     private model: any;
-    constructor(customModel: any) {
+    private relations: any = null;
+    constructor(customModel: any, relations: any[]) {
         this.model = customModel
+        this.relations = relations
     }
 
 
@@ -25,7 +27,11 @@ class Controller implements IController {
     }
     Index = async (req: Request) => {
         try {
-            const value: any = await AppDataSource.getRepository(this.model).find({});
+            var value: any;
+            if(this.relations)
+                value = await AppDataSource.getRepository(this.model).find({relations: this.relations});
+            else
+                value = await AppDataSource.getRepository(this.model).find({});
             
             return {status: 200, value};
         }

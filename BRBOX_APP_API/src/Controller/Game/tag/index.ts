@@ -7,7 +7,7 @@ import Tag from "../../../Model/Game/tag";
 export default class TagController extends Controller {
 
     constructor() {
-        super(Tag);
+        super(Tag, []);
     }
 
     Create = async (req: Request) => {
