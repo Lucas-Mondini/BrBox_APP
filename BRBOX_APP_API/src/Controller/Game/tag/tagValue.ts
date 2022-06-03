@@ -11,7 +11,7 @@ export default class TagValueController extends Controller {
     constructor() {
         super(TagValue, ["user", "value", "tag"]);
     }
-
+//@ts-ignore
     Create = async (req: Request) => {
         try {
             const {tag, value} = req.body;
@@ -37,7 +37,7 @@ export default class TagValueController extends Controller {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
-
+    //@ts-ignore
     Update = async (req: Request) => {
         try {
             const {id, tag, value} = req.body;

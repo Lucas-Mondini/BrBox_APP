@@ -1,16 +1,13 @@
-import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne } from "typeorm";
-import ExternalLinkList from "./externalLinkList";
+import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, ManyToOne, OneToMany } from "typeorm";
+import Platform from "../platform";
 
 @Entity()
 export default class ExternalLink {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
-    platform_name: string
-
-    @Column()
-    thumbnail: string
+    @ManyToOne(()=>Platform, {nullable: false})
+    platform: Platform
 
     @Column()
     link: string

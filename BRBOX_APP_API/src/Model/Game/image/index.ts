@@ -7,5 +7,8 @@ export default class Image {
     id: number
 
     @Column()
+    name: string;
+    
+    @Column()
     link: string;
 }

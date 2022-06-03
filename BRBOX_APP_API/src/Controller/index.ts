@@ -22,9 +22,12 @@ class Controller implements IController {
     }
 
 
-    Create(req: Request): Promise<Object> {
-        throw new Error('Method not implemented.');
+    Create = async (req: Request) => {
+        return {status: 404, value: {
+            message: "error, Method not implemented."
+        } }
     }
+
     Index = async (req: Request) => {
         try {
             var value: any;
@@ -39,6 +42,7 @@ class Controller implements IController {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
+
     Get = async (req: Request) => {
         try {
             const id = req.params.id
@@ -57,9 +61,13 @@ class Controller implements IController {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
-    Update(req: Request): Promise<Object> {
-        throw new Error('Method not implemented.');
+
+    Update = async (req: Request) => {
+        return {status: 404, value: {
+            message: "error, Method not implemented."
+        } }
     }
+    
     Delete = async (req: Request) => {
         try {
             const id = req.params.id

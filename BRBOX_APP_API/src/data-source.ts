@@ -22,15 +22,11 @@ import Game from './Model/Game/'
     import TagValue from './Model/Game/tag/tagValue';
     import TagValueList from './Model/Game/tag/tagValueList';
 
-    //Associations
-    import Game_ExternalLinkList from './Model/Game/externalLink/game_externallinklist';
-    import Game_ImageList from './Model/Game/image/game_imageList';
-    import Game_TagValueList from './Model/Game/tag/game_tagValueList';
-
 
 
 
 import 'dotenv/config';
+import Platform from './Model/Game/platform';
 
 const host = process.env.DATABASE_HOST;
 const port = Number(process.env.DATABASE_PORT);
@@ -59,9 +55,7 @@ export const AppDataSource = new DataSource({
         Value, 
         TagValue, 
         TagValueList, 
-        Game_ExternalLinkList, 
-        Game_ImageList, 
-        Game_TagValueList
+        Platform
     ],
     subscribers: [],
     migrations: [],

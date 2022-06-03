@@ -10,6 +10,7 @@ export default class TagController extends Controller {
         super(Tag, []);
     }
 
+    //@ts-ignore
     Create = async (req: Request) => {
         try {
             const {name, description} = req.body;
@@ -28,6 +29,7 @@ export default class TagController extends Controller {
         }
     }
 
+    //@ts-ignore
     Update = async (req: Request) => {
         try {
             const {id, new_name, new_description } = req.body

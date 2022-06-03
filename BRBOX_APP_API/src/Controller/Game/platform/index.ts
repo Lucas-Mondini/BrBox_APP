@@ -2,51 +2,49 @@ import { Request } from "express";
 import {Controller} from "../..";
 
 import { AppDataSource } from "../../../data-source";
-import Value from "../../../Model/Game/tag/value";
+import Platform from "../../../Model/Game/platform";
 
-export default class ValueController extends Controller {
+export default class PlatformController extends Controller {
+
     constructor() {
-        super(Value, []);
+        super(Platform, []);
     }
-
-
-    //NOT IMPLEMENTED, JUST WORKS IN THE DEFAULT INITIALIZATION
-/*
+    //@ts-ignore
     Create = async (req: Request) => {
         try {
             const {name} = req.body;
             
-            const value = await new Value();
-            value.name        = name;
-            await AppDataSource.getRepository(Value).save(value);
+            const platform = await new Platform();
+            platform.name        = name;
+            await AppDataSource.getRepository(Platform).save(platform);
             
             return {status: 200, value: {
-                    ...value
+                    ...platform
             }};
         }
         catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
+    //@ts-ignore
     Update = async (req: Request) => {
         try {
             const {id, new_name} = req.body
-            const value = await AppDataSource.getRepository(Value).findOneBy({id: Number(id)});
+            const platform = await AppDataSource.getRepository(Platform).findOneBy({id: Number(id)});
 
-            if(!value)
-                return { status: 404, value: {message: "value not found" }};
+            if(!platform)
+                return { status: 404, value: {message: "platform not found" }};
 
-            value.name = new_name || value.name;
+            platform.name = new_name || platform.name;
             
-            AppDataSource.getRepository(Value).save(value);
+            await AppDataSource.getRepository(Platform).save(platform);
             
             return {status: 200, value: {
-                    ...value
+                    ...platform
             }};
         }
         catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
         }
     }
-    */
 }

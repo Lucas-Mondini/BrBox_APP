@@ -1,7 +1,7 @@
 import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
-import Game_ExternalLinkList from "./externalLink/game_externallinklist";
-import Game_ImageList from "./image/game_imageList";
-import Game_TagValueList from "./tag/game_tagValueList";
+import ImageList from "./image/imageList";
+import TagValueList from "./tag/tagValueList";
+import ExtternalLinkList from "./externalLink/externalLinkList"
 
 @Entity()
 export default class Game {
@@ -11,17 +11,17 @@ export default class Game {
     @Column()
     name: string;
 
-    @OneToOne(() => Game_ExternalLinkList)
+    @OneToOne(() => ExtternalLinkList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
-    externalLinks: Game_ExternalLinkList;
+    linkList: ExtternalLinkList;
 
-    @OneToOne(() => Game_ImageList)
+    @OneToOne(() => ImageList, {eager: true, nullable: true, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
-    imageList: Game_ImageList;
+    imageList: ImageList;
 
-    @OneToOne(() => Game_TagValueList)
+    @OneToOne(() => TagValueList, {eager: true, nullable: true, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
-    tagList: Game_TagValueList;
+    tagList: TagValueList;
 
     @CreateDateColumn()
     createdDate: Date
