@@ -1,5 +1,6 @@
 import { AppDataSource } from "../data-source";
 import 'dotenv/config';
+import bcrypt from "bcrypt";
 
 import User from "../Model/User";
 import Admin from "../Model/User/Admin";
@@ -18,7 +19,7 @@ async function initializeUser() {
         
         user_admin.Email     = process.env.ADMIN_EMAIL       || "administrator@adm.com"
         user_admin.username  = process.env.ADMIN_USER        || "Administrator"
-        user_admin.Password  = process.env.ADMIN_PASSWORD    || "123"
+        user_admin.Password  = await bcrypt.hash(process.env.ADMIN_PASSWORD    || "123", 10);
         await AppDataSource.getRepository(User).save(user_admin);
         
         console.log(`new user ${user_admin.username} created\nwith email: "${user_admin.Email}" and password "${user_admin.Password}"`)
