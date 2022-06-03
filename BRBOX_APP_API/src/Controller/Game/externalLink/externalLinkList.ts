@@ -53,6 +53,8 @@ export default class ExternalLinkListController extends Controller {
         if(!externalLinks) {
             return externalLinkList;
         }
+
+        AppDataSource.getRepository(ExternalLink).remove(externalLinkList.externalLinks);
         
         const Platforms = await AppDataSource.getRepository(Platform).find({});
         
