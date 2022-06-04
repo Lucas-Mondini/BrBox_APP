@@ -12,7 +12,7 @@ export default class User {
     Password: string
 
     @Column({unique: true})
-    Email: string
+    email: string
 
     @CreateDateColumn()
     createdDate: Date
