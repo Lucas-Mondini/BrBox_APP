@@ -23,20 +23,33 @@ class Controller implements IController {
 
 
     Create = async (req: Request) => {
-        return {status: 404, value: {
+        return {status: 500, value: {
             message: "error, Method not implemented."
         } }
     }
 
     Index = async (req: Request) => {
         try {
-            var value: any;
-            if(this.relations)
-                value = await AppDataSource.getRepository(this.model).find({relations: this.relations});
-            else
-                value = await AppDataSource.getRepository(this.model).find({});
+            var values: any;
+            if(this.relations) {
+                values = await AppDataSource.getRepository(this.model).find({relations: this.relations});
+                for (let value of values) {
+                    if(this.relations.includes("user")) {
+                        value.user = {
+                            id: value.user.id,
+                            username: value.user.username,
+                            email: value.user.email
+                        };
+                    }
+                };
+            }
+            else {
+                values = await AppDataSource.getRepository(this.model).find({});
+            }
             
-            return {status: 200, value};
+            console.log(values)
+
+            return {status: 200, value: values};
         }
         catch (e) {
             return {status: 500, value: {message: "something went wrong: " + e}};
@@ -47,8 +60,16 @@ class Controller implements IController {
         try {
             const id = req.params.id
             var value: any;
-            if(this.relations)
+            if(this.relations) {
                 value = await AppDataSource.getRepository(this.model).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+                if(this.relations.includes("user")) {
+                    value.user = {
+                        id: value.user.id,
+                        username: value.user.username,
+                        email: value.user.email
+                    };
+                }
+            }
             else
                 value = await AppDataSource.getRepository(this.model).findOneByOrFail({id: Number(id)});
 
@@ -63,7 +84,7 @@ class Controller implements IController {
     }
 
     Update = async (req: Request) => {
-        return {status: 404, value: {
+        return {status: 500, value: {
             message: "error, Method not implemented."
         } }
     }
