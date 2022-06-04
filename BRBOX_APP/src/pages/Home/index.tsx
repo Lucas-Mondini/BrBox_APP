@@ -1,35 +1,23 @@
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  ScrollView,
-  Text,
-  useColorScheme,
+  View
 } from 'react-native';
 
 import BottomMenu from '../../components/BottomMenu';
 import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
-import { useTerm } from '../../Contexts/TermProvider';
 import styles from './styles';
 
-import config from "../../../brbox.config.json";
 import { useAuth } from '../../Contexts/Auth';
 import { Game } from '../../utils/types';
 
 const Home = () => {
-  const isDarkMode = useColorScheme() === 'dark';
-  const navigation = useNavigation<any>();
   const [games, setGames] = useState<Game[]>([]);
   const isFocused = useIsFocused()
 
   const {signOut} = useAuth();
-
-  const {getTerm} = useTerm();
-
-  const titleColorStyle = {
-    color: !isDarkMode ? config.dark : "#fff",
-  };
 
   async function getGames()
   {
@@ -41,13 +29,14 @@ const Home = () => {
   function renderGames()
   {
     return (
-      <FlatList style={[styles.list]}
+      <FlatList
         data={games}
         keyExtractor={(game: any) => game.id}
         renderItem={
           ({item}: any) => {
             return (
               <GameCard
+                id={item.id}
                 title={item.title}
                 year={item.year}
                 tag1={item.tag1}
@@ -67,14 +56,11 @@ const Home = () => {
   }, [isFocused]);
 
   return (
-    <MainView>
-      <ScrollView style={[styles.container]}>
-        <Text style={[styles.title, titleColorStyle]}>{getTerm(100008)}</Text>
+    <MainView showTitle>
+      <View style={styles.container}>
+        {renderGames()}
+      </View>
 
-        <ScrollView horizontal style={{width: "100%", height: "100%"}}>
-          {renderGames()}
-        </ScrollView>
-      </ScrollView>
       <BottomMenu/>
     </MainView>
   );

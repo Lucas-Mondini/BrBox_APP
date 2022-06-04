@@ -20,6 +20,7 @@ export type User = {
 
 export type Params = {
   id: number | null;
+  new: boolean | null;
 }
 
 export type Evaluation = {

@@ -5,6 +5,8 @@ import Home from '../pages/Home';
 import GameInfo from '../pages/GameInfo';
 import Profile from '../pages/Profile';
 import TagRegister from '../pages/TagRegister';
+import TagList from '../pages/TagList';
+import UserList from '../pages/UserList';
 
 const App = createStackNavigator();
 
@@ -16,6 +18,14 @@ const AppRoutes: React.FC = () => {
       <App.Screen
         name="Home"
         component={Home}
+      />
+      <App.Screen
+        name="TagList"
+        component={TagList}
+      />
+      <App.Screen
+        name="UserList"
+        component={UserList}
       />
       <App.Screen
         name="GameInfo"

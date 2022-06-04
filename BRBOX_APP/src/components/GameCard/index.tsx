@@ -2,11 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import React from "react";
 import { Image, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 
-import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 
 interface GameCardProps {
+  id: number;
   title: string;
   year: number;
   tag1?: string;
@@ -16,16 +16,19 @@ interface GameCardProps {
   imgUri: string;
 }
 
-export default function GameCard({title, year, tag1, tag2, moreTags, evaluations, imgUri}:GameCardProps)
+export default function GameCard({id, title, year, tag1, tag2, moreTags, evaluations, imgUri}:GameCardProps)
 {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<any>();
-  const {getTerm} = useTerm();
 
   const textColor = {color: isDarkMode ? "#fff" : config.dark}
 
+  function navigateToGameInfo() {
+    return navigation.navigate("GameInfo", {id});
+  }
+
   return (
-    <TouchableOpacity style={styles.gameCard}>
+    <TouchableOpacity style={styles.gameCard} onPress={navigateToGameInfo}>
       <View style={styles.container}>
         <View>
           <Image style={styles.img} source={{uri: imgUri}} />

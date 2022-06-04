@@ -29,6 +29,21 @@ let term = {
   100027: "Cadastre uma nova tag",
   100028: "Edite sua tag",
   100029: "Descrição",
+  100030: "Tags",
+  100031: "Usuários",
+  100032: "Excluir tag",
+  100033: "Tem certeza que deseja excluir a tag? \n Essa ação não poderá ser revertida",
+  100034: "Excluir usuário",
+  100035: "Tem certeza que deseja excluir o usuário? \n Essa ação não poderá ser revertida",
+  100036: "Tornar usuário administrador",
+  100037: "Tem certeza que deseja tornar o usuário um administrador?",
+  100038: "Remover administrador do usuário",
+  100039: "Tem certeza que deseja remover a permissão de adminstrador do usuário?",
+  100040: "SIM",
+  100041: "NÃO",
+  100042: "Criar novo usuário",
+  100043: "Editar informações de %2",
+  100044: "Excluir dados da conta de %2.\n Essa ação não poderá ser revertida",
 };
 
 export default term;

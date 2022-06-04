@@ -29,6 +29,21 @@ let term = {
   100027: "Register new tag",
   100028: "Edit your tag",
   100029: "Description",
+  100030: "Tags",
+  100031: "Users",
+  100032: "Delete tag",
+  100033: "Are you sure you want to delete the tag? \n This action cannot be undone",
+  100034: "Delete user",
+  100035: "Are you sure you want to delete the user? \n This action cannot be undone",
+  100036: "Make user admin",
+  100037: "Are you sure you want to turn this user into admin?",
+  100038: "Remove user admin permission",
+  100039: "Are you sure you want to remove this user admin permission?",
+  100040: "YES",
+  100041: "NO",
+  100042: "Create new user",
+  100043: "Edit %2 information",
+  100044: "Delete %2 data.\n This action cannot be undone",
 };
 
 export default term;

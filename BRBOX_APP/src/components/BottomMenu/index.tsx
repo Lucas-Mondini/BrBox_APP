@@ -21,13 +21,13 @@ export default function BottomMenu()
 
   return (
     <View style={[styles.bottomMenuContainer, backgroundColor]}>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TagList")}>
         <Icon name="search" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TagRegister")}>
         <Icon name="check-square" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("UserList")}>
         <Icon name="star" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
