@@ -1,4 +1,4 @@
-import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, ManyToMany } from "typeorm";
+import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany, OneToOne, ManyToMany, JoinTable } from "typeorm";
 import Game from "..";
 import TagValue from "./tagValue";
 
@@ -7,8 +7,8 @@ export default class TagValueList {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToMany(() => TagValue, {nullable: false})
-    @JoinColumn({referencedColumnName: "id"})
+    @ManyToMany(() => TagValue, {nullable: false, cascade: true, onDelete: "CASCADE"})
+    @JoinTable()
     tagValues: TagValue[];
 
 }

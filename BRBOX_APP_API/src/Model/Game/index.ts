@@ -15,11 +15,11 @@ export default class Game {
     @JoinColumn({referencedColumnName: "id"})
     linkList: ExtternalLinkList;
 
-    @OneToOne(() => ImageList, {eager: true, nullable: true, cascade: true, onDelete: "CASCADE"})
+    @OneToOne(() => ImageList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
     imageList: ImageList;
 
-    @OneToOne(() => TagValueList, {eager: true, nullable: true, cascade: true, onDelete: "CASCADE"})
+    @OneToOne(() => TagValueList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
     tagList: TagValueList;
 

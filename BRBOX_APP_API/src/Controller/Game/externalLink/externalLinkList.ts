@@ -45,7 +45,7 @@ export default class ExternalLinkListController extends Controller {
     //@ts-ignore
     Update = async (req: Request, id: number) => {
         const {externalLinks} = req.body
-        const externalLinkList = await AppDataSource.getRepository(ExternalLinkList).findOneOrFail({where: {id: Number(id)}, relations: ["externalLinks"]});
+        const externalLinkList = await AppDataSource.getRepository(ExternalLinkList).findOneOrFail({where: {id: Number(id)}, relations: ["externalLinks", "externalLinks.platform"]});
         
         if(!externalLinkList)
         throw "externalLinkList not found";
@@ -78,5 +78,19 @@ export default class ExternalLinkListController extends Controller {
         await AppDataSource.getRepository(ExternalLinkList).save(externalLinkList);
         
         return externalLinkList;
+    }
+
+    //@ts-ignore
+    Delete = async (req: Request) => {
+        const id = req.params.id;
+        const externalLinkList = await AppDataSource.getRepository(ExternalLinkList).findOneOrFail({where: {id: Number(id)}, relations: ["externalLinks"]});
+
+        if(!externalLinkList)
+        throw "externalLinkList not found"
+
+        AppDataSource.getRepository(ExternalLink).remove(externalLinkList.externalLinks);
+        AppDataSource.getRepository(ExternalLinkList).remove(externalLinkList);
+        return AppDataSource.getRepository(ExternalLinkList).find({where: {id: Number(id)}, relations: ["externalLinks"]});
+
     }
 }

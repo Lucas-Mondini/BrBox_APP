@@ -6,7 +6,7 @@ export default class ImageList {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToMany(()=>Image, {nullable: false})
+    @ManyToMany(()=>Image, {nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinTable()
     images: Image[]
 }
