@@ -17,12 +17,12 @@ async function initializeUser() {
         
         const user_admin = new User();
         
-        user_admin.Email     = process.env.ADMIN_EMAIL       || "administrator@adm.com"
+        user_admin.email     = process.env.ADMIN_EMAIL       || "administrator@adm.com"
         user_admin.username  = process.env.ADMIN_USER        || "Administrator"
         user_admin.Password  = await bcrypt.hash(process.env.ADMIN_PASSWORD    || "123", 10);
         await AppDataSource.getRepository(User).save(user_admin);
         
-        console.log(`new user ${user_admin.username} created\nwith email: "${user_admin.Email}" and password "${user_admin.Password}"`)
+        console.log(`new user ${user_admin.username} created\nwith email: "${user_admin.email}" and password "${user_admin.Password}"`)
         console.log(`setting up user ${user_admin.username} as an administrator`)
         
         const admin = await new Admin();
