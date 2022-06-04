@@ -44,6 +44,8 @@ let term = {
   100042: "Criar novo usuário",
   100043: "Editar informações de %2",
   100044: "Excluir dados da conta de %2.\n Essa ação não poderá ser revertida",
+  100045: "Sair",
+  100046: "Perfil",
 };
 
 export default term;

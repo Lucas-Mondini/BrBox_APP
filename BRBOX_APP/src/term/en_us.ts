@@ -44,6 +44,8 @@ let term = {
   100042: "Create new user",
   100043: "Edit %2 information",
   100044: "Delete %2 data.\n This action cannot be undone",
+  100045: "Sign out",
+  100046: "Profile",
 };
 
 export default term;
