@@ -6,10 +6,6 @@ import styles from "./styles";
 
 import config from "../../../brbox.config.json";
 
-interface BottomMenuProps {
-  children: React.ReactElement
-}
-
 export default function BottomMenu()
 {
   const navigation = useNavigation<any>();
