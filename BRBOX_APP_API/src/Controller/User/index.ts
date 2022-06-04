@@ -27,7 +27,7 @@ export default class UserController implements IController {
             const {username, email, password, confirm_password} = req.body;
             let hash = null;
             
-            const usedEmail = await AppDataSource.getRepository(User).findOneBy({Email: email});
+            const usedEmail = await AppDataSource.getRepository(User).findOneBy({email: email});
             
             if(usedEmail)
             return { status: 400, value: {message: "this e-mail is already in use"}};
@@ -43,14 +43,14 @@ export default class UserController implements IController {
             const newUser = await new User();
             newUser.username    = username;
             newUser.Password    = hash;
-            newUser.Email       = email;
+            newUser.email       = email;
             await AppDataSource.getRepository(User).save(newUser);
             const jwt = await this.generateJwt(newUser)
             
             return {status: 200, value: {
                     id: newUser.id,
                     username: newUser.username,
-                    email: newUser.Email,
+                    email: newUser.email,
                     auth_token: jwt.token
             }};
         
@@ -133,7 +133,7 @@ export default class UserController implements IController {
             if(!userRef)
                 return { status: 404, value: {message: "User not found" }};
             
-            const usedEmail = await AppDataSource.getRepository(User).findOneBy({Email: email});
+            const usedEmail = await AppDataSource.getRepository(User).findOneBy({email: email});
             
             if(email && usedEmail && usedEmail.id != userRef.id)
                 return {status: 400, value: {message: "his e-mail is already in use"}};
@@ -149,7 +149,7 @@ export default class UserController implements IController {
                 if(userRef) {
                     userRef.username    = username  || userRef.username;
                     userRef.Password    = hash      || userRef.Password;
-                    userRef.Email       = email     || userRef.Email;
+                    userRef.email       = email     || userRef.email;
                     AppDataSource.getRepository(User).save(userRef);
 
                     const jwt = await this.generateJwt(userRef)
@@ -157,7 +157,7 @@ export default class UserController implements IController {
                     return {status: 200, value: {
                             id: userRef.id,
                             username: username  || userRef.username,
-                            email: email        || userRef.Email,
+                            email: email        || userRef.email,
                             auth_token: jwt.token
                     }};
                 }
@@ -189,7 +189,7 @@ export default class UserController implements IController {
             
 
             if(!req.user.admin) {
-                const login = await this.Login((<User>user).Email, password);
+                const login = await this.Login((<User>user).email, password);
                 if(login.status != 200)
                     return {status: 401, value: {message: "authentication failed"}}
             }
@@ -215,7 +215,7 @@ export default class UserController implements IController {
     Login = async (email: string, password: string) => {
         try {
             const user = await AppDataSource.getRepository(User).findOneBy({
-                Email: email
+                email: email
             });
             
             if(!user) {
@@ -255,7 +255,7 @@ export default class UserController implements IController {
         const TokenStruct = {
             id: user.id,
             username: user.username,
-            email: user.Email,
+            email: user.email,
             admin: admin? true : false
         };
         const token = jwt.sign(TokenStruct, tokenSecret);
@@ -270,7 +270,7 @@ export default class UserController implements IController {
         return {
             id: user.id,
             username: user.username,
-            email: user.Email,
+            email: user.email,
             Password: user.Password
         }
         else

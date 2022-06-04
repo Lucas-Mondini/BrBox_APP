@@ -29,7 +29,7 @@ export default class AdminController implements IController {
             
             return {status: 200, value: {
                     username: user.username,
-                    email: user.Email,
+                    email: user.email,
                     admin: true
             }};
         }
