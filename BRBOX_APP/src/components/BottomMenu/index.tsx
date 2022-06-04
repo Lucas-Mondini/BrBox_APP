@@ -6,10 +6,6 @@ import styles from "./styles";
 
 import config from "../../../brbox.config.json";
 
-interface BottomMenuProps {
-  children: React.ReactElement
-}
-
 export default function BottomMenu()
 {
   const navigation = useNavigation<any>();
@@ -21,19 +17,19 @@ export default function BottomMenu()
 
   return (
     <View style={[styles.bottomMenuContainer, backgroundColor]}>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Search")}>
         <Icon name="search" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TagRegister")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("TagsRatedByUser")}>
         <Icon name="check-square" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Recommended")}>
         <Icon name="star" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("SearchGame")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("YourRatings")}>
         <Icon name="thumbs-up" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Profile")}>
+      <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Share")}>
         <Icon name="share-square" size={35} color={iconColor}/>
       </TouchableOpacity>
     </View>

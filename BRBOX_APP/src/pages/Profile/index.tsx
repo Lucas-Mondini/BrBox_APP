@@ -1,4 +1,4 @@
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -20,17 +20,21 @@ import { useTerm } from '../../Contexts/TermProvider';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Params } from '../../utils/types';
 
 const Profile = () => {
   const navigation = useNavigation<any>();
   const {user, setUser, signOut} = useAuth();
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
+  const route = useRoute();
+  const params = route.params as Params;
 
   const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
-  const [username, setUserName] = useState(user?.username);
-  const [email, setEmail] = useState(user?.email);
+  const [username, setUserName] = useState("");
+  const [id, setId] = useState(0);
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -44,8 +48,15 @@ const Profile = () => {
   async function loadUser()
   {
     try {
-      const response = await get(`/user/${user?.id}`, setLoading);
+      const response = await get(`/user/${!params ? user?.id : params.id}`, setLoading);
 
+      setId(response.id);
+      setUserName(response.username);
+      setEmail(response.email);
+
+      if (!params) {
+        setUser({...response, auth_token: user?.auth_token});
+      }
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -54,16 +65,17 @@ const Profile = () => {
   async function deleteUser()
   {
     try {
-      if (!password) {
+      if (!password && !params) {
         return Alert.alert("Faltou a senha cabaço");
       }
 
       await post(`user/destroy`, setLoading, {
-        id: user?.id,
-        password
+        id, password
       });
 
-      signOut();
+      if (!params) return signOut();
+
+      navigation.goBack();
     } catch (error) {
       signOut();
     }
@@ -73,16 +85,44 @@ const Profile = () => {
   {
     try {
       const response = await put(`/user/update`, setLoading, {
-        username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
+        id, username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
       });
 
-      setUser(response);
+      if (!params) {
+        setUser(response);
+      } else {
+        setId(response.id);
+        setUserName(response.username);
+        setEmail(response.email);
+        setPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch (error) {
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+    }
+  }
+
+  async function createUser()
+  {
+    try {
+      const response = await post(`/user/create`, setLoading, {
+        username, email, password, confirm_password: confirmPassword
+      });
+
+      setId(response.id);
+      setUserName(response.username);
+      setEmail(response.email);
+      setPassword("");
+      setConfirmPassword("");
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
   useEffect(() => {
+    if (params && params.new) return setLoading(false);
+
     if (isFocused) loadUser();
   }, [isFocused]);
 
@@ -92,7 +132,7 @@ const Profile = () => {
         <Text
           style={[styles.title, textColorStyle]}
         >
-          {getTerm(100022)}
+          {getTerm(params ? (params.new && !id ? 100042 : 100043) : 100022).replace("%2", username)}
         </Text>
 
         <Input
@@ -112,66 +152,79 @@ const Profile = () => {
           secureTextEntry
         />
 
-        <Text
-          style={[styles.changePassText, textColorStyle]}
-        >
-          {getTerm(100017)}
-        </Text>
+        {Boolean(id) ? <>
+          <Text
+            style={[styles.changePassText, textColorStyle]}
+          >
+            {getTerm(100017)}
+          </Text>
 
-        <Input
-          placeholderText={100018}
-          value={newPassword}
-          onChangeText={setNewPassword}
-          secureTextEntry
-        />
-        <Input
-          placeholderText={100019}
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-        />
+          <Input
+            placeholderText={100018}
+            value={newPassword}
+            onChangeText={setNewPassword}
+            secureTextEntry
+          />
+          <Input
+            placeholderText={100019}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          /></>
+          : <Input
+              placeholderText={100014}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry
+            />
+        }
 
         <Button
-          text={100015}
-          onPress={updateUser}
+          text={id ? 100015 : 100026}
+          onPress={id ? updateUser : createUser}
         />
 
-        <View style={styles.exitButtonContainer}>
-          <TouchableOpacity
-            style={styles.exitButton}
-            onPress={signOut}
+        {Boolean(id) && <>
+          
+          {!params &&
+            <View style={styles.exitButtonContainer}>
+              <TouchableOpacity
+                style={styles.exitButton}
+                onPress={signOut}
+              >
+                <Icon name="exit-run" size={20} color={isDarkMode ? "#fff" : config.dark}/>
+                <Text
+                  style={[styles.exitButtonText, textColorStyle]}
+                >
+                  {getTerm(100025)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+
+          <View
+            style={[styles.darkZone]}
           >
-            <Icon name="exit-run" size={20} color={isDarkMode ? "#fff" : config.dark}/>
             <Text
-              style={[styles.exitButtonText, textColorStyle]}
+              style={[styles.changePassText, textColorStyle]}
             >
-              {getTerm(100025)}
+              {getTerm(100023)}
             </Text>
-          </TouchableOpacity>
-        </View>
+            <Text
+              style={[styles.changePassText, textColorStyle]}
+            >
+              {getTerm(params ? 100044 : 100024).replace("%2", username)}
+            </Text>
 
-        <View
-          style={[styles.darkZone]}
-        >
-          <Text
-            style={[styles.changePassText, textColorStyle]}
-          >
-            {getTerm(100023)}
-          </Text>
-          <Text
-            style={[styles.changePassText, textColorStyle]}
-          >
-            {getTerm(100024)}
-          </Text>
-
-          <Button
-            text={100016}
-            onPress={deleteUser}
-            extraStyle={{width: '70%', marginTop: 15}}
-            extraTextStyle={{color: "#fff"}}
-            buttonColor={config.redBar}
-          />
-        </View>
+            <Button
+              text={100016}
+              onPress={deleteUser}
+              extraStyle={{width: '70%', marginTop: 15}}
+              extraTextStyle={{color: "#fff"}}
+              buttonColor={config.redBar}
+            />
+          </View></>
+        }
       </ScrollView>
     </MainView>
   );
