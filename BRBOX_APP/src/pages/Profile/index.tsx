@@ -84,9 +84,6 @@ const Profile = () => {
   async function updateUser()
   {
     try {
-      console.log({
-        id, username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
-      })
       const response = await put(`/user/update`, setLoading, {
         id, username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
       });

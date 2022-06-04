@@ -39,7 +39,6 @@ export default function UserCard({id, username, email, admin, setLoading, callba
           await post(`/user/destroy`, setLoading, {id});
           callback();
         } catch (error) {
-          return console.log(error);
           return navigation.reset({index: 0, routes: [{name: "Home"}]});
         }
       }},

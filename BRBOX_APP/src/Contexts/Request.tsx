@@ -106,7 +106,6 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       callback();
     } catch (error: any) {
       if (setLoading) setLoading(false);
-      console.log(error.response)
       throw new Error(error.response.status);
     }
   }
