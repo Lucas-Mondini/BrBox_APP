@@ -8,7 +8,7 @@ export default class User {
     @Column()
     username: string
 
-    @Column({ select: false })
+    @Column()
     Password: string
 
     @Column({unique: true})
