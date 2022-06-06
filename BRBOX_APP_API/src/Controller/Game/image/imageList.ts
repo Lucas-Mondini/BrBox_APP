@@ -75,4 +75,40 @@ export default class ImageListController extends Controller {
 
         return AppDataSource.getRepository(ImageList).find({where: {id: Number(id)}, relations: ["images"]});
     }
+
+    AddImages = async(req: Request) => {
+        const {imageListId, images} = req.body
+        const imageList = await AppDataSource.getRepository(ImageList).findOneOrFail({where: {id: Number(imageListId)}, relations: ["images"]});
+        
+        for (let element of images) {
+                const imageObj = new Image();
+                
+                imageObj.link = element.link;
+                imageObj.name = element.name;
+                
+                imageList.images.push(imageObj);
+        };
+        
+        await AppDataSource.getRepository(ImageList).save(imageList);
+        return imageList;
+    }
+    
+    RemoveImage = async (req: Request) => {
+        const {imageListId, imageId} = req.body
+        const imageList = await AppDataSource.getRepository(ImageList).findOneOrFail({where: {id: Number(imageListId)}, relations: ["images"]});
+        
+        const image = imageList.images.find((image) => {
+            return image.id == imageId;
+        });
+        if(!image)
+        throw "Image not found"
+        
+        imageList.images = imageList.images.filter((im)=> {
+            return im.id != image.id;
+        });
+
+        await AppDataSource.getRepository(ImageList).save(imageList);
+        AppDataSource.getRepository(Image).remove(image);
+        return imageList;
+    }
 }

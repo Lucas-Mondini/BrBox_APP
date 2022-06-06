@@ -8,12 +8,12 @@ export default class User {
     @Column()
     username: string
 
-    @Column()
+    @Column({ select: false })
     Password: string
 
     @Column({unique: true})
     email: string
 
-    @CreateDateColumn()
+    @CreateDateColumn({ select: false })
     createdDate: Date
 }

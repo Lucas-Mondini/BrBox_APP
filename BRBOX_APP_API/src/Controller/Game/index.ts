@@ -15,9 +15,12 @@ import TagValueListController from "./tag/tagValueList";
 export default class GameController extends Controller {
     
     constructor() {
-        super(Game, ["tagList", "imageList", "linkList",
+        super(Game, ["imageList", "linkList", "tagList",
                     "linkList.externalLinks",
-                    "imageList.images" ])
+                    "linkList.externalLinks.platform",
+                    "imageList.images",
+                    "tagList.tagValues",
+                    "tagList.tagValues.tag", "tagList.tagValues.value"])
     }
     
     //@ts-ignore
@@ -118,33 +121,17 @@ export default class GameController extends Controller {
         }
     }
 
-
-
-    
-    
+  
     AddLink = async(req: Request) => {
         try {
-            const {id, externalLinks} = req.body
-            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: ["tagList", "linkList.externalLinks"]});
-            
-            const Platforms = await AppDataSource.getRepository(Platform).find({});
-            
-            for (let element of externalLinks) {
-                const externalLinkObj = new ExternalLink();
-                
-                const platform = Platforms.find((item : Platform) => {
-                    return item.id == element.platform
-                });
-                if(!platform) 
-                throw "invalid platform id"
-                
-                externalLinkObj.link = element.link;
-                externalLinkObj.platform = platform;
-                
-                game.linkList.externalLinks.push(externalLinkObj);
-            };
-            
-            await AppDataSource.getRepository(Game).save(game);
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["linkList"]});
+
+            const ELLReq = req;
+            ELLReq.body.externalLinkListId = game.linkList.id
+
+            game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
+
             return {status: 200, value: {
                 ...game
             }};
@@ -156,14 +143,52 @@ export default class GameController extends Controller {
 
     RemoveLink = async (req: Request) => {
         try {
-            const {id, externalLinks} = req.body
-            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: ["tagList", "linkList.externalLinks"]});
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["linkList"]});
 
-            game.linkList.externalLinks.filter((i)=> {
-                return externalLinks.find(i) < 0;
-            });
+            const ELLReq = req;
+            ELLReq.body.externalLinkListId = game.linkList.id
 
-            await AppDataSource.getRepository(Game).save(game);
+            game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
+
+            return {status: 200, value: {
+                ...game
+            }};
+
+        }catch(e) {
+            return {status: 500, value: {message: "something went wrong: " + e}};
+        }
+    }
+
+    AddImage = async(req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["imageList"]});
+
+            const ILReq = req;
+            ILReq.body.imageListId = game.imageList.id
+
+            game.imageList = await new ImageListController().AddImages(ILReq);
+
+            return {status: 200, value: {
+                ...game
+            }};
+        }catch(e) {
+            return {status: 500, value: {message: "something went wrong: " + e}};
+        }
+        
+    }
+
+    RemoveImage = async (req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["imageList"]});
+
+            const ILReq = req;
+            ILReq.body.imageListId = game.imageList.id
+
+            game.imageList = await new ImageListController().RemoveImage(ILReq);
+
             return {status: 200, value: {
                 ...game
             }};

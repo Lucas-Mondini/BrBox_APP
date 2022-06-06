@@ -9,7 +9,7 @@
     "build": "npx tsc"
   },
   "type": "module",
-  "author": "TinSoft",
+  "author": "JL Software",
   "license": "ISC",
   "dependencies": {
     "@types/cors": "^2.8.12",

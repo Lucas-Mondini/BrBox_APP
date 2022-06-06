@@ -8,7 +8,7 @@ import adminRouter from './User/Admin';
 import gameRouter from './Game';
 import tagRouter from './Game/Tag';
 import valueRouter from './Game/Tag/value'
-import tagValueRouter from './Game/Tag/tagValue';
+import tagValueListRouter from './Game/Tag/tagValueList';
 import platformRouter from './Game/Platform';
 
 const mainRouter = Router();
@@ -22,6 +22,6 @@ mainRouter.use('/platform', Auth.admin, platformRouter);
 
 mainRouter.use('/tag', Auth.admin,      tagRouter);
 mainRouter.use('/value', Auth.admin,    valueRouter);
-mainRouter.use('/tagValue', Auth.user,  tagValueRouter);
+mainRouter.use('/tagValue', Auth.user,  tagValueListRouter);
 
 export default mainRouter;
