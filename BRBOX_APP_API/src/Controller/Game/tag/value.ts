@@ -33,7 +33,7 @@ export default class ValueController extends Controller {
             }};
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     Update = async (req: Request) => {
@@ -53,7 +53,7 @@ export default class ValueController extends Controller {
             }};
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     */

@@ -34,7 +34,7 @@ export default class AdminController implements IController {
             }};
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     /**
@@ -53,7 +53,7 @@ export default class AdminController implements IController {
                 value: users
             };
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     /**
@@ -82,7 +82,7 @@ export default class AdminController implements IController {
                 value: user
             };
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     /**
@@ -120,7 +120,7 @@ export default class AdminController implements IController {
                 }   
             return {status: 400, value: {message: "user not found"}}
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
 

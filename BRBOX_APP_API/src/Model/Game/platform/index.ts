@@ -5,7 +5,7 @@ export default class Platform {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
+    @Column({unique: true})
     name: string;
 
 }

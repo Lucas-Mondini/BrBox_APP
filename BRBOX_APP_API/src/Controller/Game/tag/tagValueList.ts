@@ -66,7 +66,7 @@ export default class TagValueListController extends Controller {
             return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     
@@ -88,7 +88,7 @@ export default class TagValueListController extends Controller {
             return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
         }        
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
 }

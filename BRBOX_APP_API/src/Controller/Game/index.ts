@@ -49,7 +49,7 @@ export default class GameController extends Controller {
             }};
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     //@ts-ignore
@@ -76,7 +76,7 @@ export default class GameController extends Controller {
             }};
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     
@@ -117,7 +117,7 @@ export default class GameController extends Controller {
             }
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
 
@@ -136,7 +136,7 @@ export default class GameController extends Controller {
                 ...game
             }};
         }catch(e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
         
     }
@@ -156,7 +156,7 @@ export default class GameController extends Controller {
             }};
 
         }catch(e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
 
@@ -174,7 +174,7 @@ export default class GameController extends Controller {
                 ...game
             }};
         }catch(e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
         
     }
@@ -194,7 +194,7 @@ export default class GameController extends Controller {
             }};
 
         }catch(e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     

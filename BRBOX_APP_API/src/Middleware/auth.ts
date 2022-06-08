@@ -38,7 +38,9 @@ export default class Auth {
       const tokenValue = jwt.verify(token, tokenSecret);
       
       const user = await AppDataSource.getRepository(User).findOneBy({
-        id: (<any>tokenValue)._id
+        id: (<any>tokenValue).id,
+        username: (<any>tokenValue).username,
+        email: (<any>tokenValue).email
       });
       
       if(!user) 

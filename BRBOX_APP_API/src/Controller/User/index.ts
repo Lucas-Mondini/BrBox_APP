@@ -56,7 +56,7 @@ export default class UserController implements IController {
         
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     /**
@@ -68,15 +68,15 @@ export default class UserController implements IController {
         try {
             const users = await AppDataSource.getRepository(User).find();
             const usersToReturn = new Array();
-            users.forEach((user) => {
-                usersToReturn.push(this.getUserAttributes(req.user.admin, user))
-            })
+            for (let user of users) {
+                usersToReturn.push(await this.getUserAttributes(req.user.admin, user))
+            }
             return  {
                         status: 200, 
                         value: [...usersToReturn]
                     };
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     /**
@@ -97,7 +97,7 @@ export default class UserController implements IController {
                 return { status: 404, value: {message: "User not found" }};
             
             
-            const userToReturn = this.getUserAttributes(req.user.admin || (user.id == req.user.id), user);
+            const userToReturn = await this.getUserAttributes(req.user.admin || (user.id == req.user.id), user);
             
             
             return  {
@@ -105,7 +105,7 @@ export default class UserController implements IController {
                 value: {...userToReturn}
             };
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     /**
@@ -144,6 +144,7 @@ export default class UserController implements IController {
             
             
             hash = await bcrypt.hash(new_password || password, 10);
+            const adm = AppDataSource.getRepository(Admin).findOneBy({user: userRef});
             
             if(hash) {
                 if(userRef) {
@@ -156,15 +157,16 @@ export default class UserController implements IController {
                     
                     return {status: 200, value: {
                             id: userRef.id,
-                            username: username  || userRef.username,
-                            email: email        || userRef.email,
+                            username: username      || userRef.username,
+                            email: email            || userRef.email,
+                            admin: await adm? true  : false,
                             auth_token: jwt.token
                     }};
                 }
             }
         }
         catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
         return {status: 500, value: {message: "an unexpected error ocurred"}};
     }
@@ -208,15 +210,15 @@ export default class UserController implements IController {
                 }   
             return {status: 400, value: {message: "user not found"}}
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
     
     Login = async (email: string, password: string) => {
         try {
-            const user = await AppDataSource.getRepository(User).findOneBy({
+            const user = await AppDataSource.getRepository(User).findOneOrFail( {where: {
                 email: email
-            });
+            }, select: ["id", "username", "email", "Password"]});
             
             if(!user) {
                 return {status: 404, value: {message: "User not found"}};
@@ -238,7 +240,7 @@ export default class UserController implements IController {
                 }
             };
         } catch (e) {
-            return {status: 500, value: {message: "something went wrong: " + e}};
+            return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
 
@@ -265,18 +267,21 @@ export default class UserController implements IController {
         }
     }
     
-    getUserAttributes(admin: boolean, user: User) {
+    async getUserAttributes(admin: boolean, user: User) {
+
+        const adm = await AppDataSource.getRepository(Admin).findOneBy({user: user});
         if (admin)
         return {
             id: user.id,
             username: user.username,
             email: user.email,
-            Password: user.Password
+            admin: adm? true : false
         }
         else
         return {
             id: user.id,
             username: user.username,
+            admin: adm? true : false
         }
     }
 }
