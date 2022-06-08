@@ -8,7 +8,6 @@ export type Game = {
   evaluations: number;
 }
 
-
 export type User = {
   id: number;
   username: string;
@@ -16,7 +15,6 @@ export type User = {
   admin: boolean;
   auth_token: string;
 }
-
 
 export type Params = {
   id: number | null;
@@ -29,8 +27,15 @@ export type Evaluation = {
   participated: boolean;
 }
 
-export type PhotoType = {
-  uri: string | undefined
+export type ImageType = {
+  id?: number;
+  name: string;
+  link: string;
+}
+
+export type LinkType = {
+  id: number;
+  link: string;
 }
 
 export type Tag = {

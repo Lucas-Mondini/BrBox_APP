@@ -46,6 +46,14 @@ let term = {
   100044: "Delete %2 data.\n This action cannot be undone",
   100045: "Sign out",
   100046: "Profile",
+  100047: "Add game",
+  100048: "Add Link",
+  100049: "Link",
+  100050: "Choose Platform",
+  100051: "Image name",
+  100052: "Image link",
+  100053: "Add image",
+  100054: "Create new game",
 };
 
 export default term;

@@ -46,6 +46,14 @@ let term = {
   100044: "Excluir dados da conta de %2.\n Essa ação não poderá ser revertida",
   100045: "Sair",
   100046: "Perfil",
+  100047: "Adicionar Jogo",
+  100048: "Adicionar Link",
+  100049: "Link",
+  100050: "Escolha a Plataforma",
+  100051: "Nome da imagem",
+  100052: "Link da imagem",
+  100053: "Adicionar imagem",
+  100054: "Criar um novo jogo",
 };
 
 export default term;
