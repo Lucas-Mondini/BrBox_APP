@@ -1,24 +1,47 @@
-// Converts string type date to js date object
-export function stringToDate(date: string, hour: string): Date {
+/**
+ * Converts string type date to js date object
+ * @param date string
+ * @param hour string
+ * @returns Date
+ */
+export function stringToDate(date: string, hour: string): Date
+{
   const formatDate = date.split('/');
 
   return new Date(`${formatDate[2]}-${formatDate[1]}-${formatDate[0]}T${hour}`);
 }
 
-// Split string with specif delimiter
-export function splitText(text: string, delimiter: number): string {
+/**
+ * Returns a delimited part of a string
+ * @param text string
+ * @param delimiter number
+ * @returns string
+ */
+export function splitText(text: string, delimiter: number): string
+{
   const formattedText = text.substr(0, delimiter).trim() + (text.length > delimiter ? "..." : "");
   return formattedText;
 }
 
-// Get first word of a string sentence
-export function getFirstName(name: string):string {
+/**
+ * Get first word of a string sentence
+ * @param name string
+ * @returns string
+ */
+export function getFirstName(name: string):string
+{
   const firstName = name.split(" ")[0];
   return firstName;
 }
 
-// clear the input value of not allowed characters
-function clear(value: string, validChar: string) {
+/**
+ * Removes special characters
+ * @param value string
+ * @param validChar string
+ * @returns string
+ */
+function clear(value: string, validChar: string): string
+{
   let result = "", aux;
 
   for (let i = 0; i < value.length; i++) {
@@ -32,9 +55,13 @@ function clear(value: string, validChar: string) {
   return result;
 }
 
-// Formats number to monetary format
-export function formatMoneyRealTime(value: string) {
-
+/**
+ * Formats number to monetary format
+ * @param value string
+ * @returns string
+ */
+export function formatMoneyRealTime(value: string): string
+{
   const vr = clear(value, "0123456789"),
         size = vr.length,
         dec = 2;
@@ -57,4 +84,40 @@ export function formatMoneyRealTime(value: string) {
   }
 
   return value;
+}
+
+/**
+ * Gets max id from object list
+ * @param object[]
+ * @returns number
+ */
+export function getMaxId(object: any[]): number
+{
+  if (object.length == 0) {
+    return 0;
+  }
+
+  const maxId = object.reduce((item1: any, item2: any) => {
+    if (Math.max(item2.id)) {
+      return item2
+    } else {
+      return item1
+    }
+  });
+
+  return maxId.id + 1;
+}
+
+/**
+ * Removes object from an object array
+ * @param id object identifier
+ * @param objects objects array
+ * @param setFunction function that sets the object array
+ * @returns void
+ */
+export function removeObjectFromArray(id: number, objects: any[], setFunction: (value: any) => void):void
+{
+  const objectList = objects.filter(object => object.id !== id);
+
+  setFunction([...objectList]);
 }

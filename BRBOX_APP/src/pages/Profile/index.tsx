@@ -185,7 +185,6 @@ const Profile = () => {
         />
 
         {Boolean(id) && <>
-          
           {!params &&
             <View style={styles.exitButtonContainer}>
               <TouchableOpacity

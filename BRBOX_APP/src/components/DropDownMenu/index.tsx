@@ -92,6 +92,13 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             }}>
               <Text style={[styles.menuButtonText]}>{getTerm(100042)}</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.menuButton]} onPress={()=>{
+              setModal(null);
+              navigation.navigate("AddGame", {new:true});
+            }}>
+              <Text style={[styles.menuButtonText]}>{getTerm(100047)}</Text>
+            </TouchableOpacity>
           </>}
 
           <TouchableOpacity style={[styles.menuButton]} onPress={()=>{
