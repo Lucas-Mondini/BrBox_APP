@@ -54,6 +54,11 @@ let term = {
   100052: "Image link",
   100053: "Add image",
   100054: "Create new game",
+  100055: "Add platform",
+  100056: "Platforms",
+  100057: "Delete platform",
+  100058: "Are you sure you want to delete the platform? \n This action cannot be undone",
+  100059: "Edit platform",
 };
 
 export default term;

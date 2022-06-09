@@ -1,4 +1,3 @@
-import asyncBatch from "async-batch";
 import { Request } from "express";
 import {Controller} from "../";
 import { AppDataSource } from "../../data-source";

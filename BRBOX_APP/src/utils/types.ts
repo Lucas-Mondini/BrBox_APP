@@ -42,5 +42,9 @@ export type Tag = {
   id: number;
   name: string;
   description?: string;
-  color: string;
+}
+
+export type Platform = {
+  id: number;
+  name: string;
 }

@@ -17,9 +17,9 @@ import { useTerm } from '../../Contexts/TermProvider';
 
 import config from "../../../brbox.config.json";
 import styles from './styles';
-import { Params, Tag } from '../../utils/types';
+import { Params, Platform } from '../../utils/types';
 
-const TagRegister = () => {
+const AddPlatform = () => {
   const navigation = useNavigation<any>();
   const route = useRoute();
   const params = route.params as Params;
@@ -29,7 +29,7 @@ const TagRegister = () => {
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(Boolean(params));
-  const [tag, setTag] = useState({} as Tag);
+  const [platform, setPlatform] = useState({} as Platform);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -43,9 +43,9 @@ const TagRegister = () => {
       if (!params) {
         return;
       }
-      const response = await get(`/tag/${params.id}`, setLoading);
+      const response = await get(`/platform/${params.id}`, setLoading);
 
-      setTag(response);
+      setPlatform(response);
     } catch (error: any) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -56,19 +56,18 @@ const TagRegister = () => {
     try {
       let response;
 
-      if (!params && !tag.id) {
-        response = await post(`/tag/create`, setLoading, {
-          name: tag.name, description: tag.description
+      if (!params && !platform.id) {
+        response = await post(`/platform/create`, setLoading, {
+          name: platform.name
         });
       } else {
-        response = await put(`/tag/update`, setLoading, {
-          id: tag.id,
-          new_name: tag.name,
-          new_description: tag.description
+        response = await put(`/platform/update`, setLoading, {
+          id: platform.id,
+          new_name: platform.name
         });
       }
 
-      setTag(response);
+      setPlatform(response);
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -84,27 +83,18 @@ const TagRegister = () => {
         <Text
           style={[styles.title, textColorStyle]}
         >
-          {getTerm(!params ? 100027 : 100028)}
+          {getTerm(!params ? 100055 : 100059)}
         </Text>
 
         <Input
           placeholderText={100013}
-          value={tag?.name}
-          onChangeText={name => setTag({...tag, name})}
-        />
-
-        <Input
-          placeholderText={100029}
-          value={tag?.description}
-          multiline
-          numberOfLines={10}
-          extraStyles={styles.description}
-          onChangeText={description => setTag({...tag, description})}
+          value={platform?.name}
+          onChangeText={name => setPlatform({...platform, name})}
         />
 
         <View style={styles.buttonView}>
           <Button
-            text={!params && !tag.id ? 100026 : 100015}
+            text={!params && !platform.id ? 100026 : 100015}
             onPress={saveTag}
           />
         </View>
@@ -113,4 +103,4 @@ const TagRegister = () => {
   );
 };
 
- export default TagRegister;
+ export default AddPlatform;
