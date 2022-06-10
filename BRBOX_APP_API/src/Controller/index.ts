@@ -15,7 +15,7 @@ interface IController {
 
 class Controller implements IController {
     private model: any;
-    private relations: any = null;
+    public relations: any = null;
     constructor(customModel: any, relations: any[]) {
         this.model = customModel
         this.relations = relations

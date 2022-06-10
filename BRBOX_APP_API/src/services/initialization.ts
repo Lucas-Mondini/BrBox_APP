@@ -5,6 +5,9 @@ import bcrypt from "bcrypt";
 import User from "../Model/User";
 import Admin from "../Model/User/Admin";
 import Value from "../Model/Game/tag/value";
+import SteamLoader from "./loadGames/steam";
+import Platform from "../Model/Game/platform";
+import Game from "../Model/Game";
 
 async function initializeUser() {
     console.log("trying to find users");
@@ -60,9 +63,31 @@ async function initalizeAvaliationValues() {
     
 }
 
+async function initializePlatform() {
+    console.log("trying to find platforms");
+    const platforms = await AppDataSource.getRepository(Platform).find();
+    if(platforms.length > 0) {
+        console.log(`${platforms.length} platforms found, proceding with initialization`)
+        return 0
+    }
+    
+    console.log("no platform found, creating default platforms")
+
+    const official  = new Platform();
+    const steam     = new Platform();
+
+    official.name   = "official";
+    steam.name      = "steam";
+
+    await AppDataSource.getRepository(Platform).save([official, steam]);
+    console.log(`platforms values: ${[official, steam]}`)
+    
+}
+
 export default async function () {
     await initializeUser();
     await initalizeAvaliationValues();
-    
+    await initializePlatform();
+    await new SteamLoader().Run();
     
 }

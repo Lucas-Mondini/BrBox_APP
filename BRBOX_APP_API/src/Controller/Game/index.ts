@@ -51,6 +51,34 @@ export default class GameController extends Controller {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
+
+    Index = async (req: Request) => {
+        try {
+            var values: any;
+            if(this.relations) {
+                values = await AppDataSource.getRepository(Game).find({relations: this.relations, skip: 0, take: 100, order:{ id: "ASC"} });
+                for (let value of values) {
+                    if(this.relations.includes("user")) {
+                        value.user = {
+                            id: value.user.id,
+                            username: value.user.username,
+                            email: value.user.email
+                        };
+                    }
+                };
+            }
+            else {
+                values = await AppDataSource.getRepository(Game).find({});
+            }
+            
+            console.log(values)
+
+            return {status: 200, value: values};
+        }
+        catch (e) {
+            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }
+    }
     //@ts-ignore
     Update = async (req: Request) => {
         try {
