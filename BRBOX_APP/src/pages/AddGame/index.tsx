@@ -1,7 +1,9 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import Carousel from 'react-native-reanimated-carousel';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
+  Image,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -41,9 +43,6 @@ const AddGame = () => {
   const [images, setImages] = useState([{id: 0, name: "", link: ""}]);
   const [imageName, setImageName] = useState("");
   const [imageLink, setImageLink] = useState("");
-  
-
-  const [idMock, setIdMock] = useState(0);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -121,11 +120,12 @@ const AddGame = () => {
   async function loadGame()
   {
     try {
-      const response = await get(`/user/${!params ? user?.id : params.id}`, setLoading);
+      const response = await get(`/game/${params.id}`, setLoading);
 
       setId(response.id);
       setName(response.name);
-
+      setLinkList(response.linkList.externalLinks);
+      setImages(response.imageList.images);
       if (!params) {
         setUser({...response, auth_token: user?.auth_token});
       }
@@ -155,24 +155,23 @@ const AddGame = () => {
 
   async function updateGame()
   {
-    /* try {
-      const response = await put(`/user/update`, setLoading, {
-        id, name, email, password, new_password: newPassword, confirm_new_password: confirmPassword
-      });
+    try {
+      const externalLinks = linkList.filter(link => link.link !== "");
+      const imageList = images.filter(image => image.link !== "");
 
-      if (!params) {
-        setUser(response);
-      } else {
+      if (imageList.length > 0 && externalLinks.length > 0) {
+        const response = await put(`/game/update`, setLoading, {
+          id, new_name: name, new_description: name, externalLinks, images: imageList
+        });
+
         setId(response.id);
         setName(response.name);
-        setEmail(response.email);
-        setPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+        setLinkList(response.linkList.externalLinks);
+        setImages(response.imageList.images);
       }
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
-    } */
+    }
   }
 
   async function createGame()
@@ -198,11 +197,8 @@ const AddGame = () => {
   }
 
   useEffect(() => {
-    //console.log(linkList);
-  }, [linkList]);
-  useEffect(() => {
-    console.log(images);
-  }, [images]);
+    if (isFocused && params) loadGame();
+  }, [isFocused]);
 
   return (
     <MainView loading={loading}>
@@ -243,7 +239,24 @@ const AddGame = () => {
           onPress={addLink}
         />
 
-        {renderImages()}
+        {/* {renderImages()} */}
+
+        <Carousel
+          data={images}
+          height={100}
+          width={50}
+          windowSize={1}
+          renderItem={
+            ({item}: any) => {
+              console.log(item)
+              return (
+                <Image
+                  source={{uri: item.link}}
+                />
+              )
+            }
+          }
+        />
 
         <Input
           placeholderText={100051}

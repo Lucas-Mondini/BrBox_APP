@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: "3%",
-    paddingTop: "10%",
+    paddingTop: "10%"
   },
   title: {
     fontSize: 20,

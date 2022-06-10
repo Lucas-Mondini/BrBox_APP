@@ -47,7 +47,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
     } catch (error: any) {
       setLoading(false);
 
-      throw new Error(error.response.status);
+      throw new Error(JSON.stringify({status: error.response.status, error: error.response.message}));
     }
   }
 
@@ -67,7 +67,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       return result.data;
     } catch (error: any) {
       setLoading(false);
-      throw new Error(error.response.status);
+      throw new Error(JSON.stringify({status: error.response.status, error: error.response.message}));
     }
   }
 
@@ -87,7 +87,7 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       return result.data;
     } catch (error: any) {
       setLoading(false);
-      throw new Error(error.response.status);
+      throw new Error(JSON.stringify({status: error.response.status, error: error.response.message}));
     }
   }
 
@@ -106,45 +106,16 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       callback();
     } catch (error: any) {
       if (setLoading) setLoading(false);
-      throw new Error(error.response.status);
+      throw new Error(JSON.stringify({status: error.response.status, error: error.response.message}));
     }
   }
-
-  /* async function uploadPhoto(route: string, setLoading: Function, photo: PhotoType | undefined)
-  {
-      if (!photo) {
-        throw new Error("Photo not found");
-      }
-
-      setLoading(true);
-
-      if (!user) {
-        throw new Error("User not found");
-      }
-
-      const reference = storage().ref(route);
-
-      try {
-        await reference.delete();
-      } finally {
-        if (!photo || !photo.uri) return;
-
-        const pathToFile = photo.uri;
-
-        await reference.putFile(pathToFile);
-
-        return await reference.getDownloadURL();
-      }
-
-  } */
 
   return (
     <RequestContext.Provider value={{
       get,
       put,
       post,
-      destroy,
-      //uploadPhoto
+      destroy
     }}>
       {children}
     </RequestContext.Provider>
