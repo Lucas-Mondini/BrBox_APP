@@ -8,10 +8,15 @@ import TagRegister from '../pages/TagRegister';
 import TagList from '../pages/TagList';
 import UserList from '../pages/UserList';
 import AddGame from '../pages/AddGame';
+import AddPlatform from '../pages/AddPlatform';
+import Platforms from '../pages/Platforms';
+import { useAuth } from '../Contexts/Auth';
 
 const App = createStackNavigator();
 
 const AppRoutes: React.FC = () => {
+  const {user} = useAuth();
+
   return (
     <App.Navigator
       screenOptions={{headerShown: false}}
@@ -19,14 +24,6 @@ const AppRoutes: React.FC = () => {
       <App.Screen
         name="Home"
         component={Home}
-      />
-      <App.Screen
-        name="TagList"
-        component={TagList}
-      />
-      <App.Screen
-        name="UserList"
-        component={UserList}
       />
       <App.Screen
         name="GameInfo"
@@ -44,14 +41,33 @@ const AppRoutes: React.FC = () => {
         name="Profile"
         component={Profile}
       />
-      <App.Screen
-        name="TagRegister"
-        component={TagRegister}
-      />
-      <App.Screen
-        name="AddGame"
-        component={AddGame}
-      />
+
+      {user?.admin && <>
+        <App.Screen
+          name="TagList"
+          component={TagList}
+        />
+        <App.Screen
+          name="UserList"
+          component={UserList}
+        />
+        <App.Screen
+          name="TagRegister"
+          component={TagRegister}
+        />
+        <App.Screen
+          name="AddGame"
+          component={AddGame}
+        />
+        <App.Screen
+          name="Platforms"
+          component={Platforms}
+        />
+        <App.Screen
+          name="AddPlatform"
+          component={AddPlatform}
+        /></>
+      }
     </App.Navigator>
   );
 };

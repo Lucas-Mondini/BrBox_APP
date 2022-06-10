@@ -54,6 +54,11 @@ let term = {
   100052: "Link da imagem",
   100053: "Adicionar imagem",
   100054: "Criar um novo jogo",
+  100055: "Adicionar plataforma",
+  100056: "Plataformas",
+  100057: "Excluir plataforma",
+  100058: "Tem certeza que deseja excluir a plataforma? \n Essa ação não poderá ser revertida",
+  100059: "Editar plataforma",
 };
 
 export default term;

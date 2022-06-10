@@ -12,13 +12,13 @@ import MainView from '../../components/MainView';
 
 import styles from './styles';
 
-import { Game } from '../../utils/types';
+import { Tag } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 
 const TagList = () => {
   const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(true);
-  const [tags, setTags] = useState<Game[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const isFocused = useIsFocused()
 
   const {get} = useRequest();

@@ -7,56 +7,55 @@ import {
 } from 'react-native';
 
 import BottomMenu from '../../components/BottomMenu';
-import UserCard from '../../components/UserCard';
 import MainView from '../../components/MainView';
+
 import styles from './styles';
 
-import { Game } from '../../utils/types';
+import { Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
+import PlatformCard from '../../components/PlatformCard';
 
-const UserList = () => {
+const Platforms = () => {
   const navigation = useNavigation<any>();
-  const [users, setUsers] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
+  const [platforms, setPlatforms] = useState<Platform[]>([]);
   const isFocused = useIsFocused()
 
   const {get} = useRequest();
 
-  async function getUsers()
+  async function getPlatforms()
   {
     try {
-      const users = await get("/user", setLoading);
+      const getPlatformsList = await get("/platform", setLoading);
 
-      setUsers(users);
+      setPlatforms(getPlatformsList);
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
-  async function navigateToAddUser()
+  function navigateToTagRegister()
   {
-    return navigation.navigate("Profile", {new: true});
+    return navigation.navigate("AddPlatform");
   }
 
-  function renderUsers()
+  function renderPlatforms()
   {
     return (
       <FlatList
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={getUsers}/>
+          <RefreshControl refreshing={loading} onRefresh={getPlatforms}/>
         }
-        data={users}
-        keyExtractor={(user: any) => user.id}
+        data={platforms}
+        keyExtractor={(tag: any) => tag.id}
         renderItem={
           ({item}: any) => {
             return (
-              <UserCard
+              <PlatformCard
                 id={item.id}
-                username={item.username}
-                email={item.email}
-                admin={item.admin}
+                name={item.name}
                 setLoading={setLoading}
-                callback={getUsers}
+                onDelete={getPlatforms}
               />
             )
           }
@@ -65,18 +64,18 @@ const UserList = () => {
   }
 
   useEffect(()=>{
-    if (isFocused) getUsers();
+    if (isFocused) getPlatforms();
   }, [isFocused]);
 
   return (
     <MainView
       showTitle
+      headerTitle={100056}
       loading={loading}
-      headerTitle={100031}
-      headerAddButtonAction={navigateToAddUser}
+      headerAddButtonAction={navigateToTagRegister}
     >
       <View style={styles.container}>
-        {renderUsers()}
+        {renderPlatforms()}
       </View>
 
       <BottomMenu/>
@@ -84,4 +83,4 @@ const UserList = () => {
   );
 };
 
-export default UserList;
+export default Platforms;
