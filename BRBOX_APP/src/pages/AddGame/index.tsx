@@ -3,7 +3,6 @@ import Carousel from 'react-native-reanimated-carousel';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
-  Image,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -22,12 +21,14 @@ import { useTerm } from '../../Contexts/TermProvider';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Params } from '../../utils/types';
-import { getMaxId, removeObjectFromArray } from '../../utils/functions';
+import { ImageType, LinkType, Params, Platform } from '../../utils/types';
+import { getMaxId, removeObjectFromArray, splitText } from '../../utils/functions';
+import CarouselImage from '../../components/CarouselImage';
+import PlatformsModal from '../../components/PlatformsModal';
 
 const AddGame = () => {
   const navigation = useNavigation<any>();
-  const {user, setUser, signOut} = useAuth();
+  const {user, setUser} = useAuth();
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
   const route = useRoute();
@@ -37,12 +38,13 @@ const AddGame = () => {
   const isFocused = useIsFocused();
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
-  const [linkList, setLinkList] = useState([{id: 0, platform: 0, link: ""}]);
+  const [linkList, setLinkList] = useState([] as LinkType[]);
   const [link, setLink] = useState("");
-  const [platform, setPlatform] = useState("");
-  const [images, setImages] = useState([{id: 0, name: "", link: ""}]);
+  const [platform, setPlatform] = useState<Platform | null>();
+  const [images, setImages] = useState([] as ImageType[]);
   const [imageName, setImageName] = useState("");
   const [imageLink, setImageLink] = useState("");
+  const [modal, setModal] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -51,7 +53,7 @@ const AddGame = () => {
   };
 
   function addLink() {
-    if (!platform.trim()) {
+    if (!platform) {
       return Alert.alert("Faltou a plataforma", "Escolha uma plataforma para adicionar o link");
     }
 
@@ -59,9 +61,9 @@ const AddGame = () => {
       return Alert.alert("Faltou o link", "Preencha o link da plataforma para adicionar o link a lista");
     }
 
+    setLinkList([...linkList, {id: getMaxId(linkList), platform: platform.id, link: link}]);
     setLink("");
-    setPlatform("");
-    setLinkList([...linkList, {id: getMaxId(linkList), platform: Number(platform), link: link}]);
+    setPlatform(null);
   }
 
   function addImage() {
@@ -85,7 +87,7 @@ const AddGame = () => {
       if (link.link) {
         links.push(
           <View style={styles.linkContainer} key={link.id}>
-            <Text style={[styles.linkText, textColorStyle]}>{link.link}</Text>
+            <Text style={[styles.linkText, textColorStyle]}>{splitText(link.link, 40)}</Text>
             <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
               <Icon name="close" size={35} color={"#686868"}/>
             </TouchableOpacity>
@@ -98,23 +100,37 @@ const AddGame = () => {
   }
 
   function renderImages() {
-    const imageList = new Array();
-
-    for (const image of images) {
-      if (image.link) {
-        imageList.push(
-          <View style={styles.linkContainer} key={image.id}>
-            <Text style={[styles.linkText, {marginRight: 5}, textColorStyle]}>{image.name}</Text>
-            <Text style={[styles.linkText, textColorStyle]}>{image.link}</Text>
-            <TouchableOpacity onPress={() => removeObjectFromArray(image.id, images, setImages)}>
-              <Icon name="close" size={35} color={"#686868"}/>
-            </TouchableOpacity>
-          </View>
-        );
-      }
+    if (images.length > 0) {
+      return (
+        <Carousel
+            style={{width: "100%", marginBottom: 30}}
+            loop
+            pagingEnabled={true}
+            snapEnabled={true}
+            autoPlay={false}
+            mode="parallax"
+            modeConfig={{
+                parallaxScrollingScale: 0.9,
+                parallaxScrollingOffset: 50,
+            }}
+            data={images}
+            height={300}
+            width={340}
+            windowSize={1}
+            renderItem={
+              ({item}: any) => {
+                if (!item.link) return <View />;
+                return (
+                  <CarouselImage
+                    imageUri={item.link}
+                    callback={() => removeObjectFromArray(item.id, images, setImages)}
+                  />
+                )
+              }
+            }
+          />
+      )
     }
-
-    return imageList;
   }
 
   async function loadGame()
@@ -169,7 +185,7 @@ const AddGame = () => {
         setLinkList(response.linkList.externalLinks);
         setImages(response.imageList.images);
       }
-    } catch (error) {
+    } catch (error: any) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
@@ -197,11 +213,18 @@ const AddGame = () => {
   }
 
   useEffect(() => {
-    if (isFocused && params) loadGame();
+    if (isFocused && params.id) loadGame();
   }, [isFocused]);
 
   return (
     <MainView loading={loading}>
+
+      <PlatformsModal
+        setModal={() => setModal(!modal)}
+        visible={modal}
+        setPlatform={setPlatform}
+      />
+
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
@@ -224,12 +247,15 @@ const AddGame = () => {
           onSubmitEditing={addLink}
         />
 
-        <Input
-          placeholderText={100050}
-          value={platform}
-          onChangeText={setPlatform}
-          onSubmitEditing={addLink}
-        />
+        <TouchableOpacity onPress={() => setModal(!modal)}>
+          <View pointerEvents="none">
+            <Input
+              placeholderText={100050}
+              value={platform?.name}
+              onSubmitEditing={addLink}
+            />
+          </View>
+        </TouchableOpacity>
 
         <Button
           text={100048}
@@ -239,24 +265,7 @@ const AddGame = () => {
           onPress={addLink}
         />
 
-        {/* {renderImages()} */}
-
-        <Carousel
-          data={images}
-          height={100}
-          width={50}
-          windowSize={1}
-          renderItem={
-            ({item}: any) => {
-              console.log(item)
-              return (
-                <Image
-                  source={{uri: item.link}}
-                />
-              )
-            }
-          }
-        />
+        {renderImages()}
 
         <Input
           placeholderText={100051}
@@ -283,6 +292,7 @@ const AddGame = () => {
         <Button
           text={id ? 100015 : 100026}
           onPress={id ? updateGame : createGame}
+          extraStyle={{marginBottom: 80}}
         />
       </ScrollView>
     </MainView>

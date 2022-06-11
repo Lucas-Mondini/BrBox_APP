@@ -49,7 +49,7 @@ let term = {
   100047: "Adicionar Jogo",
   100048: "Adicionar Link",
   100049: "Link",
-  100050: "Escolha a Plataforma",
+  100050: "Escolha a Plataforma...",
   100051: "Nome da imagem",
   100052: "Link da imagem",
   100053: "Adicionar imagem",

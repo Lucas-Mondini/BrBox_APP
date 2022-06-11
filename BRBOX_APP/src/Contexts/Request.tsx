@@ -1,16 +1,13 @@
 import React, { createContext, ReactNode, useContext } from 'react';
-//import storage from '@react-native-firebase/storage';
 
 import api from '../services/api';
 import { useAuth } from './Auth';
-//import { PhotoType } from '../utils/types';
 
 type RequestData = {
   get: (route: string, setLoading: Function) => any;
   put: (route: string, setLoading: Function, data: any, allowNoUser?: boolean) => any;
   post: (route: string, setLoading: Function, data: any, allowNoUser?: boolean) => any;
   destroy: (route: string, callback: Function, setLoading?: Function) => any;
-  //uploadPhoto: (route: string, setLoading: Function, photo: PhotoType | undefined) => any;
 }
 
 type RequestProviderProps = {
