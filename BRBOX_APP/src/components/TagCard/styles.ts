@@ -18,16 +18,13 @@ const styles = StyleSheet.create({
     fontFamily: config.fontFamily,
     fontWeight: '700',
   },
-  deleteButton: {
-    height: 40,
-    width: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
+  buttonView: {
     position: 'absolute',
     right: 5,
     top: 5,
-    backgroundColor: config.redBar,
-    borderRadius: 5
+  },
+  deleteButton: {
+    backgroundColor: config.redBar
   }
 });
 

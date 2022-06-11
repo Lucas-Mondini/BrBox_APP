@@ -5,10 +5,9 @@ import { Alert, Text, TouchableOpacity, useColorScheme, View } from "react-nativ
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import { splitText } from "../../utils/functions";
-import Icon from "react-native-vector-icons/FontAwesome";
-import IconMaterial from "react-native-vector-icons/MaterialIcons";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
+import CardsButton from "../CardsButton";
 
 interface UserCardProps {
   id: number;
@@ -73,12 +72,18 @@ export default function UserCard({id, username, email, admin, setLoading, callba
       </View>
 
       <View style={styles.buttonsView}>
-        <TouchableOpacity style={[styles.button, {backgroundColor: !admin ? config.darkGreen : config.red}]} onPress={makeUserAdmin}>
-          <IconMaterial name="admin-panel-settings" size={30} color="#fff" />
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.deleteButton]} onPress={deleteUser}>
-          <Icon name="trash" size={30} color="#fff" />
-        </TouchableOpacity>
+        <CardsButton
+          iconName="admin-panel-settings"
+          iconLibrary="MaterialIcons"
+          extraButtonStyle={{backgroundColor: !admin ? config.darkGreen : config.red}}
+          callback={makeUserAdmin}
+        />
+
+        <CardsButton
+          iconName="trash"
+          extraButtonStyle={styles.deleteButton}
+          callback={deleteUser}
+        />
       </View>
     </TouchableOpacity>
   );

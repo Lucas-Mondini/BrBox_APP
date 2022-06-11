@@ -25,26 +25,29 @@ import { ImageType, LinkType, Params, Platform } from '../../utils/types';
 import { getMaxId, removeObjectFromArray, splitText } from '../../utils/functions';
 import CarouselImage from '../../components/CarouselImage';
 import PlatformsModal from '../../components/PlatformsModal';
+import DarkZone from '../../components/DarkZone';
 
 const AddGame = () => {
-  const navigation = useNavigation<any>();
-  const {user, setUser} = useAuth();
-  const {getTerm} = useTerm();
-  const {get, put, post} = useRequest();
   const route = useRoute();
+  const {getTerm} = useTerm();
+  const isFocused = useIsFocused();
+  const {user, setUser} = useAuth();
+  const navigation = useNavigation<any>();
+  const {get, put, post, destroy} = useRequest();
+
   const params = route.params as Params;
 
-  const [loading, setLoading] = useState(false);
-  const isFocused = useIsFocused();
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
-  const [linkList, setLinkList] = useState([] as LinkType[]);
   const [link, setLink] = useState("");
-  const [platform, setPlatform] = useState<Platform | null>();
-  const [images, setImages] = useState([] as ImageType[]);
   const [imageName, setImageName] = useState("");
   const [imageLink, setImageLink] = useState("");
+  const [images, setImages] = useState([] as ImageType[]);
+  const [linkList, setLinkList] = useState([] as LinkType[]);
+  const [platform, setPlatform] = useState<Platform | null>();
+
   const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -152,21 +155,11 @@ const AddGame = () => {
 
   async function deleteGame()
   {
-    /* try {
-      if (!password && !params) {
-        return Alert.alert("Faltou a senha cabaço");
-      }
-
-      await post(`user/destroy`, setLoading, {
-        id, password
-      });
-
-      if (!params) return signOut();
-
-      navigation.goBack();
+    try {
+      await destroy(`game/destroy/${id}`, () => navigation.goBack(), setLoading);
     } catch (error) {
-      signOut();
-    } */
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+    }
   }
 
   async function updateGame()
@@ -294,6 +287,14 @@ const AddGame = () => {
           onPress={id ? updateGame : createGame}
           extraStyle={{marginBottom: 80}}
         />
+
+        {Boolean(id) &&
+          <DarkZone
+            message={100060}
+            itemName={name}
+            callback={deleteGame}
+            buttonText={100061}
+          />}
       </ScrollView>
     </MainView>
   );

@@ -60,12 +60,15 @@ const Home = () => {
       />);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isFocused) getGames();
   }, [isFocused]);
 
   return (
-    <MainView showTitle>
+    <MainView
+      showTitle
+      loading={loading}
+    >
       <View style={styles.container}>
         {renderGames()}
       </View>

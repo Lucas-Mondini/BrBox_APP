@@ -21,6 +21,7 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Params } from '../../utils/types';
+import DarkZone from '../../components/DarkZone';
 
 const Profile = () => {
   const navigation = useNavigation<any>();
@@ -201,28 +202,12 @@ const Profile = () => {
             </View>
           }
 
-          <View
-            style={[styles.darkZone]}
-          >
-            <Text
-              style={[styles.changePassText, textColorStyle]}
-            >
-              {getTerm(100023)}
-            </Text>
-            <Text
-              style={[styles.changePassText, textColorStyle]}
-            >
-              {getTerm(params ? 100044 : 100024).replace("%2", username)}
-            </Text>
-
-            <Button
-              text={100016}
-              onPress={deleteUser}
-              extraStyle={{width: '70%', marginTop: 15}}
-              extraTextStyle={{color: "#fff"}}
-              buttonColor={config.redBar}
-            />
-          </View></>
+          <DarkZone
+            message={params ? 100044 : 100024}
+            itemName={username}
+            callback={deleteUser}
+            buttonText={100016}
+          /></>
         }
       </ScrollView>
     </MainView>
