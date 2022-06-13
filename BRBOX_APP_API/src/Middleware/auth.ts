@@ -20,7 +20,7 @@ export default class Auth {
 
   public static async admin (req: Request, res: Response, next: NextFunction) {
     const value = await Auth.auth(req.header("auth_token"))
-    console.log((<any>value.value).admin)
+    
     if(value.status != 200 || !(<any>value.value).admin) {
       return res.status(400).json({ message:"Unauthorized"});
     }

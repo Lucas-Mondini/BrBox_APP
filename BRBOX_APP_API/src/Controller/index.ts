@@ -46,8 +46,6 @@ class Controller implements IController {
             else {
                 values = await AppDataSource.getRepository(this.model).find({});
             }
-            
-            console.log(values)
 
             return {status: 200, value: values};
         }

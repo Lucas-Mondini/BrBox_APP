@@ -56,7 +56,7 @@ export default class GameController extends Controller {
         try {
             var values: any;
             if(this.relations) {
-                values = await AppDataSource.getRepository(Game).find({relations: this.relations, skip: 0, take: 100, order:{ id: "ASC"} });
+                values = await AppDataSource.getRepository(Game).find({relations: this.relations, take: 100, order:{ id: "ASC"} });
                 for (let value of values) {
                     if(this.relations.includes("user")) {
                         value.user = {
@@ -70,8 +70,6 @@ export default class GameController extends Controller {
             else {
                 values = await AppDataSource.getRepository(Game).find({});
             }
-            
-            console.log(values)
 
             return {status: 200, value: values};
         }
@@ -99,7 +97,7 @@ export default class GameController extends Controller {
             AppDataSource.getRepository(Game).save(game);
             
             return {status: 200, value: {
-                ...game
+                ...this.linkFormatter(game)
             }};
         }
         catch (e) {
@@ -152,7 +150,7 @@ export default class GameController extends Controller {
     AddLink = async(req: Request) => {
         try {
             const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["linkList"]});
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
 
             const ELLReq = req;
             ELLReq.body.externalLinkListId = game.linkList.id
@@ -160,7 +158,7 @@ export default class GameController extends Controller {
             game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
 
             return {status: 200, value: {
-                ...game
+                ...this.linkFormatter(game)
             }};
         }catch(e) {
             return {status: 500, value: {message: {"something went wrong" : e}}};
@@ -171,7 +169,7 @@ export default class GameController extends Controller {
     RemoveLink = async (req: Request) => {
         try {
             const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["linkList"]});
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
 
             const ELLReq = req;
             ELLReq.body.externalLinkListId = game.linkList.id
@@ -179,7 +177,7 @@ export default class GameController extends Controller {
             game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
 
             return {status: 200, value: {
-                ...game
+                ...this.linkFormatter(game)
             }};
 
         }catch(e) {
@@ -190,7 +188,7 @@ export default class GameController extends Controller {
     AddImage = async(req: Request) => {
         try {
             const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["imageList"]});
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
 
             const ILReq = req;
             ILReq.body.imageListId = game.imageList.id
@@ -198,7 +196,7 @@ export default class GameController extends Controller {
             game.imageList = await new ImageListController().AddImages(ILReq);
 
             return {status: 200, value: {
-                ...game
+                ...this.linkFormatter(game)
             }};
         }catch(e) {
             return {status: 500, value: {message: {"something went wrong" : e}}};
@@ -209,7 +207,7 @@ export default class GameController extends Controller {
     RemoveImage = async (req: Request) => {
         try {
             const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["imageList"]});
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
 
             const ILReq = req;
             ILReq.body.imageListId = game.imageList.id
@@ -217,12 +215,26 @@ export default class GameController extends Controller {
             game.imageList = await new ImageListController().RemoveImage(ILReq);
 
             return {status: 200, value: {
-                ...game
+                ...this.linkFormatter(game)
             }};
 
         }catch(e) {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
+
+
+    linkFormatter = (game: Game) => {
+        (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
+           return (<any>item) = {  
+            id: item.id,
+            platform: item.platform.id,
+            platformName: item.platform.name,
+            link: item.link
+           }
+        })
+        return game;
+    }
+
     
 }
