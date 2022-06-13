@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   View
@@ -12,18 +12,27 @@ import styles from './styles';
 
 import { useAuth } from '../../Contexts/Auth';
 import { Game } from '../../utils/types';
+import { useRequest } from '../../Contexts/Request';
 
 const Home = () => {
-  const [games, setGames] = useState<Game[]>([]);
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
 
+  const [loading, setLoading] = useState(true);
+  const [games, setGames] = useState<Game[]>([]);
+
+  const {get} = useRequest();
   const {signOut} = useAuth();
 
   async function getGames()
   {
-    const gamesList = require("../../../mockdata.json").games;
+    try {
+      const response = await get("/game", setLoading);
 
-    setGames(gamesList);
+      setGames(response);
+    } catch (err) {
+      return signOut();
+    }
   }
 
   function renderGames()
@@ -37,13 +46,13 @@ const Home = () => {
             return (
               <GameCard
                 id={item.id}
-                title={item.title}
-                year={item.year}
-                tag1={item.tag1}
-                tag2={item.tag2}
-                moreTags={item.moreTags}
-                evaluations={item.evaluations}
-                imgUri={item.img}
+                title={item.name}
+                year={1}
+                tag1={"1"}
+                tag2={"2"}
+                moreTags={1}
+                evaluations={1}
+                imgUri={item.imageList.images[0].link}
               />
             )
           }
@@ -51,12 +60,15 @@ const Home = () => {
       />);
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isFocused) getGames();
   }, [isFocused]);
 
   return (
-    <MainView showTitle>
+    <MainView
+      showTitle
+      loading={loading}
+    >
       <View style={styles.container}>
         {renderGames()}
       </View>

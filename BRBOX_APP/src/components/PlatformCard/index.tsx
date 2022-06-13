@@ -5,18 +5,19 @@ import { Alert, Text, TouchableOpacity, useColorScheme, View } from "react-nativ
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import { splitText } from "../../utils/functions";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
+import CardsButton from "../CardsButton";
 
 interface PlatformCardProps {
   id: number;
   name: string;
   setLoading: (value: boolean) => void;
-  onDelete: () => void;
+  onDelete?: () => void;
+  onPress?: () => void;
 }
 
-export default function PlatformCard({id, name, setLoading, onDelete}: PlatformCardProps)
+export default function PlatformCard({id, name, setLoading, onDelete, onPress}: PlatformCardProps)
 {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<any>();
@@ -30,6 +31,8 @@ export default function PlatformCard({id, name, setLoading, onDelete}: PlatformC
   }
 
   async function deletePlatform() {
+    if (!onDelete) return;
+
     Alert.alert(getTerm(100057), getTerm(100058),[
       {text: getTerm(100040), onPress: async () => {
         try {
@@ -43,14 +46,23 @@ export default function PlatformCard({id, name, setLoading, onDelete}: PlatformC
   }
 
   return (
-    <TouchableOpacity style={styles.platformCard} onPress={navigateToPlatformInfo}>
+    <TouchableOpacity
+      style={styles.platformCard}
+      onPress={onPress || navigateToPlatformInfo}
+    >
       <View>
         <Text style={[styles.title, textColor]}>{splitText(name, 24)}</Text>
       </View>
 
-      <TouchableOpacity style={styles.deleteButton} onPress={deletePlatform}>
-        <Icon name="trash" size={30} color="#fff" />
-      </TouchableOpacity>
+      {onDelete &&
+        <View style={styles.buttonView}>
+          <CardsButton
+            iconName="trash"
+            extraButtonStyle={styles.deleteButton}
+            callback={deletePlatform}
+          />
+        </View>
+      }
     </TouchableOpacity>
   );
 }

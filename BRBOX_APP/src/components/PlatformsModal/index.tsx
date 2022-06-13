@@ -3,19 +3,29 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   RefreshControl,
+  useColorScheme,
   View
 } from 'react-native';
 
-import BottomMenu from '../../components/BottomMenu';
-import MainView from '../../components/MainView';
-
 import styles from './styles';
+import config from "../../../brbox.config.json";
 
 import { Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import PlatformCard from '../../components/PlatformCard';
+import DefaultModal from '../DefaultModal';
 
-const Platforms = () => {
+interface PlatformsModalProps {
+  visible: boolean;
+  setModal: () => void;
+  setPlatform: (platform: Platform) => void;
+}
+
+export default function PlatformsModal({setModal, visible, setPlatform}: PlatformsModalProps) {
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const color = isDarkMode ? config.dark : "#fff";
+
   const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(true);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
@@ -34,11 +44,6 @@ const Platforms = () => {
     }
   }
 
-  function navigateToPlatformRegister()
-  {
-    return navigation.navigate("AddPlatform");
-  }
-
   function renderPlatforms()
   {
     return (
@@ -55,7 +60,10 @@ const Platforms = () => {
                 id={item.id}
                 name={item.name}
                 setLoading={setLoading}
-                onDelete={getPlatforms}
+                onPress={() => {
+                  setPlatform({id: item.id, platform: item.id, name: item.name});
+                  setModal();
+                }}
               />
             )
           }
@@ -68,19 +76,14 @@ const Platforms = () => {
   }, [isFocused]);
 
   return (
-    <MainView
-      showTitle
-      headerTitle={100056}
+    <DefaultModal
+      setModal={setModal}
+      visible={visible}
       loading={loading}
-      headerAddButtonAction={navigateToPlatformRegister}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, {backgroundColor: color}]}>
         {renderPlatforms()}
       </View>
-
-      <BottomMenu/>
-    </MainView>
+    </DefaultModal>
   );
 };
-
-export default Platforms;

@@ -22,7 +22,7 @@ let term = {
   100020: "Bem vindo de volta",
   100021: "Inscreva-se e aproveite",
   100022: "Edite as informações do seu perfil",
-  100023: "Zona cega",
+  100023: "Zona perigosa",
   100024: "Aqui você tem a opção de excluir os dados da sua conta.\n Essa ação não poderá ser revertida",
   100025: "SAIR",
   100026: "SALVAR",
@@ -49,7 +49,7 @@ let term = {
   100047: "Adicionar Jogo",
   100048: "Adicionar Link",
   100049: "Link",
-  100050: "Escolha a Plataforma",
+  100050: "Escolha a Plataforma...",
   100051: "Nome da imagem",
   100052: "Link da imagem",
   100053: "Adicionar imagem",
@@ -59,6 +59,8 @@ let term = {
   100057: "Excluir plataforma",
   100058: "Tem certeza que deseja excluir a plataforma? \n Essa ação não poderá ser revertida",
   100059: "Editar plataforma",
+  100060: "Excluir dados de %2? \n Essa ação não poderá ser revertida",
+  100061: "Excluir jogo",
 };
 
 export default term;

@@ -1,4 +1,5 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import Carousel from 'react-native-reanimated-carousel';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -20,30 +21,33 @@ import { useTerm } from '../../Contexts/TermProvider';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Params } from '../../utils/types';
-import { getMaxId, removeObjectFromArray } from '../../utils/functions';
+import { ImageType, LinkType, Params, Platform } from '../../utils/types';
+import { getMaxId, removeObjectFromArray, splitText } from '../../utils/functions';
+import CarouselImage from '../../components/CarouselImage';
+import PlatformsModal from '../../components/PlatformsModal';
+import DarkZone from '../../components/DarkZone';
 
 const AddGame = () => {
-  const navigation = useNavigation<any>();
-  const {user, setUser, signOut} = useAuth();
-  const {getTerm} = useTerm();
-  const {get, put, post} = useRequest();
   const route = useRoute();
+  const {getTerm} = useTerm();
+  const isFocused = useIsFocused();
+  const {user, setUser} = useAuth();
+  const navigation = useNavigation<any>();
+  const {get, put, post, destroy} = useRequest();
+
   const params = route.params as Params;
 
-  const [loading, setLoading] = useState(false);
-  const isFocused = useIsFocused();
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
-  const [linkList, setLinkList] = useState([{id: 0, platform: 0, link: ""}]);
   const [link, setLink] = useState("");
-  const [platform, setPlatform] = useState("");
-  const [images, setImages] = useState([{id: 0, name: "", link: ""}]);
   const [imageName, setImageName] = useState("");
   const [imageLink, setImageLink] = useState("");
-  
+  const [images, setImages] = useState([] as ImageType[]);
+  const [linkList, setLinkList] = useState([] as LinkType[]);
+  const [platform, setPlatform] = useState<Platform | null>();
 
-  const [idMock, setIdMock] = useState(0);
+  const [modal, setModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const isDarkMode = useColorScheme() === 'dark';
 
@@ -52,7 +56,7 @@ const AddGame = () => {
   };
 
   function addLink() {
-    if (!platform.trim()) {
+    if (!platform) {
       return Alert.alert("Faltou a plataforma", "Escolha uma plataforma para adicionar o link");
     }
 
@@ -60,9 +64,9 @@ const AddGame = () => {
       return Alert.alert("Faltou o link", "Preencha o link da plataforma para adicionar o link a lista");
     }
 
+    setLinkList([...linkList, {id: getMaxId(linkList), platform: platform.id, link: link}]);
     setLink("");
-    setPlatform("");
-    setLinkList([...linkList, {id: getMaxId(linkList), platform: Number(platform), link: link}]);
+    setPlatform(null);
   }
 
   function addImage() {
@@ -86,7 +90,7 @@ const AddGame = () => {
       if (link.link) {
         links.push(
           <View style={styles.linkContainer} key={link.id}>
-            <Text style={[styles.linkText, textColorStyle]}>{link.link}</Text>
+            <Text style={[styles.linkText, textColorStyle]}>{splitText(link.link, 40)}</Text>
             <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
               <Icon name="close" size={35} color={"#686868"}/>
             </TouchableOpacity>
@@ -99,33 +103,48 @@ const AddGame = () => {
   }
 
   function renderImages() {
-    const imageList = new Array();
-
-    for (const image of images) {
-      if (image.link) {
-        imageList.push(
-          <View style={styles.linkContainer} key={image.id}>
-            <Text style={[styles.linkText, {marginRight: 5}, textColorStyle]}>{image.name}</Text>
-            <Text style={[styles.linkText, textColorStyle]}>{image.link}</Text>
-            <TouchableOpacity onPress={() => removeObjectFromArray(image.id, images, setImages)}>
-              <Icon name="close" size={35} color={"#686868"}/>
-            </TouchableOpacity>
-          </View>
-        );
-      }
+    if (images.length > 0) {
+      return (
+        <Carousel
+            style={{width: "100%", marginBottom: 30}}
+            loop
+            pagingEnabled={true}
+            snapEnabled={true}
+            autoPlay={false}
+            mode="parallax"
+            modeConfig={{
+                parallaxScrollingScale: 0.9,
+                parallaxScrollingOffset: 50,
+            }}
+            data={images}
+            height={300}
+            width={340}
+            windowSize={1}
+            renderItem={
+              ({item}: any) => {
+                if (!item.link) return <View />;
+                return (
+                  <CarouselImage
+                    imageUri={item.link}
+                    callback={() => removeObjectFromArray(item.id, images, setImages)}
+                  />
+                )
+              }
+            }
+          />
+      )
     }
-
-    return imageList;
   }
 
   async function loadGame()
   {
     try {
-      const response = await get(`/user/${!params ? user?.id : params.id}`, setLoading);
+      const response = await get(`/game/${params.id}`, setLoading);
 
       setId(response.id);
       setName(response.name);
-
+      setLinkList(response.linkList.externalLinks);
+      setImages(response.imageList.images);
       if (!params) {
         setUser({...response, auth_token: user?.auth_token});
       }
@@ -136,43 +155,32 @@ const AddGame = () => {
 
   async function deleteGame()
   {
-    /* try {
-      if (!password && !params) {
-        return Alert.alert("Faltou a senha cabaço");
-      }
-
-      await post(`user/destroy`, setLoading, {
-        id, password
-      });
-
-      if (!params) return signOut();
-
-      navigation.goBack();
+    try {
+      await destroy(`game/destroy/${id}`, () => navigation.goBack(), setLoading);
     } catch (error) {
-      signOut();
-    } */
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+    }
   }
 
   async function updateGame()
   {
-    /* try {
-      const response = await put(`/user/update`, setLoading, {
-        id, name, email, password, new_password: newPassword, confirm_new_password: confirmPassword
-      });
+    try {
+      const externalLinks = linkList.filter(link => link.link !== "");
+      const imageList = images.filter(image => image.link !== "");
 
-      if (!params) {
-        setUser(response);
-      } else {
+      if (imageList.length > 0 && externalLinks.length > 0) {
+        const response = await put(`/game/update`, setLoading, {
+          id, new_name: name, new_description: name, externalLinks, images: imageList
+        });
+
         setId(response.id);
         setName(response.name);
-        setEmail(response.email);
-        setPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+        setLinkList(response.linkList.externalLinks);
+        setImages(response.imageList.images);
       }
-    } catch (error) {
+    } catch (error: any) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
-    } */
+    }
   }
 
   async function createGame()
@@ -198,14 +206,18 @@ const AddGame = () => {
   }
 
   useEffect(() => {
-    //console.log(linkList);
-  }, [linkList]);
-  useEffect(() => {
-    console.log(images);
-  }, [images]);
+    if (isFocused && params.id) loadGame();
+  }, [isFocused]);
 
   return (
     <MainView loading={loading}>
+
+      <PlatformsModal
+        setModal={() => setModal(!modal)}
+        visible={modal}
+        setPlatform={setPlatform}
+      />
+
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
@@ -228,12 +240,15 @@ const AddGame = () => {
           onSubmitEditing={addLink}
         />
 
-        <Input
-          placeholderText={100050}
-          value={platform}
-          onChangeText={setPlatform}
-          onSubmitEditing={addLink}
-        />
+        <TouchableOpacity onPress={() => setModal(!modal)}>
+          <View pointerEvents="none">
+            <Input
+              placeholderText={100050}
+              value={platform?.name}
+              onSubmitEditing={addLink}
+            />
+          </View>
+        </TouchableOpacity>
 
         <Button
           text={100048}
@@ -270,7 +285,16 @@ const AddGame = () => {
         <Button
           text={id ? 100015 : 100026}
           onPress={id ? updateGame : createGame}
+          extraStyle={{marginBottom: 80}}
         />
+
+        {Boolean(id) &&
+          <DarkZone
+            message={100060}
+            itemName={name}
+            callback={deleteGame}
+            buttonText={100061}
+          />}
       </ScrollView>
     </MainView>
   );

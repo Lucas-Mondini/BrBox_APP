@@ -24,7 +24,7 @@ export default function GameCard({id, title, year, tag1, tag2, moreTags, evaluat
   const textColor = {color: isDarkMode ? "#fff" : config.dark}
 
   function navigateToGameInfo() {
-    return navigation.navigate("GameInfo", {id});
+    return navigation.navigate("AddGame", {id});
   }
 
   return (

@@ -15,16 +15,15 @@ const styles = StyleSheet.create({
     fontSize: 22,
     paddingTop: 8
   },
-  deleteButton: {
-    height: 40,
-    width: 40,
+  buttonView: {
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
     right: 5,
     top: 5,
-    backgroundColor: config.redBar,
-    borderRadius: 5
+  },
+  deleteButton: {
+    backgroundColor: config.redBar
   }
 });
 

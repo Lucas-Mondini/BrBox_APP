@@ -36,6 +36,7 @@ export type ImageType = {
 export type LinkType = {
   id: number;
   link: string;
+  platform: number;
 }
 
 export type Tag = {
@@ -46,5 +47,6 @@ export type Tag = {
 
 export type Platform = {
   id: number;
+  platform: number;
   name: string;
 }

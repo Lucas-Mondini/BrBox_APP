@@ -5,9 +5,9 @@ import { Alert, Text, TouchableOpacity, useColorScheme, View } from "react-nativ
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import { splitText } from "../../utils/functions";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
+import CardsButton from "../CardsButton";
 
 interface TagCardProps {
   id: number;
@@ -50,9 +50,13 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
         <Text style={[styles.description, textColor]}>{splitText(description, 50)}</Text>
       </View>
 
-      <TouchableOpacity style={styles.deleteButton} onPress={deleteTag}>
-        <Icon name="trash" size={30} color="#fff" />
-      </TouchableOpacity>
+      <View style={styles.buttonView}>
+        <CardsButton
+          iconName="trash"
+          extraButtonStyle={styles.deleteButton}
+          callback={deleteTag}
+        />
+      </View>
     </TouchableOpacity>
   );
 }

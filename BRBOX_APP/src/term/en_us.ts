@@ -22,7 +22,7 @@ let term = {
   100020: "Welcome back",
   100021: "Sign up to enjoy",
   100022: "Edit your profile information",
-  100023: "Dark zone",
+  100023: "Danger zone",
   100024: "Here you got the option for you to delete your information.\n This action cannot be undone",
   100025: "EXIT",
   100026: "SAVE",
@@ -49,7 +49,7 @@ let term = {
   100047: "Add game",
   100048: "Add Link",
   100049: "Link",
-  100050: "Choose Platform",
+  100050: "Choose Platform...",
   100051: "Image name",
   100052: "Image link",
   100053: "Add image",
@@ -59,6 +59,8 @@ let term = {
   100057: "Delete platform",
   100058: "Are you sure you want to delete the platform? \n This action cannot be undone",
   100059: "Edit platform",
+  100060: "Delete data of %2? \n This action cannot be undone",
+  100061: "Delete game",
 };
 
 export default term;
