@@ -15,11 +15,11 @@ export default class GameController extends Controller {
     
     constructor() {
         super(Game, ["imageList", "linkList", "tagList",
-                    "linkList.externalLinks",
-                    "linkList.externalLinks.platform",
-                    "imageList.images",
-                    "tagList.tagValues",
-                    "tagList.tagValues.tag", "tagList.tagValues.value"])
+        "linkList.externalLinks",
+        "linkList.externalLinks.platform",
+        "imageList.images",
+        "tagList.tagValues",
+        "tagList.tagValues.tag", "tagList.tagValues.value"])
     }
     
     //@ts-ignore
@@ -51,49 +51,43 @@ export default class GameController extends Controller {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
-
+    
     Index = async (req: Request) => {
         try {
-            var values: any;
-            if(this.relations) {
-                values = await AppDataSource.getRepository(Game).find({relations: this.relations, take: 100, order:{ id: "ASC"} });
-                for (let value of values) {
-                    if(this.relations.includes("user")) {
-                        value.user = {
-                            id: value.user.id,
-                            username: value.user.username,
-                            email: value.user.email
-                        };
-                    }
-                };
-            }
-            else {
-                values = await AppDataSource.getRepository(Game).find({});
-            }
+            const {page = "1", ammount = "25"} = req.query
 
-            return {status: 200, value: values};
+            const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : undefined
+            const games = await AppDataSource.getRepository(Game).find({relations: this.relations, take: Number(ammount), skip: skip , order:{ id: "ASC"} });
+            
+            games.map(i => this.linkFormatter(i));
+
+            return {status: 200, value: {
+                games
+            }};
         }
         catch (e) {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
-
+    
     //@ts-ignore
-    Get = async (req: Request) => { 
-        const id = req.params.id
-        const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
-
-        if(!game)
+    Get = async (req: Request) => {
+        try {
+            const id = req.params.id
+            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+            
+            if(!game)
             return { status: 404, game: {message: "game not found" }};
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        } catch (e) {
+            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }
         
-        return {status: 200, value: {
-            ...this.linkFormatter(game)
-        }};
     }
-    catch (e: any) {
-        return {status: 500, value: {message: {"something went wrong" : e}}};
-    }
-
+    
     //@ts-ignore
     Update = async (req: Request) => {
         try {
@@ -102,11 +96,11 @@ export default class GameController extends Controller {
             
             if(!game)
             return { status: 404, value: {message: "game not found" }};
-
-
+            
+            
             const externalLinkList = new ExternalLinkListController().Update(req, game.linkList.id);
             const imageList = new ImageListController().Update(req, game.imageList.id);
-
+            
             game.name = new_name || game.name;
             game.linkList = await externalLinkList;
             game.imageList = await imageList;
@@ -129,7 +123,7 @@ export default class GameController extends Controller {
             
             if(!game)
             return { status: 404, value: {message: "value not found" }};
-
+            
             const reqExternalLinkList = req;
             const reqImageList = req;
             const reqTagValueList = req;
@@ -141,10 +135,10 @@ export default class GameController extends Controller {
             await new ExternalLinkListController().Delete(reqExternalLinkList);
             await new ImageListController().Delete(reqImageList);
             await new TagValueListController().Delete(reqTagValueList);
-
             
-
-        
+            
+            
+            
             await AppDataSource.getRepository(Game).remove(game);
             const dead = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
             
@@ -162,18 +156,18 @@ export default class GameController extends Controller {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
-
-  
+    
+    
     AddLink = async(req: Request) => {
         try {
             const {gameId} = req.body
             var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-
+            
             const ELLReq = req;
             ELLReq.body.externalLinkListId = game.linkList.id
-
+            
             game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
-
+            
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
@@ -182,36 +176,36 @@ export default class GameController extends Controller {
         }
         
     }
-
+    
     RemoveLink = async (req: Request) => {
         try {
             const {gameId} = req.body
             var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-
+            
             const ELLReq = req;
             ELLReq.body.externalLinkListId = game.linkList.id
-
+            
             game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
-
+            
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
-
+            
         }catch(e) {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
-
+    
     AddImage = async(req: Request) => {
         try {
             const {gameId} = req.body
             var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-
+            
             const ILReq = req;
             ILReq.body.imageListId = game.imageList.id
-
+            
             game.imageList = await new ImageListController().AddImages(ILReq);
-
+            
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
@@ -220,38 +214,38 @@ export default class GameController extends Controller {
         }
         
     }
-
+    
     RemoveImage = async (req: Request) => {
         try {
             const {gameId} = req.body
             var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-
+            
             const ILReq = req;
             ILReq.body.imageListId = game.imageList.id
-
+            
             game.imageList = await new ImageListController().RemoveImage(ILReq);
-
+            
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
-
+            
         }catch(e) {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
-
-
+    
+    
     linkFormatter = (game: Game) => {
         (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
-           return (<any>item) = {  
-            id: item.id,
-            platform: item.platform.id,
-            platformName: item.platform.name,
-            link: item.link
-           }
+            return (<any>item) = {  
+                id: item.id,
+                platform: item.platform.id,
+                platformName: item.platform.name,
+                link: item.link
+            }
         })
         return game;
     }
-
+    
     
 }
