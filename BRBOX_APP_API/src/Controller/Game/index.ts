@@ -44,7 +44,7 @@ export default class GameController extends Controller {
             await AppDataSource.getRepository(Game).save(game);
             
             return {status: 200, value: {
-                ...game
+                ...this.linkFormatter(game)
             }};
         }
         catch (e) {
@@ -77,6 +77,23 @@ export default class GameController extends Controller {
             return {status: 500, value: {message: {"something went wrong" : e}}};
         }
     }
+
+    //@ts-ignore
+    Get = async (req: Request) => { 
+        const id = req.params.id
+        const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+
+        if(!game)
+            return { status: 404, game: {message: "game not found" }};
+        
+        return {status: 200, value: {
+            ...this.linkFormatter(game)
+        }};
+    }
+    catch (e: any) {
+        return {status: 500, value: {message: {"something went wrong" : e}}};
+    }
+
     //@ts-ignore
     Update = async (req: Request) => {
         try {
