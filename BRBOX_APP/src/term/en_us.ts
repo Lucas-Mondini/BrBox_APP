@@ -61,6 +61,23 @@ let term = {
   100059: "Edit platform",
   100060: "Delete data of %2? \n This action cannot be undone",
   100061: "Delete game",
+  100062: "Associate tags",
+  100063: "Choose one platform",
+  100064: "Choose a platform to add link",
+  100065: "Insert link",
+  100066: "Insert the link of the platform to add the link in the list",
+  100067: "Insert image name",
+  100068: "Inserte a name to the image to add it to the list",
+  100069: "Insert image link",
+  100070: "Insert image link to add the image to the list",
+  100071: "An error has occurred while loading register",
+  100072: "A unexpected error ocurred while fetching data",
+  100073: "An error has occurred during register deletion",
+  100074: "A unexpected error ocurred while deleting data",
+  100075: "An error has occurred during register edit",
+  100076: "A unexpected error ocurred while editing data",
+  100077: "An error has occurred during register creation",
+  100078: "An error has occurred during the register save",
 };
 
 export default term;

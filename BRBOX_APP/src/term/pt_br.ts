@@ -61,6 +61,23 @@ let term = {
   100059: "Editar plataforma",
   100060: "Excluir dados de %2? \n Essa ação não poderá ser revertida",
   100061: "Excluir jogo",
+  100062: "Associar tags",
+  100063: "Escolha uma plataforma",
+  100064: "Escolha uma plataforma para adicionar o link",
+  100065: "Digite o link",
+  100066: "Preencha o link da plataforma para adicionar o link a lista",
+  100067: "Digite o nome da imagem",
+  100068: "Dê um nome para a imagem para adicioná-la na lista",
+  100069: "Digite o link da imagem",
+  100070: "Adicione o link de uma imagem para adicioná-la na lista",
+  100071: "Ocorreu um erro ao carregar registro",
+  100072: "Ocorreu algum erro inesperado ao carregar os dados",
+  100073: "Ocorreu um erro ao excluir o registro",
+  100074: "Ocorreu algum erro inesperado ao tentar excluir os dados",
+  100075: "Ocorreu um erro ao editar o registro",
+  100076: "Ocorreu algum erro inesperado ao tentar editar os dados",
+  100077: "Ocorreu um erro ao criar o registro",
+  100078: "Ocorreu algum erro inesperado ao tentar salvar os dados",
 };
 
 export default term;

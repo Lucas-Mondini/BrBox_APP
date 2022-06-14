@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, ScrollView, Text, TouchableOpacity, useColorScheme, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
@@ -7,6 +7,7 @@ import config from "../../../brbox.config.json";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../Contexts/Auth";
+import { useGame } from "../../Contexts/Game";
 
 interface DropDownMenuProps {
   setModal: (value: any) => void;
@@ -18,6 +19,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
   const navigation = useNavigation<any>();
   const {getTerm} = useTerm();
   const {signOut, user} = useAuth();
+  const {clearGameContext} = useGame();
 
   const color = !isDarkMode ? config.darkGreen : config.mediumGreen;
 
@@ -29,6 +31,10 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
 
     navigation.navigate(route);
   }
+
+  useEffect(() => {
+    clearGameContext();
+  }, []);
 
   return (
     <Modal transparent onRequestClose={() => setModal(null)}>
