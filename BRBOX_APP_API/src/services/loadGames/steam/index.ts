@@ -21,7 +21,6 @@ export default class SteamLoader {
         var totalGames;
         const platforms = await AppDataSource.getRepository(Platform).find({});
         const gamesArray = new Array<Game>();
-        console.log(typeof this.games)
         for (const i in this.games) {
             const g = this.games[i];
             const game = new Game();
