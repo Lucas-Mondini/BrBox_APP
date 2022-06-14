@@ -47,8 +47,8 @@ export default class GameController extends Controller {
                 ...this.linkFormatter(game)
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
@@ -65,8 +65,8 @@ export default class GameController extends Controller {
                 games
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
@@ -82,8 +82,8 @@ export default class GameController extends Controller {
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
-        } catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
         
     }
@@ -111,8 +111,8 @@ export default class GameController extends Controller {
                 ...this.linkFormatter(game)
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
@@ -152,8 +152,8 @@ export default class GameController extends Controller {
                 value: {message: "unhandled error"}
             }
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
@@ -171,8 +171,8 @@ export default class GameController extends Controller {
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
-        }catch(e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
         
     }
@@ -191,8 +191,8 @@ export default class GameController extends Controller {
                 ...this.linkFormatter(game)
             }};
             
-        }catch(e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
@@ -209,8 +209,8 @@ export default class GameController extends Controller {
             return {status: 200, value: {
                 ...this.linkFormatter(game)
             }};
-        }catch(e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
         
     }
@@ -229,8 +229,8 @@ export default class GameController extends Controller {
                 ...this.linkFormatter(game)
             }};
             
-        }catch(e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     

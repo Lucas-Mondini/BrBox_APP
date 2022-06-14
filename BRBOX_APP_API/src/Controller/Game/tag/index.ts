@@ -24,8 +24,8 @@ export default class TagController extends Controller {
                     ...tag
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
 
@@ -47,8 +47,8 @@ export default class TagController extends Controller {
                     ...tag
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
 }

@@ -22,8 +22,8 @@ export default class PlatformController extends Controller {
                     ...platform
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     //@ts-ignore
@@ -43,8 +43,8 @@ export default class PlatformController extends Controller {
                     ...platform
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
 }

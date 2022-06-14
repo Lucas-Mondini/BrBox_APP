@@ -55,8 +55,8 @@ export default class UserController implements IController {
             }};
         
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     /**
@@ -75,8 +75,8 @@ export default class UserController implements IController {
                         status: 200, 
                         value: [...usersToReturn]
                     };
-        } catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     /**
@@ -104,8 +104,8 @@ export default class UserController implements IController {
                 status: 200, 
                 value: {...userToReturn}
             };
-        } catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     /**
@@ -165,8 +165,8 @@ export default class UserController implements IController {
                 }
             }
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
         return {status: 500, value: {message: "an unexpected error ocurred"}};
     }
@@ -209,8 +209,8 @@ export default class UserController implements IController {
                     value: {message: "deleted " + dead.affected + " users"}
                 }   
             return {status: 400, value: {message: "user not found"}}
-        } catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
@@ -239,8 +239,8 @@ export default class UserController implements IController {
                         auth_token: jwt.token
                 }
             };
-        } catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+        }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
 

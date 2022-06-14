@@ -33,8 +33,8 @@ export default class TagValueController extends Controller {
     //                 ...tagValue
     //         }};
     //     }
-    //     catch (e) {
-    //         return {status: 500, value: {message: {"something went wrong" : e}}};
+    //      catch (e : any) {
+    //         return {status: 500, value: {message: {"something went wrong" : e.detail}}};
     //     }
     // }
     //@ts-ignore
@@ -58,8 +58,8 @@ export default class TagValueController extends Controller {
                     ...tagValue
             }};
         }
-        catch (e) {
-            return {status: 500, value: {message: {"something went wrong" : e}}};
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
 }
