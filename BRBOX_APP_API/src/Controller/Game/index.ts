@@ -1,11 +1,16 @@
 import { Request } from "express";
+import { FindOptionsOrder } from "typeorm/find-options/FindOptionsOrder";
 import {Controller} from "../";
 import { AppDataSource } from "../../data-source";
 
 import Game from "../../Model/Game";
 import ExternalLink from "../../Model/Game/externalLink";
 import ExternalLinkList from "../../Model/Game/externalLink/externalLinkList";
+import Image from "../../Model/Game/image";
+import ImageList from "../../Model/Game/image/imageList";
 import Platform from "../../Model/Game/platform";
+import TagValue from "../../Model/Game/tag/tagValue";
+import Value from "../../Model/Game/tag/value";
 import ExternalLinkListController from "./externalLink/externalLinkList";
 import ImageListController from "./image/imageList";
 import TagValueListController from "./tag/tagValueList";
@@ -47,205 +52,279 @@ export default class GameController extends Controller {
                 ...this.linkFormatter(game)
             }};
         }
-         catch (e : any) {
+        catch (e : any) {
             return {status: 500, value: {message: {"something went wrong" : e.detail}}};
         }
     }
     
     Index = async (req: Request) => {
         try {
-            const {page = "1", ammount = "25"} = req.query
+            const {page = "1", ammount = "25", order = "id"} = req.query
+            
+            const _order:any = {};
+            _order[<string>order] = "ASC";
+            
+            const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0
+            let games = await AppDataSource
+            .getRepository(Game)
+            .createQueryBuilder("game")
+            .leftJoinAndSelect("game.imageList",       "imageList")
+            .leftJoinAndSelect("imageList.images",     "image")
+            .leftJoinAndSelect("game.tagList",         "tagList")
+            .leftJoinAndSelect("tagList.tagValues",    "tagValues")
+            .leftJoinAndSelect("tagValues.tag",        "tag")
+            .leftJoinAndSelect("tagValues.value",      "value")
+            .take(Number(ammount))
+            .skip(skip)
+            .orderBy("game."+<string>order, "ASC")
+            .getMany();
+            
+            
+            const values = await AppDataSource.getRepository(Value).find();
+            
+            const filterTagValue = (list: TagValue[]) => {
+                const tags = [...new Set(list.map(item => item.tag.name))]
+                var valuedTags: any = {};
+                
+                tags.forEach((t) => {
+                    valuedTags[t] = {
+                        tag: t,
+                        total: list.filter(i => i.tag.name == t).length,
+                        upVotes: list.filter(i =>       i.tag.name == t && i.value.id == values[0].id).length,
+                        neutralVotes: list.filter(i =>  i.tag.name == t && i.value.id == values[1].id).length,
+                        downVotes: list.filter(i =>     i.tag.name == t && i.value.id == values[2].id).length,
+                    }
+                })
+                
+                valuedTags = Object.keys(valuedTags).map(function(key) {
+                    return valuedTags[key];
+                });
 
-            const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : undefined
-            const games = await AppDataSource.getRepository(Game).find({relations: this.relations, take: Number(ammount), skip: skip , order:{ id: "ASC"} });
-            
-            games.map(i => this.linkFormatter(i));
+                let upvotes = [...valuedTags.sort((a:any, b:any) => b.upVotes - a.upVotes)]
+                let downvotes = [...valuedTags.sort((a:any, b:any) => b.downVotes - a.downVotes)]
 
-            return {status: 200, value: {
-                games
-            }};
-        }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-    }
-    
-    //@ts-ignore
-    Get = async (req: Request) => {
-        try {
-            const id = req.params.id
-            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
-            
-            if(!game)
-            return { status: 404, game: {message: "game not found" }};
-            
-            return {status: 200, value: {
-                ...this.linkFormatter(game)
-            }};
-        }  catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-        
-    }
-    
-    //@ts-ignore
-    Update = async (req: Request) => {
-        try {
-            const {id, new_name} = req.body
-            const game = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
-            
-            if(!game)
-            return { status: 404, value: {message: "game not found" }};
-            
-            
-            const externalLinkList = new ExternalLinkListController().Update(req, game.linkList.id);
-            const imageList = new ImageListController().Update(req, game.imageList.id);
-            
-            game.name = new_name || game.name;
-            game.linkList = await externalLinkList;
-            game.imageList = await imageList;
-            
-            AppDataSource.getRepository(Game).save(game);
-            
-            return {status: 200, value: {
-                ...this.linkFormatter(game)
-            }};
-        }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-    }
-    
-    Delete = async (req: Request) => {
-        try {
-            const id = req.params.id
-            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: ["tagList", "imageList", "linkList"]});
-            
-            if(!game)
-            return { status: 404, value: {message: "value not found" }};
-            
-            const reqExternalLinkList = req;
-            const reqImageList = req;
-            const reqTagValueList = req;
-            reqExternalLinkList.params.id   = game.linkList.id.toString();
-            reqImageList.params._id         = game.imageList.id.toString();
-            reqTagValueList.params._id      = game.tagList.id.toString();
-            
-            
-            await new ExternalLinkListController().Delete(reqExternalLinkList);
-            await new ImageListController().Delete(reqImageList);
-            await new TagValueListController().Delete(reqTagValueList);
-            
-            
-            
-            
-            await AppDataSource.getRepository(Game).remove(game);
-            const dead = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
-            
-            if(!dead)
-            return {
-                status: 200,
-                value: {message: "deleted 1 value"}
+                const topTags = new Array();
+
+                if(upvotes[0])
+                    topTags.push({
+                        value: "up",
+                        ...upvotes[0]
+                    })
+                if(upvotes[1])
+                    topTags.push({
+                        value: "up",
+                        ...upvotes[1]
+                    })
+                if(downvotes[0] && downvotes[0] != upvotes[0] && upvotes[1] && downvotes[0] != upvotes[1])
+                    topTags.push({
+                        value: "down",
+                        ...downvotes[0]
+                    })
+                
+                return topTags;
             }
-            return {
-                status: 501,
-                value: {message: "unhandled error"}
+            
+            (<any>games) = games.map(i=> {
+                return (<any>i) = {
+                    id: i.id,
+                    name: i.name,
+                    Image: {
+                        name: i.imageList.images[0].name,
+                        link: i.imageList.images[0].link},
+                        tags: filterTagValue(i.tagList.tagValues)
+                        
+                        
+                        
+                    }
+                })
+                
+                //games.map(i => this.linkFormatter(i));
+                
+                return {status: 200, value: {
+                    games
+                }};
+            }
+            catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
             }
         }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-    }
-    
-    
-    AddLink = async(req: Request) => {
-        try {
-            const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-            
-            const ELLReq = req;
-            ELLReq.body.externalLinkListId = game.linkList.id
-            
-            game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
-            
-            return {status: 200, value: {
-                ...this.linkFormatter(game)
-            }};
-        } catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
         
-    }
-    
-    RemoveLink = async (req: Request) => {
-        try {
-            const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-            
-            const ELLReq = req;
-            ELLReq.body.externalLinkListId = game.linkList.id
-            
-            game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
-            
-            return {status: 200, value: {
-                ...this.linkFormatter(game)
-            }};
-            
-        } catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-    }
-    
-    AddImage = async(req: Request) => {
-        try {
-            const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-            
-            const ILReq = req;
-            ILReq.body.imageListId = game.imageList.id
-            
-            game.imageList = await new ImageListController().AddImages(ILReq);
-            
-            return {status: 200, value: {
-                ...this.linkFormatter(game)
-            }};
-        } catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-        
-    }
-    
-    RemoveImage = async (req: Request) => {
-        try {
-            const {gameId} = req.body
-            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-            
-            const ILReq = req;
-            ILReq.body.imageListId = game.imageList.id
-            
-            game.imageList = await new ImageListController().RemoveImage(ILReq);
-            
-            return {status: 200, value: {
-                ...this.linkFormatter(game)
-            }};
-            
-        } catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
-        }
-    }
-    
-    
-    linkFormatter = (game: Game) => {
-        (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
-            return (<any>item) = {  
-                id: item.id,
-                platform: item.platform.id,
-                platformName: item.platform.name,
-                link: item.link
+        //@ts-ignore
+        Get = async (req: Request) => {
+            try {
+                const id = req.params.id
+                const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+                
+                if(!game)
+                return { status: 404, game: {message: "game not found" }};
+                
+                return {status: 200, value: {
+                    ...this.linkFormatter(game)
+                }};
+            }  catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
             }
-        })
-        return game;
+            
+        }
+        
+        //@ts-ignore
+        Update = async (req: Request) => {
+            try {
+                const {id, new_name} = req.body
+                const game = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
+                
+                if(!game)
+                return { status: 404, value: {message: "game not found" }};
+                
+                
+                const externalLinkList = new ExternalLinkListController().Update(req, game.linkList.id);
+                const imageList = new ImageListController().Update(req, game.imageList.id);
+                
+                game.name = new_name || game.name;
+                game.linkList = await externalLinkList;
+                game.imageList = await imageList;
+                
+                AppDataSource.getRepository(Game).save(game);
+                
+                return {status: 200, value: {
+                    ...this.linkFormatter(game)
+                }};
+            }
+            catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            }
+        }
+        
+        Delete = async (req: Request) => {
+            try {
+                const id = req.params.id
+                const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: ["tagList", "imageList", "linkList"]});
+                
+                if(!game)
+                return { status: 404, value: {message: "value not found" }};
+                
+                const reqExternalLinkList = req;
+                const reqImageList = req;
+                const reqTagValueList = req;
+                reqExternalLinkList.params.id   = game.linkList.id.toString();
+                reqImageList.params._id         = game.imageList.id.toString();
+                reqTagValueList.params._id      = game.tagList.id.toString();
+                
+                
+                await new ExternalLinkListController().Delete(reqExternalLinkList);
+                await new ImageListController().Delete(reqImageList);
+                await new TagValueListController().Delete(reqTagValueList);
+                
+                
+                
+                
+                await AppDataSource.getRepository(Game).remove(game);
+                const dead = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
+                
+                if(!dead)
+                return {
+                    status: 200,
+                    value: {message: "deleted 1 value"}
+                }
+                return {
+                    status: 501,
+                    value: {message: "unhandled error"}
+                }
+            }
+            catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            }
+        }
+        
+        
+        AddLink = async(req: Request) => {
+            try {
+                const {gameId} = req.body
+                var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                
+                const ELLReq = req;
+                ELLReq.body.externalLinkListId = game.linkList.id
+                
+                game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
+                
+                return {status: 200, value: {
+                    ...this.linkFormatter(game)
+                }};
+            } catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            }
+            
+        }
+        
+        RemoveLink = async (req: Request) => {
+            try {
+                const {gameId} = req.body
+                var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                
+                const ELLReq = req;
+                ELLReq.body.externalLinkListId = game.linkList.id
+                
+                game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
+                
+                return {status: 200, value: {
+                    ...this.linkFormatter(game)
+                }};
+                
+            } catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            }
+        }
+        
+        AddImage = async(req: Request) => {
+            try {
+                const {gameId} = req.body
+                var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                
+                const ILReq = req;
+                ILReq.body.imageListId = game.imageList.id
+                
+                game.imageList = await new ImageListController().AddImages(ILReq);
+                
+                return {status: 200, value: {
+                    ...this.linkFormatter(game)
+                }};
+            } catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            }
+            
+        }
+        
+        RemoveImage = async (req: Request) => {
+            try {
+                const {gameId} = req.body
+                var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                
+                const ILReq = req;
+                ILReq.body.imageListId = game.imageList.id
+                
+                game.imageList = await new ImageListController().RemoveImage(ILReq);
+                
+                return {status: 200, value: {
+                    ...this.linkFormatter(game)
+                }};
+                
+            } catch (e : any) {
+                return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            }
+        }
+        
+        
+        linkFormatter = (game: Game) => {
+            (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
+                return (<any>item) = {  
+                    id: item.id,
+                    platform: item.platform.id,
+                    platformName: item.platform.name,
+                    link: item.link
+                }
+            })
+            return game;
+        }
+        
+        
     }
-    
-    
-}
