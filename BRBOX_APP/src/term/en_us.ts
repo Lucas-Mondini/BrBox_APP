@@ -78,6 +78,8 @@ let term = {
   100076: "A unexpected error ocurred while editing data",
   100077: "An error has occurred during register creation",
   100078: "An error has occurred during the register save",
+  100079: "No tags Selected",
+  100080: "Selected tags",
 };
 
 export default term;

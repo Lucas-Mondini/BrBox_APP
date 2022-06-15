@@ -78,6 +78,8 @@ let term = {
   100076: "Ocorreu algum erro inesperado ao tentar editar os dados",
   100077: "Ocorreu um erro ao criar o registro",
   100078: "Ocorreu algum erro inesperado ao tentar salvar os dados",
+  100079: "Nenhuma tag Selecionada",
+  100080: "Tags selecionadas",
 };
 
 export default term;

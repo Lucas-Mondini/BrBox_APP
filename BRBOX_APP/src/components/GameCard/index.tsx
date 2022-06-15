@@ -12,11 +12,12 @@ interface GameCardProps {
   tag1?: string;
   tag2?: string;
   moreTags?: number;
+  editGame?: boolean;
   evaluations: number;
   imgUri: string;
 }
 
-export default function GameCard({id, title, year, tag1, tag2, moreTags, evaluations, imgUri}:GameCardProps)
+export default function GameCard({id, title, year, tag1, tag2, moreTags, editGame, evaluations, imgUri}:GameCardProps)
 {
   const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<any>();
@@ -24,7 +25,7 @@ export default function GameCard({id, title, year, tag1, tag2, moreTags, evaluat
   const textColor = {color: isDarkMode ? "#fff" : config.dark}
 
   function navigateToGameInfo() {
-    return navigation.navigate("AddGame", {id});
+    return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id});
   }
 
   return (

@@ -16,7 +16,6 @@ import { useRequest } from '../../Contexts/Request';
 
 const Home = () => {
   const isFocused = useIsFocused();
-  const navigation = useNavigation<any>();
 
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState<Game[]>([]);
@@ -29,7 +28,7 @@ const Home = () => {
     try {
       const response = await get("/game", setLoading);
 
-      setGames(response);
+      setGames(response.games);
     } catch (err) {
       return signOut();
     }
@@ -52,7 +51,7 @@ const Home = () => {
                 tag2={"2"}
                 moreTags={1}
                 evaluations={1}
-                imgUri={item.imageList.images[0].link}
+                imgUri={item.Image.link}
               />
             )
           }

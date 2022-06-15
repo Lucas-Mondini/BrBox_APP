@@ -1,114 +1,140 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
+import {
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  useColorScheme,
+  View,
+} from 'react-native';
 
- import React from 'react';
- import {
-   SafeAreaView,
-   ScrollView,
-   StatusBar,
-   StyleSheet,
-   Text,
-   useColorScheme,
-   View,
- } from 'react-native';
+import MainView from '../../components/MainView';
+import { useGame } from '../../Contexts/Game';
+import { useRequest } from '../../Contexts/Request';
+import { useTerm } from '../../Contexts/TermProvider';
 
- import {
-   Colors,
-   DebugInstructions,
-   Header,
-   LearnMoreLinks,
-   ReloadInstructions,
- } from 'react-native/Libraries/NewAppScreen';
+import config from "../../../brbox.config.json";
+import styles from './styles';
 
- const Section: React.FC<{
-   title: string;
- }> = ({children, title}) => {
-   const isDarkMode = useColorScheme() === 'dark';
-   return (
-     <View style={styles.sectionContainer}>
-       <Text
-         style={[
-           styles.sectionTitle,
-           {
-             color: isDarkMode ? Colors.white : Colors.black,
-           },
-         ]}>
-         {title}
-       </Text>
-       <Text
-         style={[
-           styles.sectionDescription,
-           {
-             color: isDarkMode ? Colors.light : Colors.dark,
-           },
-         ]}>
-         {children}
-       </Text>
-     </View>
-   );
- };
+import { Params, Tag } from '../../utils/types';
 
- const GameInfo = () => {
-   const isDarkMode = useColorScheme() === 'dark';
+import TagEvaluationCard from '../../components/TagEvaluationCard';
 
-   const backgroundStyle = {
-     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-   };
+const GameInfo = () => {
+  const {
+    id, name, loading, tagValueList,
+    setLoading,
+    loadGame, renderLinks, renderImages
+  } = useGame();
 
-   return (
-     <SafeAreaView style={backgroundStyle}>
-       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-       <ScrollView
-         contentInsetAdjustmentBehavior="automatic"
-         style={backgroundStyle}>
-         <Header />
-         <View
-           style={{
-             backgroundColor: isDarkMode ? Colors.black : Colors.white,
-           }}>
-           <Section title="Step One">
-             <Text style={styles.highlight}>GameInfo</Text>
-           </Section>
-           <Section title="See Your Changes">
-             <ReloadInstructions />
-           </Section>
-           <Section title="Debug">
-             <DebugInstructions />
-           </Section>
-           <Section title="Learn More">
-             Read the docs to discover what to do next:
-           </Section>
-           <LearnMoreLinks />
-         </View>
-       </ScrollView>
-     </SafeAreaView>
-   );
- };
+  const route = useRoute();
+  const {get} = useRequest();
+  const {getTerm} = useTerm();
+  const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
 
- const styles = StyleSheet.create({
-   sectionContainer: {
-     marginTop: 32,
-     paddingHorizontal: 24,
-   },
-   sectionTitle: {
-     fontSize: 24,
-     fontWeight: '600',
-   },
-   sectionDescription: {
-     marginTop: 8,
-     fontSize: 18,
-     fontWeight: '400',
-   },
-   highlight: {
-     fontWeight: '700',
-   },
- });
+  const params = route.params as Params;
 
- export default GameInfo;
+  const [tags, setTags] = useState([] as Tag[]);
+  const [selectedTags, setSelectedTags] = useState([] as Tag[]);
+
+  const isDarkMode = useColorScheme() === 'dark';
+
+  const color = isDarkMode ? "#fff" : config.dark;
+
+  async function getTags() {
+    try {
+      const getTagsList = await get("/tag", setLoading);
+
+      setTags(getTagsList);
+    } catch (err) {
+      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+    }
+  }
+
+  function handleLists(id: number, tagList: Tag[], oppositeTagList: Tag[], setListFunction: (tag: Tag[]) => void, setOppositeListFunction: (tag: Tag[]) => void) {
+    const tagsNotSelected = tagList.filter(item => item.id !== id),
+          tagsSelected = tagList.filter(item => item.id === id);
+
+    setListFunction([...tagsNotSelected]);
+    setOppositeListFunction([...oppositeTagList, ...tagsSelected]);
+  }
+
+  function renderTags()
+  {
+    const tagArray: React.ReactNode[] = [];
+
+    for (const tag of tags) {
+      tagArray.push(
+        <TouchableOpacity onPress={() => handleLists(
+          tag.id, tags, selectedTags, setTags, setSelectedTags
+        )}>
+          <Text style={styles.tag} key={tag.id}>{tag.name}</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    return tagArray;
+  }
+
+  function renderSelectedTags()
+  {
+    const tagArray: React.ReactNode[] = [];
+
+    for (const tag of selectedTags) {
+      tagArray.push(
+        <TagEvaluationCard
+          key={tag.id}
+          remove={() => handleLists(
+            tag.id, selectedTags, tags, setSelectedTags, setTags
+          )}
+          id={tag.id}
+          title={tag.name}
+          description={tag.description || ""}
+        />
+      );
+    }
+
+    if (tagArray.length > 0) {
+      return tagArray;
+    }
+  }
+
+  useEffect(() => {
+    if (isFocused && params.id) {
+      getTags();
+      loadGame(params.id);
+    }
+  }, [isFocused]);
+
+  return (
+    <MainView loading={loading}>
+      <ScrollView style={[styles.container]}>
+        <Text
+          style={[styles.title, {color}]}
+        >
+          {name}
+        </Text>
+
+        {renderImages()}
+
+        {renderLinks()}
+
+        <View style={styles.selectedTagsContainer}>
+          <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080)}</Text>
+          {renderSelectedTags() || <Text>{getTerm(100079)}</Text>}
+        </View>
+
+        <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030)}</Text>
+        
+        <View style={[styles.tagsListView, {borderColor: color}]}>
+          <View style={styles.tagsContainer}>
+            <Text>{renderTags()}</Text>
+          </View>
+        </View>
+      </ScrollView>
+    </MainView>
+  );
+};
+
+export default GameInfo;

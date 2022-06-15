@@ -19,12 +19,13 @@ type GameData = {
   id: number;
   name: string;
   link: string;
-  loading: boolean;
-  imageName: string;
-  imageLink: string;
   images: ImageType[];
+  loading: boolean;
   linkList: LinkType[];
   platform: Platform | null;
+  imageName: string;
+  imageLink: string;
+  tagValueList: number;
 
   setId: (value: number) => void;
   setName: (value: string) => void;
@@ -35,6 +36,7 @@ type GameData = {
   setLinkList: (value: LinkType[]) => void;
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
+  setTagValueList: (value: number) => void;
 
   addLink: () => void;
   addImage: () => void;
@@ -68,6 +70,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [images, setImages] = useState([] as ImageType[]);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  const [tagValueList, setTagValueList] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
@@ -167,6 +170,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setName(response.name);
       setLinkList(response.linkList.externalLinks);
       setImages(response.imageList.images);
+      setTagValueList(response.tagList.id);
     } catch (error) {
       Alert.alert(getTerm(100071), getTerm(100072));
     }
@@ -195,8 +199,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
         setId(response.id);
         setName(response.name);
-        setLinkList(response.linkList.externalLinks);
         setImages(response.imageList.images);
+        setLinkList(response.linkList.externalLinks);
+        setTagValueList(response.tagList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100075), getTerm(100076));
@@ -216,8 +221,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
         setId(response.id);
         setName(response.name);
-        setLinkList(response.linkList.externalLinks);
         setImages(response.imageList.images);
+        setLinkList(response.linkList.externalLinks);
+        setTagValueList(response.tagList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100077), getTerm(100078));
@@ -230,16 +236,17 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setName("");
       setLinkList([]);
       setImages([]);
+      setTagValueList(0);
   }
 
-  useEffect(() => {
-    //checkLogin();
-  }, []);
+  /* useEffect(() => {
+    console.log(linkList);
+  }, [linkList]); */
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform,
+      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList,
+      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setTagValueList,
       addLink, addImage, renderLinks, renderImages, loadGame, createGame, updateGame, deleteGame, clearGameContext
     }}>
       {children}
