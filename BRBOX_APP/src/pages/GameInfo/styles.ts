@@ -38,8 +38,10 @@ const styles = StyleSheet.create({
     marginRight: 5,
     marginTop: 5,
     padding: 3,
+    minWidth: 80,
     borderRadius: 8,
     fontSize: 13,
+    textAlign: "center",
     color: "#fff",
     fontFamily: config.fontFamilyBold
   },

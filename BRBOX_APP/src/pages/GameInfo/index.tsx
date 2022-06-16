@@ -85,12 +85,13 @@ const GameInfo = () => {
       tagArray.push(
         <TagEvaluationCard
           key={tag.id}
-          remove={() => handleLists(
+          remove={() => {handleLists(
             tag.id, selectedTags, tags, setSelectedTags, setTags
-          )}
+          )}}
           id={tag.id}
           title={tag.name}
           description={tag.description || ""}
+          tagValueListId={tagValueList}
         />
       );
     }
@@ -126,7 +127,7 @@ const GameInfo = () => {
         </View>
 
         <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030)}</Text>
-        
+
         <View style={[styles.tagsListView, {borderColor: color}]}>
           <View style={styles.tagsContainer}>
             <Text>{renderTags()}</Text>

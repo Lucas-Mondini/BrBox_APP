@@ -1,59 +1,100 @@
 import { useNavigation } from "@react-navigation/native";
-import React from "react";
-import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import React, { useState } from "react";
+import { Text, useColorScheme, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import { splitText } from "../../utils/functions";
 import CardsButton from "../CardsButton";
+import { useRequest } from "../../Contexts/Request";
 
 interface TagEvaluationCardProps {
   id: number;
   title: string;
   description: string;
+  tagValueListId: number;
   remove: () => void;
 }
 
-export default function TagEvaluationCard({id, title, description, remove}: TagEvaluationCardProps)
+export default function TagEvaluationCard({id, title, description, tagValueListId, remove}: TagEvaluationCardProps)
 {
   const isDarkMode = useColorScheme() === 'dark';
-  const navigation = useNavigation<any>();
+  const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [evalId, setEvalId] = useState(0);
+  const { post } = useRequest();
 
   const textColor = {color: isDarkMode ? "#fff" : config.dark}
 
-  function navigateToTagInfo() {
-    return navigation.navigate("TagRegister", {id});
+  async function saveVote(vote: number) {
+    setLoading(true);
+
+    try {
+      const response = await post("tagValue/add", setLoading, {
+        tagValueListId, tag: id, value: vote
+      });
+
+      setEvalId(response.tagValues[0].id);
+      setSelectedEvaluationVote(response.tagValues[0].value.id);
+    } catch (error: any) {
+      setSelectedEvaluationVote(vote);
+    }
+
+    setLoading(false);
+  }
+
+  async function deleteVote() {
+    setLoading(true);
+
+    try {
+      if (evalId > 0) {
+        await post("tagValue/remove", setLoading, {
+          tagValueListId, tagValueId: evalId
+        });
+      }
+
+      remove();
+    } catch (e : any) {
+      console.log(e)
+      setLoading(false);
+    }
   }
 
   return (
-    <TouchableOpacity style={styles.tagCard} onPress={navigateToTagInfo}>
+    <View style={styles.tagCard}>
       <View>
         <Text style={[styles.title, textColor]}>{splitText(title, 24)}</Text>
         <Text style={[styles.description, textColor]}>{splitText(description, 50)}</Text>
       </View>
 
-      <View style={styles.buttonView}>
-        <CardsButton
-          iconName="md-thumbs-up-sharp"
-          iconLibrary="Ionicons"
-          callback={navigateToTagInfo}
-        />
-        <CardsButton
-          iconName="thumbs-up-down"
-          iconLibrary="MaterialIcons"
-          callback={navigateToTagInfo}
-        />
-        <CardsButton
-          iconName="md-thumbs-down-sharp"
-          iconLibrary="Ionicons"
-          callback={navigateToTagInfo}
+      {!loading &&
+        <View style={styles.buttonView}>
+          <CardsButton
+            iconName="md-thumbs-up-sharp"
+            iconLibrary="Ionicons"
+            callback={() => saveVote(1)}
+            extraButtonStyle={selectedEvaluationVote === 1 ? {backgroundColor: config.greenBar} : {}}
           />
-        <CardsButton
-          iconName="close"
-          iconLibrary="MaterialIcons"
-          callback={remove}
-        />
-      </View>
-    </TouchableOpacity>
+          <CardsButton
+            iconName="thumbs-up-down"
+            iconLibrary="MaterialIcons"
+            callback={() => saveVote(2)}
+            extraButtonStyle={selectedEvaluationVote === 2 ? {backgroundColor: config.yellow} : {}}
+          />
+          <CardsButton
+            iconName="md-thumbs-down-sharp"
+            iconLibrary="Ionicons"
+            callback={() => saveVote(3)}
+            extraButtonStyle={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
+          />
+          
+          <CardsButton
+            iconName="close"
+            iconLibrary="MaterialIcons"
+            callback={deleteVote}
+          />
+        </View>
+      }
+    </View>
   );
 }
