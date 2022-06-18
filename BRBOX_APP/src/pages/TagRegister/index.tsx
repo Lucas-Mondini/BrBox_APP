@@ -1,10 +1,8 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   ScrollView,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -18,6 +16,7 @@ import { useTerm } from '../../Contexts/TermProvider';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, Tag } from '../../utils/types';
+import { useTheme } from '../../Contexts/Theme';
 
 const TagRegister = () => {
   const navigation = useNavigation<any>();
@@ -31,10 +30,10 @@ const TagRegister = () => {
   const [loading, setLoading] = useState(Boolean(params));
   const [tag, setTag] = useState({} as Tag);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const textColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   async function loadTag()

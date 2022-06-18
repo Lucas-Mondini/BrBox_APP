@@ -5,6 +5,7 @@ import styles from "./styles";
 import config from "../../../brbox.config.json";
 import Button from "../Button";
 import { useTerm } from "../../Contexts/TermProvider";
+import { useTheme } from "../../Contexts/Theme";
 
 interface DarkZoneProps {
   title?: number;
@@ -18,10 +19,10 @@ export default function DarkZone({title, message, itemName, buttonText, callback
 {
   const {getTerm} = useTerm();
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const textColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   return (

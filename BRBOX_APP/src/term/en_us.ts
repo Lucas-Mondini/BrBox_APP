@@ -80,6 +80,13 @@ let term = {
   100078: "An error has occurred during the register save",
   100079: "No tags Selected",
   100080: "Selected tags",
+  100081: "Light mode",
+  100082: "Dark mode",
+  100083: "Erro while sign in",
+  100084: "Make sure you entered the correct e-mail and password",
+  100085: "Missing information",
+  100086: "E-mail and password are required for sign in",
+  100087: "Name, e-mail, password and password confirmation are required",
 };
 
 export default term;

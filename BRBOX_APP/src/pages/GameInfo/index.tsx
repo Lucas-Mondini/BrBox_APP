@@ -4,7 +4,6 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -19,6 +18,7 @@ import styles from './styles';
 import { Params, Tag } from '../../utils/types';
 
 import TagEvaluationCard from '../../components/TagEvaluationCard';
+import { useTheme } from '../../Contexts/Theme';
 
 const GameInfo = () => {
   const {
@@ -38,9 +38,9 @@ const GameInfo = () => {
   const [tags, setTags] = useState([] as Tag[]);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
-  const color = isDarkMode ? "#fff" : config.dark;
+  const color = darkMode ? "#fff" : config.dark;
 
   async function getTags() {
     try {
@@ -117,7 +117,7 @@ const GameInfo = () => {
           {name}
         </Text>
 
-        {renderImages()}
+        {renderImages(false)}
 
         {renderLinks()}
 

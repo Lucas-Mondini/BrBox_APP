@@ -5,7 +5,6 @@ import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -22,6 +21,7 @@ import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Params } from '../../utils/types';
 import DarkZone from '../../components/DarkZone';
+import { useTheme } from '../../Contexts/Theme';
 
 const Profile = () => {
   const navigation = useNavigation<any>();
@@ -40,10 +40,10 @@ const Profile = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const textColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   async function loadUser()
@@ -192,7 +192,7 @@ const Profile = () => {
                 style={styles.exitButton}
                 onPress={signOut}
               >
-                <Icon name="exit-run" size={20} color={isDarkMode ? "#fff" : config.dark}/>
+                <Icon name="exit-run" size={20} color={darkMode ? "#fff" : config.dark}/>
                 <Text
                   style={[styles.exitButtonText, textColorStyle]}
                 >

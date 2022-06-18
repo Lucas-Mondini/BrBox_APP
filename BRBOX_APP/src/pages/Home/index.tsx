@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   RefreshControl,
@@ -28,10 +28,10 @@ const Home = () => {
   {
     try {
       const response = await get("/game", setLoading);
-      console.log(response.games[0].tags);
+
       setGames(response.games);
     } catch (err) {
-      return signOut();
+      //return signOut();
     }
   }
 
@@ -53,8 +53,8 @@ const Home = () => {
                 tag1={item.tags[0]}
                 tag2={item.tags[1]}
                 tag3={item.tags[2]}
-                evaluations={1}
                 imgUri={item.Image.link}
+                editGame
               />
             )
           }

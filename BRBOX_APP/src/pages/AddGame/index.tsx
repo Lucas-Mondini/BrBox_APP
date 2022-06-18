@@ -1,10 +1,9 @@
-import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   Text,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -13,8 +12,6 @@ import Input from '../../components/Input';
 
 import MainView from '../../components/MainView';
 import { useGame } from '../../Contexts/Game';
-import { useAuth } from '../../Contexts/Auth';
-import { useRequest } from '../../Contexts/Request';
 import { useTerm } from '../../Contexts/TermProvider';
 
 import config from "../../../brbox.config.json";
@@ -24,6 +21,7 @@ import { Params } from '../../utils/types';
 
 import PlatformsModal from '../../components/PlatformsModal';
 import DarkZone from '../../components/DarkZone';
+import { useTheme } from '../../Contexts/Theme';
 
 const AddGame = () => {
   const {
@@ -35,16 +33,15 @@ const AddGame = () => {
   const route = useRoute();
   const {getTerm} = useTerm();
   const isFocused = useIsFocused();
-  const navigation = useNavigation<any>();
 
   const params = route.params as Params;
 
   const [modal, setModal] = useState(false);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const textColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   useEffect(() => {
@@ -102,7 +99,7 @@ const AddGame = () => {
           onPress={addLink}
         />
 
-        {renderImages()}
+        {renderImages(true)}
 
         <Input
           placeholderText={100051}
@@ -133,13 +130,13 @@ const AddGame = () => {
         />
 
         {Boolean(id) ? <>
-          <Button
+          {/* <Button
             text={100062}
             onPress={() => navigation.navigate("TagAssoc")}
             buttonColor="#17A2B8"
             extraStyle={{marginBottom: 80}}
             extraTextStyle={{color: "#fff"}}
-          />
+          /> */}
 
           <DarkZone
             message={100060}

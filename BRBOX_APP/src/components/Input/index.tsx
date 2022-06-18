@@ -1,9 +1,10 @@
 import React from "react";
-import { TextInput, TextInputProps, useColorScheme, View } from "react-native";
+import { TextInput, TextInputProps, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
 import config from "../../../brbox.config.json";
+import { useTheme } from "../../Contexts/Theme";
 
 interface InputProps extends TextInputProps {
   placeholderText?: number;
@@ -12,10 +13,10 @@ interface InputProps extends TextInputProps {
 
 export default function Input(props: InputProps)
 {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
   const {getTerm} = useTerm();
 
-  const textColor = {color: isDarkMode ? "#fff" : config.dark}
+  const textColor = {color: darkMode ? "#fff" : config.dark}
 
   return (
     <View>

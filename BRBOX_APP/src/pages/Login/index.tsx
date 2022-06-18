@@ -3,7 +3,6 @@ import {
   Alert,
   ScrollView,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 import Input from '../../components/Input';
@@ -16,22 +15,29 @@ import config from "../../../brbox.config.json";
 
 import styles from './styles';
 import Button from '../../components/Button';
+import { useTheme } from '../../Contexts/Theme';
 
 const Login = () => {
   const {signIn} = useAuth();
   const {getTerm} = useTerm();
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
 
   const titleColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   async function login()
   {
-    await signIn(mail, password);
+    if (!mail || !password) {
+      return Alert.alert(getTerm(100085), getTerm(100086));
+    }
+
+    await signIn(mail, password, () => {
+      Alert.alert(getTerm(100083), getTerm(100084));
+    });
   }
 
   return (

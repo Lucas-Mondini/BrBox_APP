@@ -1,12 +1,12 @@
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import { Text, useColorScheme, View } from "react-native";
+import { Text, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import { splitText } from "../../utils/functions";
 import CardsButton from "../CardsButton";
 import { useRequest } from "../../Contexts/Request";
+import { useTheme } from "../../Contexts/Theme";
 
 interface TagEvaluationCardProps {
   id: number;
@@ -18,13 +18,13 @@ interface TagEvaluationCardProps {
 
 export default function TagEvaluationCard({id, title, description, tagValueListId, remove}: TagEvaluationCardProps)
 {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
   const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(0);
   const [loading, setLoading] = useState(false);
   const [evalId, setEvalId] = useState(0);
   const { post } = useRequest();
 
-  const textColor = {color: isDarkMode ? "#fff" : config.dark}
+  const textColor = {color: darkMode ? "#fff" : config.dark}
 
   async function saveVote(vote: number) {
     setLoading(true);

@@ -5,15 +5,16 @@ import Icon from "react-native-vector-icons/FontAwesome5";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json";
+import { useTheme } from "../../Contexts/Theme";
 
 export default function BottomMenu()
 {
   const navigation = useNavigation<any>();
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
-  const iconColor = isDarkMode ? "#fff" : config.mainIconColor;
-  const backgroundColor = {backgroundColor: isDarkMode ? config.dark : "#fff"}
+  const iconColor = darkMode ? "#fff" : config.mainIconColor;
+  const backgroundColor = {backgroundColor: darkMode ? config.dark : "#fff"}
 
   return (
     <View style={[styles.bottomMenuContainer, backgroundColor]}>

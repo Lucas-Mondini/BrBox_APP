@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Modal, ScrollView, Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../Contexts/Auth";
 import { useGame } from "../../Contexts/Game";
+import { useTheme } from "../../Contexts/Theme";
 
 interface DropDownMenuProps {
   setModal: (value: any) => void;
@@ -15,16 +16,16 @@ interface DropDownMenuProps {
 
 export default function DropDownMenu({setModal}: DropDownMenuProps)
 {
-  const isDarkMode = useColorScheme() === 'dark';
   const navigation = useNavigation<any>();
   const {getTerm} = useTerm();
   const {signOut, user} = useAuth();
+  const { darkMode, setDarkMode } = useTheme();
   const {clearGameContext} = useGame();
 
-  const color = !isDarkMode ? config.darkGreen : config.mediumGreen;
-  const textColor = isDarkMode ? "#fff" : config.dark;
-  const backgroundColor = !isDarkMode ? config.light : config.darkGray;
-  const backgroundColorOption = !isDarkMode ? config.light : config.mediumGray;
+  const color = !darkMode ? config.darkGreen : config.mediumGreen;
+  const textColor = darkMode ? "#fff" : config.dark;
+  const backgroundColor = !darkMode ? config.light : config.darkGray;
+  const backgroundColorOption = !darkMode ? config.light : config.mediumGray;
 
   function callNavigationFunction(route: string, specificFunction?: Function)
   {
@@ -42,7 +43,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
   return (
     <Modal transparent onRequestClose={() => setModal(null)}>
       <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setModal(null)}}>
-        <Icon name="close" color={isDarkMode ? config.mediumGreen : config.darkGreen} size={35}/>
+        <Icon name="close" color={darkMode ? config.mediumGreen : config.darkGreen} size={35}/>
       </TouchableOpacity>
 
       <View style={[styles.menuContainer, {borderBottomColor: color, backgroundColor}]}>
@@ -119,6 +120,12 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             callNavigationFunction("Profile");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100046).toUpperCase()}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+            setDarkMode(!darkMode);
+          }}>
+            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(darkMode ? 100081 : 100082).toUpperCase()}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {

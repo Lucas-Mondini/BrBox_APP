@@ -37,6 +37,7 @@ export type LinkType = {
   id: number;
   link: string;
   platform: number;
+  platformName: string;
 }
 
 export type Tag = {

@@ -1,11 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Image, Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import { TagValue } from "../../utils/types";
 import { splitText } from "../../utils/functions";
+import { useTheme } from "../../Contexts/Theme";
 
 interface GameCardProps {
   id: number;
@@ -14,17 +15,16 @@ interface GameCardProps {
   tag2?: TagValue;
   tag3?: TagValue;
   editGame?: boolean;
-  evaluations: number;
   imgUri: string;
 }
 
-export default function GameCard({id, title, tag1, tag2, tag3, editGame, evaluations, imgUri}:GameCardProps)
+export default function GameCard({id, title, tag1, tag2, tag3, editGame, imgUri}:GameCardProps)
 {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
 
-  const textColor = {color: isDarkMode ? "#fff" : config.dark}
-  const cardBackgroundColor = {backgroundColor: isDarkMode ? config.darkGray : config.light}
+  const textColor = {color: darkMode ? "#fff" : config.dark}
+  const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
 
   function navigateToGameInfo() {
     return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id});

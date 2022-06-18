@@ -1,10 +1,11 @@
 import React from 'react';
-import { Modal, useColorScheme, View } from 'react-native';
+import { Modal, View } from 'react-native';
 
 import Loading from '../Loading';
 import config from "../../../brbox.config.json";
 
 import styles from './styles';
+import { useTheme } from '../../Contexts/Theme';
 
 type ModalProps = {
   visible: boolean;
@@ -17,8 +18,8 @@ type ModalProps = {
 
 const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, children, animationType, style}) =>
 {
-  const isDarkMode = useColorScheme() === 'dark';
-  const color = isDarkMode ? "#fff" : config.dark;
+  const { darkMode } = useTheme();
+  const color = darkMode ? "#fff" : config.dark;
   return (
     <Modal
       style={[styles.modal, {backgroundColor: color}]}
