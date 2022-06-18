@@ -4,18 +4,20 @@ import config from "../../../brbox.config.json"
 const styles = StyleSheet.create({
   gameCard: {
     height: 95,
-    borderBottomWidth: 2,
-    borderBottomColor: config.yellow,
     marginBottom: 15,
+    padding: 5,
     width: "100%",
+    borderRadius: 8,
+    justifyContent: "center"
   },
   container: {
     flexDirection: "row"
   },
   img: {
-    width: 168,
-    height: 88,
-    marginRight: 5
+    width: 80,
+    height: 80,
+    marginRight: 5,
+    borderRadius: 5
   },
   info: {
     flexDirection: "row",
@@ -23,52 +25,24 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: config.fontFamilyBold,
-    fontSize: 22
-  },
-  year: {
-    fontFamily: config.fontFamily,
-    fontStyle: 'italic',
-    fontWeight: '700',
+    fontSize: 20,
+    marginLeft: 5,
+    marginTop: 8,
   },
   tagsContainer: {
     flexDirection: "row",
-    marginLeft: 5,
+    marginLeft: 15,
     position: "absolute",
-    bottom: 5
+    bottom: 5,
   },
   tag: {
-    backgroundColor: "blue",
     marginRight: 5,
     padding: 3,
     borderRadius: 8,
-    fontSize: 10,
-    color: "#fff"
-  },
-  moreTags: {
-    marginRight: 5,
-    padding: 3,
-    fontSize: 10
-  },
-  barsContainer:{
-    height: "100%",
-    justifyContent: "center",
-    width: 60
-  },
-  bar: {
-    height: 5,
-    width: "100%",
-    marginBottom: 3,
-    borderRadius: 3
-  },
-  evaluationsContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    width: 50,
-  },
-  evaluations: {
-    fontSize: 28,
-    fontStyle: "italic",
-  },
+    fontSize: 13,
+    fontFamily: config.fontFamilyBold,
+    color: "#000"
+  }
 });
 
 export default styles;

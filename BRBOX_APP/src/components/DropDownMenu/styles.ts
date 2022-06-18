@@ -3,26 +3,40 @@ import { StyleSheet } from "react-native";
 import config from "../../../brbox.config.json";
 
 const styles = StyleSheet.create({
-  menuContainer: {
+  menuCloseButton: {
     position: "absolute",
     top: 15,
     left: 10,
     minWidth: "30%",
   },
+  menuContainer: {
+    position: "absolute",
+    top: 72,
+    bottom: 55,
+    left: 0,
+    width: "60%",
+  },
   menuOptionsContainer: {
-    backgroundColor: "#E6D5FF",
-    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingTop: 10
   },
   menuButton: {
     zIndex: 9999,
-    paddingHorizontal: 5
+    padding: 5,
+    borderRadius: 5,
+    marginVertical: 5,
   },
   menuButtonText: {
     fontFamily: config.fontFamilyBold,
-    color: "#000",
-    fontSize: 20,
+    fontSize: 18,
     paddingVertical: 5,
     zIndex: 9999
+  },
+  closeModal: {
+    position: "absolute",
+    right: 0,
+    height: "100%",
+    minWidth: "40%"
   },
 });
 

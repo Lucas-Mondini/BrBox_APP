@@ -45,6 +45,14 @@ export type Tag = {
   description?: string;
 }
 
+export type TagValue = {
+  tag: string;
+  downVotes: number;
+  neutralVotes: number;
+  upVotes: number;
+  total: number;
+}
+
 export type Platform = {
   id: number;
   platform: number;

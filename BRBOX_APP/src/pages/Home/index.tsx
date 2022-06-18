@@ -2,6 +2,7 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  RefreshControl,
   View
 } from 'react-native';
 
@@ -27,7 +28,7 @@ const Home = () => {
   {
     try {
       const response = await get("/game", setLoading);
-
+      console.log(response.games[0].tags);
       setGames(response.games);
     } catch (err) {
       return signOut();
@@ -39,6 +40,9 @@ const Home = () => {
     return (
       <FlatList
         data={games}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getGames}/>
+        }
         keyExtractor={(game: any) => game.id}
         renderItem={
           ({item}: any) => {
@@ -46,10 +50,9 @@ const Home = () => {
               <GameCard
                 id={item.id}
                 title={item.name}
-                year={1}
-                tag1={"1"}
-                tag2={"2"}
-                moreTags={1}
+                tag1={item.tags[0]}
+                tag2={item.tags[1]}
+                tag3={item.tags[2]}
                 evaluations={1}
                 imgUri={item.Image.link}
               />
