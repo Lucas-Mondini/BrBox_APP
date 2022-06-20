@@ -37,12 +37,21 @@ export type LinkType = {
   id: number;
   link: string;
   platform: number;
+  platformName: string;
 }
 
 export type Tag = {
   id: number;
   name: string;
   description?: string;
+}
+
+export type TagValue = {
+  tag: string;
+  downVotes: number;
+  neutralVotes: number;
+  upVotes: number;
+  total: number;
 }
 
 export type Platform = {

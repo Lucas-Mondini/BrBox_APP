@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
 import config from "../../../brbox.config.json";
 import Icon from "react-native-vector-icons/Feather";
 import DropDownMenu from "../DropDownMenu";
+import { useTheme } from "../../Contexts/Theme";
 
 interface HeaderProps {
   title: number | string;
@@ -14,12 +15,12 @@ interface HeaderProps {
 
 export default function Header({title, addAction}: HeaderProps)
 {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
   const {getTerm} = useTerm();
 
   const [dropDownMenu, setDropDownMenu] = useState<any>();
 
-  const color = !isDarkMode ? config.darkGreen : config.mediumGreen;
+  const color = !darkMode ? config.darkGreen : config.mediumGreen;
 
 
 

@@ -2,10 +2,12 @@ import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
   carousel: {
-    
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
   },
   image: {
-    width:300, height: 265,
+    width:320, height: 180,
     marginBottom: 5
   },
   buttonContainer: {

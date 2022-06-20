@@ -4,26 +4,27 @@ import {
   ImageBackground,
   Text,
   TouchableOpacity,
-  useColorScheme,
 } from 'react-native';
 
 import MainView from '../../components/MainView';
 import { useTerm } from '../../Contexts/TermProvider';
 
+//@ts-ignore
 import bg from "../../../assets/img/loginbackground.png";
 import config from "../../../brbox.config.json";
 
 import styles from './styles';
 import Button from '../../components/Button';
+import { useTheme } from '../../Contexts/Theme';
 
 const Main = () => {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
 
   const {getTerm} = useTerm();
 
   const registerTextColorStyle = {
-    color: !isDarkMode ? config.dark : config.mediumGreen,
+    color: !darkMode ? config.dark : config.mediumGreen,
   };
 
   return (

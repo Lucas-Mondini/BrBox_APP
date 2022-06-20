@@ -1,30 +1,30 @@
-import AsyncStorage from '@react-native-community/async-storage';
-
-import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Alert, Text, TouchableOpacity, useColorScheme, View } from 'react-native';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { Alert, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
 import config from "../../../brbox.config.json";
 import { getMaxId, removeObjectFromArray, splitText } from '../../utils/functions';
-import { ImageType, LinkType, Params, Platform, User } from '../../utils/types';
+import { ImageType, LinkType, Platform } from '../../utils/types';
 import Carousel from 'react-native-reanimated-carousel';
 import CarouselImage from '../../components/CarouselImage';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
 import { useAuth } from '../Auth';
+import { useTheme } from '../Theme';
 
 type GameData = {
   id: number;
   name: string;
   link: string;
-  loading: boolean;
-  imageName: string;
-  imageLink: string;
   images: ImageType[];
+  loading: boolean;
   linkList: LinkType[];
   platform: Platform | null;
+  imageName: string;
+  imageLink: string;
+  tagValueList: number;
 
   setId: (value: number) => void;
   setName: (value: string) => void;
@@ -35,6 +35,7 @@ type GameData = {
   setLinkList: (value: LinkType[]) => void;
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
+  setTagValueList: (value: number) => void;
 
   addLink: () => void;
   addImage: () => void;
@@ -44,7 +45,7 @@ type GameData = {
   deleteGame: (callback?: () => void) => Promise<void>;
 
   renderLinks: () => React.ReactElement[];
-  renderImages: () => React.ReactElement | undefined;
+  renderImages: (allowRemove: boolean) => React.ReactElement | undefined;
   clearGameContext: () => void;
 }
 
@@ -68,13 +69,14 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [images, setImages] = useState([] as ImageType[]);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  const [tagValueList, setTagValueList] = useState(0);
 
   const [loading, setLoading] = useState(false);
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const textColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   function addLink() {
@@ -86,7 +88,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       return Alert.alert(getTerm(100065), getTerm(100066));
     }
 
-    setLinkList([...linkList, {id: getMaxId(linkList), platform: platform.id, link: link}]);
+    setLinkList([...linkList, {id: getMaxId(linkList), platform: platform.id, platformName: platform.name, link: link}]);
     setLink("");
     setPlatform(null);
   }
@@ -112,7 +114,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       if (link.link) {
         links.push(
           <View style={styles.linkContainer} key={link.id}>
-            <Text style={[styles.linkText, textColorStyle]}>{splitText(link.link, 40)}</Text>
+            <Text style={[styles.linkText, textColorStyle]}>{splitText(link.platformName, 40)}</Text>
             <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
               <Icon name="close" size={35} color={"#686868"}/>
             </TouchableOpacity>
@@ -124,7 +126,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     return links;
   }
 
-  function renderImages() {
+  function renderImages(allowRemove = false) {
     if (images.length > 0) {
       return (
         <Carousel
@@ -135,11 +137,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
             autoPlay={false}
             mode="parallax"
             modeConfig={{
-                parallaxScrollingScale: 0.9,
-                parallaxScrollingOffset: 50,
+                parallaxScrollingScale: 1,
+                parallaxScrollingOffset: 0,
             }}
             data={images}
-            height={300}
+            height={allowRemove ? 230 : 180}
             width={340}
             windowSize={1}
             renderItem={
@@ -147,7 +149,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
                 if (!item.link) return <View />;
                 return (
                   <CarouselImage
+                    key={item.id}
                     imageUri={item.link}
+                    allowRemove={allowRemove}
                     callback={() => removeObjectFromArray(item.id, images, setImages)}
                   />
                 )
@@ -167,6 +171,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setName(response.name);
       setLinkList(response.linkList.externalLinks);
       setImages(response.imageList.images);
+      setTagValueList(response.tagList.id);
     } catch (error) {
       Alert.alert(getTerm(100071), getTerm(100072));
     }
@@ -195,8 +200,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
         setId(response.id);
         setName(response.name);
-        setLinkList(response.linkList.externalLinks);
         setImages(response.imageList.images);
+        setLinkList(response.linkList.externalLinks);
+        setTagValueList(response.tagList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100075), getTerm(100076));
@@ -216,8 +222,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
         setId(response.id);
         setName(response.name);
-        setLinkList(response.linkList.externalLinks);
         setImages(response.imageList.images);
+        setLinkList(response.linkList.externalLinks);
+        setTagValueList(response.tagList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100077), getTerm(100078));
@@ -230,16 +237,17 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setName("");
       setLinkList([]);
       setImages([]);
+      setTagValueList(0);
   }
 
-  useEffect(() => {
-    //checkLogin();
-  }, []);
+  /* useEffect(() => {
+    console.log(linkList);
+  }, [linkList]); */
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform,
+      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList,
+      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setTagValueList,
       addLink, addImage, renderLinks, renderImages, loadGame, createGame, updateGame, deleteGame, clearGameContext
     }}>
       {children}

@@ -3,7 +3,6 @@ import { useIsFocused, useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   RefreshControl,
-  useColorScheme,
   View
 } from 'react-native';
 
@@ -14,6 +13,7 @@ import { Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import PlatformCard from '../../components/PlatformCard';
 import DefaultModal from '../DefaultModal';
+import { useTheme } from '../../Contexts/Theme';
 
 interface PlatformsModalProps {
   visible: boolean;
@@ -22,9 +22,9 @@ interface PlatformsModalProps {
 }
 
 export default function PlatformsModal({setModal, visible, setPlatform}: PlatformsModalProps) {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
-  const color = isDarkMode ? config.dark : "#fff";
+  const color = darkMode ? config.dark : "#fff";
 
   const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(true);

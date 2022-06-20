@@ -4,6 +4,8 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import api from '../services/api';
 import { User } from '../utils/types';
 
+import config from "../../brbox.config.json";
+
 type AuthData = {
   signed: boolean;
   user: User | null;
@@ -67,7 +69,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
     } catch (err) {
       signOut();
       setLoading(false);
-      if ( errorCallback) errorCallback();
+      if (errorCallback) errorCallback();
     }
   }
 
@@ -92,7 +94,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
     } catch (err: any) {
       signOut();
       setLoading(false);
-      if (errorCallback) errorCallback(err.response.data.status);
+      if (errorCallback) errorCallback();
     }
   }
 

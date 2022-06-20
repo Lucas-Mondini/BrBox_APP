@@ -78,6 +78,15 @@ let term = {
   100076: "Ocorreu algum erro inesperado ao tentar editar os dados",
   100077: "Ocorreu um erro ao criar o registro",
   100078: "Ocorreu algum erro inesperado ao tentar salvar os dados",
+  100079: "Nenhuma tag Selecionada",
+  100080: "Tags selecionadas",
+  100081: "Modo claro",
+  100082: "Modo escuro",
+  100083: "Ocorreu um erro no login",
+  100084: "Certifique-se que digitou seu e-mail e senha corretamente",
+  100085: "Informações não preenchidas",
+  100086: "E-mail e senha são requeridos para o login",
+  100087: "Nome, e-mail, senha e confirmação de senha são requeridos",
 };
 
 export default term;

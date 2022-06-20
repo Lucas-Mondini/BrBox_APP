@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import {
   Alert,
+  ScrollView,
   Text,
-  useColorScheme,
-  View,
 } from 'react-native';
 import Input from '../../components/Input';
 
@@ -15,15 +14,16 @@ import config from "../../../brbox.config.json";
 
 import styles from './styles';
 import Button from '../../components/Button';
+import { useTheme } from '../../Contexts/Theme';
 
 const Register = () => {
   const {register} = useAuth();
   const {getTerm} = useTerm();
 
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
 
   const titleColorStyle = {
-    color: isDarkMode ? "#fff" : config.dark,
+    color: darkMode ? "#fff" : config.dark,
   };
 
   const [username, setUserName] = useState("");
@@ -33,12 +33,18 @@ const Register = () => {
 
   async function registerUser()
   {
-    await register(username, mail, password, confirmPassword);
+    if (!mail || !password || !confirmPassword || !username) {
+      return Alert.alert(getTerm(100085), getTerm(100087));
+    }
+
+    await register(username, mail, password, confirmPassword, () => {
+      Alert.alert(getTerm(100077), getTerm(100078));
+    });
   }
 
   return (
     <MainView>
-      <View style={[styles.container]}>
+      <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, titleColorStyle]}
         >
@@ -49,11 +55,13 @@ const Register = () => {
           placeholderText={100013}
           value={username}
           onChangeText={setUserName}
+          autoCapitalize="words"
         />
         <Input
           placeholderText={100011}
           value={mail}
           onChangeText={setMail}
+          autoCapitalize="none"
         />
         <Input
           placeholderText={100012}
@@ -69,7 +77,7 @@ const Register = () => {
         />
 
         <Button text={100010} onPress={registerUser} />
-      </View>
+      </ScrollView>
     </MainView>
   );
 };

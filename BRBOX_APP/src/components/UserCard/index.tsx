@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert, Text, TouchableOpacity, useColorScheme, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -8,6 +8,7 @@ import { splitText } from "../../utils/functions";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
 import CardsButton from "../CardsButton";
+import { useTheme } from "../../Contexts/Theme";
 
 interface UserCardProps {
   id: number;
@@ -20,12 +21,12 @@ interface UserCardProps {
 
 export default function UserCard({id, username, email, admin, setLoading, callback}: UserCardProps)
 {
-  const isDarkMode = useColorScheme() === 'dark';
+  const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
   const {destroy, post} = useRequest();
   const {getTerm} = useTerm();
 
-  const textColor = {color: isDarkMode ? "#fff" : config.dark}
+  const textColor = {color: darkMode ? "#fff" : config.dark}
 
   function navigateToUserInfo() {
     return navigation.navigate("Profile", {id});

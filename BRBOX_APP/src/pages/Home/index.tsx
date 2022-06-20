@@ -1,7 +1,8 @@
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  RefreshControl,
   View
 } from 'react-native';
 
@@ -16,7 +17,6 @@ import { useRequest } from '../../Contexts/Request';
 
 const Home = () => {
   const isFocused = useIsFocused();
-  const navigation = useNavigation<any>();
 
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState<Game[]>([]);
@@ -29,9 +29,9 @@ const Home = () => {
     try {
       const response = await get("/game", setLoading);
 
-      setGames(response);
+      setGames(response.games);
     } catch (err) {
-      return signOut();
+      //return signOut();
     }
   }
 
@@ -40,6 +40,9 @@ const Home = () => {
     return (
       <FlatList
         data={games}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={getGames}/>
+        }
         keyExtractor={(game: any) => game.id}
         renderItem={
           ({item}: any) => {
@@ -47,12 +50,11 @@ const Home = () => {
               <GameCard
                 id={item.id}
                 title={item.name}
-                year={1}
-                tag1={"1"}
-                tag2={"2"}
-                moreTags={1}
-                evaluations={1}
-                imgUri={item.imageList.images[0].link}
+                tag1={item.tags[0]}
+                tag2={item.tags[1]}
+                tag3={item.tags[2]}
+                imgUri={item.Image.link}
+                editGame
               />
             )
           }
