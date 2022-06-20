@@ -16,7 +16,7 @@ const mainRouter = Router();
 mainRouter.use('/user', userRouter);
 mainRouter.use('/admin', Auth.admin,    adminRouter);
 
-mainRouter.use('/game', Auth.admin,     gameRouter);
+mainRouter.use('/game',     gameRouter);
 
 mainRouter.use('/platform', Auth.admin, platformRouter);
 
