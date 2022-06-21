@@ -51,7 +51,8 @@ export default class TagValueListController extends Controller {
             for (let tg of tagValueList.tagValues) {
                 if(tg.tag.id == tag && tg.user.id == req.user.id) {
                     tg.value = await _value;
-                    return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
+                    await AppDataSource.getRepository(TagValueList).save(tagValueList)
+                    return {status: 200, value: {...req.body, tagValueId: tg.id}}
                 }
             }
             
@@ -63,7 +64,8 @@ export default class TagValueListController extends Controller {
             
             
             tagValueList.tagValues.push(tagValue);
-            return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
+            await AppDataSource.getRepository(TagValueList).save(tagValueList)
+            return {status: 200, value: {...req.body, tagValueId: tagValue.id}}
         }
          catch (e : any) {
             return {status: 500, value: {message: {"something went wrong" : e.detail}}};
