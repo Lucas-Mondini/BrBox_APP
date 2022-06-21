@@ -72,7 +72,7 @@ const AddGame = () => {
           onChangeText={setName}
         />
 
-        {renderLinks()}
+        {renderLinks(true)}
 
         <Input
           placeholderText={100049}

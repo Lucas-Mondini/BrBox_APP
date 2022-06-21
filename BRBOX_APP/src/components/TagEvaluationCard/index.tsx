@@ -14,9 +14,10 @@ interface TagEvaluationCardProps {
   description: string;
   tagValueListId: number;
   remove: () => void;
+  extraCallback?: () => void;
 }
 
-export default function TagEvaluationCard({id, title, description, tagValueListId, remove}: TagEvaluationCardProps)
+export default function TagEvaluationCard({id, title, description, tagValueListId, remove, extraCallback}: TagEvaluationCardProps)
 {
   const { darkMode } = useTheme();
   const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(0);
@@ -39,6 +40,8 @@ export default function TagEvaluationCard({id, title, description, tagValueListI
     } catch (error: any) {
       setSelectedEvaluationVote(vote);
     }
+
+    if (extraCallback) extraCallback();
 
     setLoading(false);
   }
