@@ -54,7 +54,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100007).toUpperCase()}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+          {/* <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
             callNavigationFunction("Search");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100000).toUpperCase()}</Text>
@@ -76,7 +76,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             callNavigationFunction("Share");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100004).toUpperCase()}</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {user?.admin && <>
             <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {

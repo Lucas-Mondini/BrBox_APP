@@ -1,0 +1,266 @@
+msgid "100000"
+msgstr "Search"
+
+msgid "100001"
+msgstr "Evaluation"
+
+msgid "100002"
+msgstr "Your Ratings"
+
+msgid "100003"
+msgstr "Recommended"
+
+msgid "100004"
+msgstr "Share"
+
+msgid "100005"
+msgstr "Add Tag"
+
+msgid "100006"
+msgstr "Help"
+
+msgid "100007"
+msgstr "Home"
+
+msgid "100008"
+msgstr "Game Score"
+
+msgid "100009"
+msgstr "LOGIN"
+
+msgid "100010"
+msgstr "REGISTER"
+
+msgid "100011"
+msgstr "E-mail"
+
+msgid "100012"
+msgstr "Password"
+
+msgid "100013"
+msgstr "Name"
+
+msgid "100014"
+msgstr "Confirm your password"
+
+msgid "100015"
+msgstr "UPDATE"
+
+msgid "100016"
+msgstr "DELETE ACCOUNT"
+
+msgid "100017"
+msgstr "Change password?"
+
+msgid "100018"
+msgstr "New password"
+
+msgid "100019"
+msgstr "Confirm new password"
+
+msgid "100020"
+msgstr "Welcome back"
+
+msgid "100021"
+msgstr "Sign up to enjoy"
+
+msgid "100022"
+msgstr "Edit your profile information"
+
+msgid "100023"
+msgstr "Danger zone"
+
+msgid "100024"
+msgstr "Here you got the option for you to delete your information.\n This action cannot be undone"
+
+msgid "100025"
+msgstr "EXIT"
+
+msgid "100026"
+msgstr "SAVE"
+
+msgid "100027"
+msgstr "Register new tag"
+
+msgid "100028"
+msgstr "Edit your tag"
+
+msgid "100029"
+msgstr "Description"
+
+msgid "100030"
+msgstr "Tags"
+
+msgid "100031"
+msgstr "Users"
+
+msgid "100032"
+msgstr "Delete tag"
+
+msgid "100033"
+msgstr "Are you sure you want to delete the tag? \n This action cannot be undone"
+
+msgid "100034"
+msgstr "Delete user"
+
+msgid "100035"
+msgstr "Are you sure you want to delete the user? \n This action cannot be undone"
+
+msgid "100036"
+msgstr "Make user admin"
+
+msgid "100037"
+msgstr "Are you sure you want to turn this user into admin?"
+
+msgid "100038"
+msgstr "Remove user admin permission"
+
+msgid "100039"
+msgstr "Are you sure you want to remove this user admin permission?"
+
+msgid "100040"
+msgstr "YES"
+
+msgid "100041"
+msgstr "NO"
+
+msgid "100042"
+msgstr "Create new user"
+
+msgid "100043"
+msgstr "Edit %2 information"
+
+msgid "100044"
+msgstr "Delete %2 data.\n This action cannot be undone"
+
+msgid "100045"
+msgstr "Sign out"
+
+msgid "100046"
+msgstr "Profile"
+
+msgid "100047"
+msgstr "Add game"
+
+msgid "100048"
+msgstr "Add Link"
+
+msgid "100049"
+msgstr "Link"
+
+msgid "100050"
+msgstr "Choose Platform..."
+
+msgid "100051"
+msgstr "Image name"
+
+msgid "100052"
+msgstr "Image link"
+
+msgid "100053"
+msgstr "Add image"
+
+msgid "100054"
+msgstr "Create new game"
+
+msgid "100055"
+msgstr "Add platform"
+
+msgid "100056"
+msgstr "Platforms"
+
+msgid "100057"
+msgstr "Delete platform"
+
+msgid "100058"
+msgstr "Are you sure you want to delete the platform? \n This action cannot be undone"
+
+msgid "100059"
+msgstr "Edit platform"
+
+msgid "100060"
+msgstr "Delete data of %2? \n This action cannot be undone"
+
+msgid "100061"
+msgstr "Delete game"
+
+msgid "100062"
+msgstr "Associate tags"
+
+msgid "100063"
+msgstr "Choose one platform"
+
+msgid "100064"
+msgstr "Choose a platform to add link"
+
+msgid "100065"
+msgstr "Insert link"
+
+msgid "100066"
+msgstr "Insert the link of the platform to add the link in the list"
+
+msgid "100067"
+msgstr "Insert image name"
+
+msgid "100068"
+msgstr "Inserte a name to the image to add it to the list"
+
+msgid "100069"
+msgstr "Insert image link"
+
+msgid "100070"
+msgstr "Insert image link to add the image to the list"
+
+msgid "100071"
+msgstr "An error has occurred while loading register"
+
+msgid "100072"
+msgstr "A unexpected error ocurred while fetching data"
+
+msgid "100073"
+msgstr "An error has occurred during register deletion"
+
+msgid "100074"
+msgstr "A unexpected error ocurred while deleting data"
+
+msgid "100075"
+msgstr "An error has occurred during register edit"
+
+msgid "100076"
+msgstr "A unexpected error ocurred while editing data"
+
+msgid "100077"
+msgstr "An error has occurred during register creation"
+
+msgid "100078"
+msgstr "An error has occurred during the register save"
+
+msgid "100079"
+msgstr "No tags Selected"
+
+msgid "100080"
+msgstr "Selected tags"
+
+msgid "100081"
+msgstr "Light mode"
+
+msgid "100082"
+msgstr "Dark mode"
+
+msgid "100083"
+msgstr "Erro while sign in"
+
+msgid "100084"
+msgstr "Make sure you entered the correct e-mail and password"
+
+msgid "100085"
+msgstr "Missing information"
+
+msgid "100086"
+msgstr "E-mail and password are required for sign in"
+
+msgid "100087"
+msgstr "Name, e-mail, password and password confirmation are required"
+
+msgid "100088"
+msgstr "Evaluated tags
