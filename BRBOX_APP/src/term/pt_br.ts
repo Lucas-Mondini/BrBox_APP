@@ -87,6 +87,7 @@ let term = {
   100085: "Informações não preenchidas",
   100086: "E-mail e senha são requeridos para o login",
   100087: "Nome, e-mail, senha e confirmação de senha são requeridos",
+  100088: "Tags avaliadas",
 };
 
 export default term;

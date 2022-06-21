@@ -87,6 +87,7 @@ let term = {
   100085: "Missing information",
   100086: "E-mail and password are required for sign in",
   100087: "Name, e-mail, password and password confirmation are required",
+  100088: "Evaluated tags",
 };
 
 export default term;

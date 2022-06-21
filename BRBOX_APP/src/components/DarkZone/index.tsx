@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, useColorScheme, View } from "react-native";
+import { Text, View } from "react-native";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json";

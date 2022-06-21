@@ -14,6 +14,7 @@ import styles from './styles';
 import { useAuth } from '../../Contexts/Auth';
 import { Game } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
+import { useGame } from '../../Contexts/Game';
 
 const Home = () => {
   const isFocused = useIsFocused();
@@ -22,7 +23,8 @@ const Home = () => {
   const [games, setGames] = useState<Game[]>([]);
 
   const {get} = useRequest();
-  const {signOut} = useAuth();
+  const {signOut, user} = useAuth();
+  const {clearGameContext} = useGame();
 
   async function getGames()
   {
@@ -54,7 +56,7 @@ const Home = () => {
                 tag2={item.tags[1]}
                 tag3={item.tags[2]}
                 imgUri={item.Image.link}
-                editGame
+                editGame={!user?.admin}
               />
             )
           }
@@ -63,7 +65,10 @@ const Home = () => {
   }
 
   useEffect(() => {
-    if (isFocused) getGames();
+    if (isFocused) {
+      getGames();
+      clearGameContext();
+    }
   }, [isFocused]);
 
   return (

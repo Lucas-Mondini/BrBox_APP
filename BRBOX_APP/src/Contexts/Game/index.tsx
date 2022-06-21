@@ -1,5 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Alert, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
@@ -44,8 +44,8 @@ type GameData = {
   updateGame: () => Promise<void>;
   deleteGame: (callback?: () => void) => Promise<void>;
 
-  renderLinks: () => React.ReactElement[];
-  renderImages: (allowRemove: boolean) => React.ReactElement | undefined;
+  renderLinks: (allowRemove?: boolean) => React.ReactElement[];
+  renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
   clearGameContext: () => void;
 }
 
@@ -107,18 +107,28 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setImages([...images, {id: getMaxId(images), name: imageName, link: imageLink}]);
   }
 
-  function renderLinks() {
+  function renderLinks(allowRemove = false) {
     const links = new Array();
 
     for (const link of linkList) {
       if (link.link) {
         links.push(
-          <View style={styles.linkContainer} key={link.id}>
+          <TouchableOpacity style={styles.linkContainer}
+            key={link.id}
+            activeOpacity={allowRemove ? 1 : 0.8}
+            onPress={async () => {
+              if (!allowRemove) {
+                await Linking.openURL(link.link);
+              }
+            }}
+          >
             <Text style={[styles.linkText, textColorStyle]}>{splitText(link.platformName, 40)}</Text>
-            <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
-              <Icon name="close" size={35} color={"#686868"}/>
-            </TouchableOpacity>
-          </View>
+            {allowRemove &&
+              <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
+                <Icon name="close" size={35} color={"#686868"}/>
+              </TouchableOpacity>
+            }
+          </TouchableOpacity>
         );
       }
     }
