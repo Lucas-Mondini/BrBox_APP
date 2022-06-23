@@ -14,7 +14,7 @@ export default class SteamLoader {
     games : any
     
     constructor() {
-        this.games = require('./games.json')
+        this.games = require('../../../../games.json')
     }
     loadFromJSON = async () => {
         let counter = 0

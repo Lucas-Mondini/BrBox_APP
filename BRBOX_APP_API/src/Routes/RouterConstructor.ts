@@ -32,4 +32,18 @@ export default class RouterConstructor {
         return router;
     }
 
+    public static getCRUD_middleware_GetFree(customView : View, Middleware: any) {
+
+        const router = Router();
+        const view = customView;
+        
+        router.post('/create',          Middleware[0], view.Create);
+        router.get('/:id',              Middleware[1], view.Get);
+        router.put('/update',           Middleware[0], view.Update);
+        router.delete('/destroy/:id',   Middleware[0], view.Delete);
+        router.get('/',                 Middleware[1], view.GetAll);
+
+        return router;
+    }
+
 };
