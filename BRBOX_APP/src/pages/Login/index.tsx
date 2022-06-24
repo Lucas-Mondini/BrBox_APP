@@ -18,7 +18,7 @@ import Button from '../../components/Button';
 import { useTheme } from '../../Contexts/Theme';
 
 const Login = () => {
-  const {signIn} = useAuth();
+  const {signIn, loading} = useAuth();
   const {getTerm} = useTerm();
   const { darkMode } = useTheme();
 
@@ -65,6 +65,7 @@ const Login = () => {
           <Button
             text={100009}
             onPress={login}
+            loading={loading}
           />
         </ScrollView>
       </View>

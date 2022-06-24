@@ -6,9 +6,10 @@ import { useTheme } from "../../Contexts/Theme";
 
 type LoadingProps = {
   styles?: object;
+  activeColor?: string;
 }
 
-const Loading: React.FC<LoadingProps> = ({styles}) => {
+const Loading: React.FC<LoadingProps> = ({styles, activeColor}) => {
   const { darkMode } = useTheme();
 
   return (
@@ -18,7 +19,7 @@ const Loading: React.FC<LoadingProps> = ({styles}) => {
       justifyContent: 'center',
       alignItems: 'center'
     }, styles]}>
-      <ActivityIndicator size="large" color="#686868"/>
+      <ActivityIndicator size="large" color={activeColor || "#686868"}/>
     </View>
   );
 }

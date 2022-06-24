@@ -17,7 +17,7 @@ import Button from '../../components/Button';
 import { useTheme } from '../../Contexts/Theme';
 
 const Register = () => {
-  const {register} = useAuth();
+  const {register, loading} = useAuth();
   const {getTerm} = useTerm();
 
   const { darkMode } = useTheme();
@@ -76,7 +76,11 @@ const Register = () => {
           secureTextEntry
         />
 
-        <Button text={100010} onPress={registerUser} />
+        <Button
+          text={100010}
+          onPress={registerUser}
+          loading={loading}
+        />
       </ScrollView>
     </MainView>
   );

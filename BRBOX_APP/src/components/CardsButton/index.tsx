@@ -1,22 +1,23 @@
 import React from "react";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import FontistoIcon from "react-native-vector-icons/Fontisto";
 
 import styles from "./styles";
+import Loading from "../Loading";
 
-interface CardsButtonProps {
+interface CardsButtonProps extends TouchableOpacityProps {
+  loading?: boolean;
   iconName: string;
   iconSize?: number;
   iconColor?: string;
   iconLibrary?: "MaterialIcons" | "FontAwesome" | "Fontisto" | "Ionicons";
-  extraButtonStyle?: object;
-  callback: () => void;
+  callback?: () => void;
 }
 
-export default function CardsButton({iconName, iconSize, iconColor,iconLibrary, extraButtonStyle, callback}: CardsButtonProps)
+export default function CardsButton({iconName, iconSize, iconColor, iconLibrary, style, callback, loading, ...props}: CardsButtonProps)
 {
   iconLibrary = iconLibrary || "FontAwesome";
 
@@ -35,8 +36,11 @@ export default function CardsButton({iconName, iconSize, iconColor,iconLibrary, 
   }
 
   return (
-    <TouchableOpacity style={[styles.button, extraButtonStyle]} onPress={callback}>
-      {getIconComponent()}
+    <TouchableOpacity
+      style={[styles.button, style]}
+      {...props}
+    >
+      {loading ? <Loading /> : getIconComponent()}
     </TouchableOpacity>
   );
 }

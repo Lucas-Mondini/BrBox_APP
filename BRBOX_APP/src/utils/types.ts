@@ -43,6 +43,8 @@ export type LinkType = {
 export type Tag = {
   id: number;
   name: string;
+  evalId: number;
+  value?: number;
   description?: string;
 }
 

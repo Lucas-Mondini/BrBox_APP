@@ -1,20 +1,22 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, TouchableOpacityProps, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json"
+import Loading from "../Loading";
 
-interface ButtonProps {
+interface ButtonProps extends TouchableOpacityProps {
   text: number;
+  loading?: boolean;
   onPress: () => void;
   buttonColor?: string;
   extraStyle?: object;
   extraTextStyle?: object;
 }
 
-export default function Button({text, onPress, buttonColor, extraStyle, extraTextStyle}: ButtonProps)
+export default function Button({text, onPress, buttonColor, extraStyle, extraTextStyle, loading}: ButtonProps)
 {
   const {getTerm} = useTerm();
 
@@ -25,12 +27,16 @@ export default function Button({text, onPress, buttonColor, extraStyle, extraTex
       <TouchableOpacity
         onPress={onPress}
         style={[styles.button, buttonColorStyle]}
+        disabled={loading}
       >
-        <Text
-          style={[styles.buttonText, extraTextStyle]}
-        >
-          {getTerm(text)}
-        </Text>
+        {loading
+          ? <Loading activeColor={"#000"} styles={{backgroundColor: "transparent"}}/>
+          : <Text
+              style={[styles.buttonText, extraTextStyle]}
+            >
+              {getTerm(text)}
+            </Text>
+        }
       </TouchableOpacity>
     </View>
   );

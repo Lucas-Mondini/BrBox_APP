@@ -11,7 +11,6 @@ import CarouselImage from '../../components/CarouselImage';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
-import { useAuth } from '../Auth';
 import { useTheme } from '../Theme';
 
 type GameData = {
@@ -58,7 +57,6 @@ const GameContext = createContext({} as GameData);
 export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 {
   const {getTerm} = useTerm();
-  const {user, setUser} = useAuth();
   const {get, put, post, destroy} = useRequest();
 
   const [id, setId] = useState(0);
@@ -249,10 +247,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setImages([]);
       setTagValueList(0);
   }
-
-  /* useEffect(() => {
-    console.log(linkList);
-  }, [linkList]); */
 
   return (
     <GameContext.Provider value={{

@@ -5,16 +5,18 @@ import Loading from "../Loading";
 import config from "../../../brbox.config.json";
 import Header from "../Header";
 import { useTheme } from "../../Contexts/Theme";
+import BottomMenu from "../BottomMenu";
 
 interface MainViewProps {
   children: React.ReactElement | React.ReactElement[];
   loading?: boolean;
   headerTitle?: number;
   showTitle?: boolean;
+  showBottom?: boolean;
   headerAddButtonAction?: () => void;
 }
 
-export default function MainView({children, loading, headerTitle, showTitle, headerAddButtonAction}: MainViewProps)
+export default function MainView({children, loading, headerTitle, showTitle, showBottom, headerAddButtonAction}: MainViewProps)
 {
   const { darkMode } = useTheme();
 
@@ -29,6 +31,8 @@ export default function MainView({children, loading, headerTitle, showTitle, hea
       {showTitle && <Header title={headerTitle || 100008} addAction={headerAddButtonAction} />}
 
       {loading ? <Loading /> : children}
+
+      {showBottom && <BottomMenu/>}
     </SafeAreaView>
   );
 }

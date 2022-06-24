@@ -54,7 +54,7 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
       <View style={styles.buttonView}>
         <CardsButton
           iconName="trash"
-          extraButtonStyle={styles.deleteButton}
+          style={styles.deleteButton}
           callback={deleteTag}
         />
       </View>

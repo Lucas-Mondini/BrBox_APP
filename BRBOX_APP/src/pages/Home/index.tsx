@@ -56,7 +56,7 @@ const Home = () => {
                 tag2={item.tags[1]}
                 tag3={item.tags[2]}
                 imgUri={item.Image.link}
-                editGame={user?.admin}
+                editGame={!user?.admin}
               />
             )
           }
@@ -74,13 +74,13 @@ const Home = () => {
   return (
     <MainView
       showTitle
+      showBottom
       loading={loading}
     >
       <View style={styles.container}>
         {renderGames()}
       </View>
 
-      <BottomMenu/>
     </MainView>
   );
 };

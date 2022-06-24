@@ -59,7 +59,7 @@ export default function PlatformCard({id, name, setLoading, onDelete, onPress}: 
         <View style={styles.buttonView}>
           <CardsButton
             iconName="trash"
-            extraButtonStyle={styles.deleteButton}
+            style={styles.deleteButton}
             callback={deletePlatform}
           />
         </View>

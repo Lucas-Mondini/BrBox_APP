@@ -7,22 +7,29 @@ import { splitText } from "../../utils/functions";
 import CardsButton from "../CardsButton";
 import { useRequest } from "../../Contexts/Request";
 import { useTheme } from "../../Contexts/Theme";
+import Loading from "../Loading";
 
 interface TagEvaluationCardProps {
   id: number;
+  evaluationId?: number;
   title: string;
+  value?: number;
   description: string;
   tagValueListId: number;
   remove: () => void;
   extraCallback?: () => void;
 }
 
-export default function TagEvaluationCard({id, title, description, tagValueListId, remove, extraCallback}: TagEvaluationCardProps)
+export default function TagEvaluationCard({id, evaluationId, title, value, description, tagValueListId, remove, extraCallback}: TagEvaluationCardProps)
 {
   const { darkMode } = useTheme();
-  const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(0);
+  const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(value || 0);
   const [loading, setLoading] = useState(false);
-  const [evalId, setEvalId] = useState(0);
+  
+  console.log(evaluationId)
+  console.log(id)
+  const [sendRequest, setSendRequest] = useState(Boolean(evaluationId));
+  const [evalId, setEvalId] = useState(evaluationId || 0);
   const { post } = useRequest();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
@@ -35,8 +42,9 @@ export default function TagEvaluationCard({id, title, description, tagValueListI
         tagValueListId, tag: id, value: vote
       });
 
-      setEvalId(response.tagValues[0].id);
-      setSelectedEvaluationVote(response.tagValues[0].value.id);
+      setEvalId(response.tagValueId);
+      setSelectedEvaluationVote(response.value);
+      setSendRequest(true);
     } catch (error: any) {
       setSelectedEvaluationVote(vote);
     }
@@ -50,17 +58,18 @@ export default function TagEvaluationCard({id, title, description, tagValueListI
     setLoading(true);
 
     try {
-      if (evalId > 0) {
+      if (evalId > 0 && sendRequest) {
+        console.log(evalId)
         await post("tagValue/remove", setLoading, {
           tagValueListId, tagValueId: evalId
         });
       }
-
-      remove();
     } catch (e : any) {
-      console.log(e)
-      setLoading(false);
+      console.log(e);
     }
+
+    setLoading(false);
+    remove();
   }
 
   return (
@@ -70,34 +79,43 @@ export default function TagEvaluationCard({id, title, description, tagValueListI
         <Text style={[styles.description, textColor]}>{splitText(description, 50)}</Text>
       </View>
 
-      {!loading &&
-        <View style={styles.buttonView}>
+      <View style={styles.buttonView}>
+
+      {loading
+        ? <Loading
+            styles={{paddingRight: 35}}
+          />
+        : <>
           <CardsButton
             iconName="md-thumbs-up-sharp"
             iconLibrary="Ionicons"
-            callback={() => saveVote(1)}
-            extraButtonStyle={selectedEvaluationVote === 1 ? {backgroundColor: config.greenBar} : {}}
+            onPress={() => saveVote(1)}
+            style={selectedEvaluationVote === 1 ? {backgroundColor: config.greenBar} : {}}
           />
           <CardsButton
             iconName="thumbs-up-down"
             iconLibrary="MaterialIcons"
-            callback={() => saveVote(2)}
-            extraButtonStyle={selectedEvaluationVote === 2 ? {backgroundColor: config.yellow} : {}}
+            onPress={() => saveVote(2)}
+            style={selectedEvaluationVote === 2 ? {backgroundColor: config.yellow} : {}}
           />
           <CardsButton
             iconName="md-thumbs-down-sharp"
             iconLibrary="Ionicons"
-            callback={() => saveVote(3)}
-            extraButtonStyle={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
+            onPress={() => saveVote(3)}
+            style={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
           />
-          
-          <CardsButton
-            iconName="close"
-            iconLibrary="MaterialIcons"
-            callback={deleteVote}
-          />
-        </View>
-      }
+
+
+        </>}
+
+        <CardsButton
+          iconName="close"
+          iconLibrary="MaterialIcons"
+          onPress={deleteVote}
+          style={loading ? {opacity: 0} : {}}
+          disabled={loading}
+        />
+      </View>
     </View>
   );
 }

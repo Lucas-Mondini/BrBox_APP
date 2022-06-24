@@ -29,7 +29,7 @@ export default function TagsContainers({title}: TagsContainersProps)
   const navigation = useNavigation<any>();
 
   const [tags, setTags] = useState([] as Tag[]);
-  const [loading, setLoading] = useState(true);
+  const [firstLoad, setFirstLoad] = useState(true);
   const [loadingTags, setLoadingTags] = useState(true);
   const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
@@ -54,6 +54,20 @@ export default function TagsContainers({title}: TagsContainersProps)
       const response = await get(`/tagValue/${id}`, setEvaluatedTagsLoading);
 
       setEvaluatedTags(response.tagValues);
+
+      if (firstLoad) {
+        setSelectedTags(response.tagValues.map((tag: any) => {
+          return {
+            id: tag.tag.id,
+            evalId: tag.id,
+            name: tag.tag.name,
+            description: tag.tag.description,
+            value: tag.value.id
+          };
+        }));
+      }
+
+      setFirstLoad(false);
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -113,6 +127,8 @@ export default function TagsContainers({title}: TagsContainersProps)
             getEvaluatedTags(tagValueList);
           }}
           id={tag.id}
+          evaluationId={tag.evalId}
+          value={tag.value}
           title={tag.name}
           description={tag.description || ""}
           tagValueListId={tagValueList}
