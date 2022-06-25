@@ -1,4 +1,4 @@
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
@@ -33,6 +33,7 @@ const AddGame = () => {
   const route = useRoute();
   const {getTerm} = useTerm();
   const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
 
   const params = route.params as Params;
 
@@ -43,6 +44,11 @@ const AddGame = () => {
   const textColorStyle = {
     color: darkMode ? "#fff" : config.dark,
   };
+
+  function deleteGameCallback()
+  {
+    deleteGame(navigation.reset({index: 0, routes: [{name: "Home"}]}));
+  }
 
   useEffect(() => {
     if (isFocused && params.id) {
@@ -130,18 +136,10 @@ const AddGame = () => {
         />
 
         {Boolean(id) ? <>
-          {/* <Button
-            text={100062}
-            onPress={() => navigation.navigate("TagAssoc")}
-            buttonColor="#17A2B8"
-            extraStyle={{marginBottom: 80}}
-            extraTextStyle={{color: "#fff"}}
-          /> */}
-
           <DarkZone
             message={100060}
             itemName={name}
-            callback={deleteGame}
+            callback={deleteGameCallback}
             buttonText={100061}
           /></> : <View style={{marginBottom: 100}}></View>}
       </ScrollView>

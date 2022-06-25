@@ -183,7 +183,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       const externalLinks = linkList.filter(link => link.link !== "");
       const imageList = images.filter(image => image.link !== "");
 
-      if (imageList.length > 0 && externalLinks.length > 0) {
+      if (validateGame(externalLinks, imageList)) {
         const response = await put(`/game/update`, setLoading, {
           id, new_name: name, new_description: name, externalLinks, images: imageList
         });
@@ -205,7 +205,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       const externalLinks = linkList.filter(link => link.link !== "");
       const imageList = images.filter(image => image.link !== "");
 
-      if (imageList.length > 0 && externalLinks.length > 0) {
+      if (validateGame(externalLinks, imageList)) {
         const response = await post(`/game/create`, setLoading, {
           name, externalLinks, images: imageList
         });
@@ -219,6 +219,26 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     } catch (error) {
       Alert.alert(getTerm(100077), getTerm(100078));
     }
+  }
+
+  function validateGame(externalLinks: LinkType[], imageList: ImageType[])
+  {
+    if (!name.trim()) {
+      Alert.alert(getTerm(100093), getTerm(100094));
+      return false;
+    }
+
+    if (externalLinks.length === 0) {
+      Alert.alert(getTerm(100089), getTerm(100090));
+      return false;
+    }
+
+    if (imageList.length === 0) {
+      Alert.alert(getTerm(100091), getTerm(100092));
+      return false;
+    }
+
+    return true;
   }
 
   function clearGameContext()

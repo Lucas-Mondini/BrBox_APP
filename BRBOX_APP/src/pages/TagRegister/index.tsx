@@ -1,6 +1,7 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   ScrollView,
   Text,
   View,
@@ -55,6 +56,10 @@ const TagRegister = () => {
   {
     try {
       let response;
+
+      if (!tag.name || !tag.name.trim() || !tag.description || !tag.description?.trim()) {
+        return Alert.alert(getTerm(100095), getTerm(100096));
+      }
 
       if (!params && !tag.id) {
         response = await post(`/tag/create`, setLoadingRequest, {

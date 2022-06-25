@@ -30,7 +30,7 @@ export default function UserCard({images, setImages}: UserCardProps)
           ({item}: any) => {
             if (!item.link) return <View />;
             return (
-              <View style={[styles.carousel]}>
+              <View style={[styles.carousel]} key={item.id}>
                 <View style={styles.itemContent}>
                   <Image source={{uri: item.link}} style={styles.itemImage} />
                   <Text style={styles.itemText} numberOfLines={1}>

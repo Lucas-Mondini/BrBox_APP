@@ -87,5 +87,19 @@
   "100085": "Missing information",
   "100086": "E-mail and password are required for sign in",
   "100087": "Name, e-mail, password and password confirmation are required",
-  "100088": "Evaluated tags"
+  "100088": "Evaluated tags",
+  "100089": "No platforms",
+  "100090": "At least one platform link is required",
+  "100091": "No images",
+  "100092": "At least one image is required to save the game",
+  "100093": "Name is required",
+  "100094": "Your game need to have a name",
+  "100095": "Missing required data",
+  "100096": "Tag must have name and description",
+  "100097": "Platform must have name",
+  "100098": "Password is required for this action",
+  "100099": "Enter your password to continue withe your data deletion",
+  "100100": "Name and e-mail are the minimum data to update the user",
+  "100101": "Passwords are different",
+  "100102": "The passwords you've entered are different fro each other"
 }

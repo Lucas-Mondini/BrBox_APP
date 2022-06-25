@@ -67,17 +67,15 @@ const Profile = () => {
   async function deleteUser()
   {
     try {
-      if (!password && !params) {
-        return Alert.alert("Faltou a senha cabaço");
+      if (validateUser("DELETE")) {
+        await post(`user/destroy`, setLoading, {
+          id, password
+        });
+
+        if (!params) return signOut();
+
+        navigation.goBack();
       }
-
-      await post(`user/destroy`, setLoading, {
-        id, password
-      });
-
-      if (!params) return signOut();
-
-      navigation.goBack();
     } catch (error) {
       signOut();
     }
@@ -86,19 +84,21 @@ const Profile = () => {
   async function updateUser()
   {
     try {
-      const response = await put(`/user/update`, setLoadingRequest, {
-        id, username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
-      });
+      if (validateUser("UPDATE")) {
+        const response = await put(`/user/update`, setLoadingRequest, {
+          id, username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
+        });
 
-      if (!params) {
-        setUser(response);
-      } else {
-        setId(response.id);
-        setUserName(response.username);
-        setEmail(response.email);
-        setPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+        if (!params) {
+          setUser(response);
+        } else {
+          setId(response.id);
+          setUserName(response.username);
+          setEmail(response.email);
+          setPassword("");
+          setNewPassword("");
+          setConfirmPassword("");
+        }
       }
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
@@ -108,18 +108,48 @@ const Profile = () => {
   async function createUser()
   {
     try {
-      const response = await post(`/user/create`, setLoadingRequest, {
-        username, email, password, confirm_password: confirmPassword
-      });
+      if (validateUser("SAVE")) {
+        const response = await post(`/user/create`, setLoadingRequest, {
+          username, email, password, confirm_password: confirmPassword
+        });
 
-      setId(response.id);
-      setUserName(response.username);
-      setEmail(response.email);
-      setPassword("");
-      setConfirmPassword("");
+        setId(response.id);
+        setUserName(response.username);
+        setEmail(response.email);
+        setPassword("");
+        setConfirmPassword("");
+      }
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
+  }
+
+  function validateUser(action: "SAVE" | "UPDATE" | "DELETE")
+  {
+    const messages = {
+      "SAVE": {title: getTerm(100095), message: getTerm(100087)},
+      "UPDATE": {title: getTerm(100095), message: getTerm(100100)},
+      "DELETE": {title: getTerm(100098), message: getTerm(100099)},
+    }
+
+    if (action === "SAVE" || action === "UPDATE") {
+      if (!username.trim() || !email.trim()) {
+        Alert.alert(messages[action].title, messages[action].message);
+        return false;
+      }
+
+      if (action === "UPDATE" && newPassword !== confirmPassword) {
+        Alert.alert(getTerm(100101), getTerm(100102));
+        return false;
+      }
+    } else {
+      if (!password && !params) {
+        Alert.alert(messages[action].title, messages[action].message);
+        return false;
+      }
+    }
+
+    return true;
   }
 
   useEffect(() => {

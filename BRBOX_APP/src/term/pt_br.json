@@ -87,5 +87,19 @@
   "100085": "Informações não preenchidas",
   "100086": "E-mail e senha são requeridos para o login",
   "100087": "Nome, e-mail, senha e confirmação de senha são requeridos",
-  "100088": "Tags avaliadas"
+  "100088": "Tags avaliadas",
+  "100089": "Plataforma não adicionada",
+  "100090": "Pelo menos um link de uma plataforma é requerido",
+  "100091": "Imagem não adicionada",
+  "100092": "Pelo menos uma imagem é requerida para salva o jogo",
+  "100093": "Nome é requerido",
+  "100094": "Seu jogo deve possuir um nome",
+  "100095": "Dados requeridos faltando",
+  "100096": "A tag deve possuir nome e descrição",
+  "100097": "A plataforma deve possuir nome",
+  "100098": "Senha é requerida para essa ação",
+  "100099": "Digite sua senha para continuar com a exclusão dos seus dados",
+  "100100": "Nome e email são os dados mínimos requeridos para atualizar o usuário",
+  "100101": "Senhas diferentes",
+  "100102": "As senhas digitadas são diferentes uma da outra"
 }

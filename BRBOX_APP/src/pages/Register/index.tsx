@@ -38,6 +38,10 @@ const Register = () => {
       return Alert.alert(getTerm(100085), getTerm(100087));
     }
 
+    if (password !== confirmPassword) {
+      return Alert.alert(getTerm(100101), getTerm(100102));
+    }
+
     await register(username, mail, password, confirmPassword, () => {
       Alert.alert(getTerm(100077), getTerm(100078));
     });

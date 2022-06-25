@@ -1,6 +1,7 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   ScrollView,
   Text,
   View,
@@ -55,6 +56,10 @@ const AddPlatform = () => {
   {
     try {
       let response;
+
+      if (!platform.name || !platform.name.trim()) {
+        return Alert.alert(getTerm(100095), getTerm(100097));
+      }
 
       if (!params && !platform.id) {
         response = await post(`/platform/create`, setLoadingRequest, {
