@@ -28,6 +28,7 @@ const AddPlatform = () => {
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(Boolean(params));
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [platform, setPlatform] = useState({} as Platform);
 
   const { darkMode } = useTheme();
@@ -56,11 +57,11 @@ const AddPlatform = () => {
       let response;
 
       if (!params && !platform.id) {
-        response = await post(`/platform/create`, setLoading, {
+        response = await post(`/platform/create`, setLoadingRequest, {
           name: platform.name
         });
       } else {
-        response = await put(`/platform/update`, setLoading, {
+        response = await put(`/platform/update`, setLoadingRequest, {
           id: platform.id,
           new_name: platform.name
         });
@@ -95,6 +96,7 @@ const AddPlatform = () => {
           <Button
             text={!params && !platform.id ? 100026 : 100015}
             onPress={saveTag}
+            loading={loadingRequest}
           />
         </View>
       </ScrollView>

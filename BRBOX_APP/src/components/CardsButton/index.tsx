@@ -27,11 +27,11 @@ export default function CardsButton({iconName, iconSize, iconColor, iconLibrary,
       case "FontAwesome":
         return <FontAwesomeIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
       case "MaterialIcons":
-        return <MaterialIcon name={iconName} size={iconSize || 30} color="#fff" />
+        return <MaterialIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
       case "Fontisto":
-        return <FontistoIcon name={iconName} size={iconSize || 30} color="#fff" />
+        return <FontistoIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
       case "Ionicons":
-        return <IoniconsIcon name={iconName} size={iconSize || 30} color="#fff" />
+        return <IoniconsIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
     }
   }
 

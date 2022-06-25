@@ -77,13 +77,13 @@ export default function UserCard({id, username, email, admin, setLoading, callba
           iconName="admin-panel-settings"
           iconLibrary="MaterialIcons"
           style={{backgroundColor: !admin ? config.darkGreen : config.red}}
-          callback={makeUserAdmin}
+          onPress={makeUserAdmin}
         />
 
         <CardsButton
           iconName="trash"
           style={styles.deleteButton}
-          callback={deleteUser}
+          onPress={deleteUser}
         />
       </View>
     </TouchableOpacity>

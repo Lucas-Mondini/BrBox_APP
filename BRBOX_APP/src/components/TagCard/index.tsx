@@ -55,7 +55,7 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
         <CardsButton
           iconName="trash"
           style={styles.deleteButton}
-          callback={deleteTag}
+          onPress={deleteTag}
         />
       </View>
     </TouchableOpacity>

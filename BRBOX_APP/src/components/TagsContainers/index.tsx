@@ -6,7 +6,7 @@ import config from "../../../brbox.config.json";
 import { useTerm } from "../../Contexts/TermProvider";
 import { useTheme } from "../../Contexts/Theme";
 import { useGame } from "../../Contexts/Game";
-import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useRequest } from "../../Contexts/Request";
 import { Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
@@ -22,10 +22,8 @@ export default function TagsContainers({title}: TagsContainersProps)
     tagValueList
   } = useGame();
 
-  const route = useRoute();
   const {get} = useRequest();
   const {getTerm} = useTerm();
-  const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
   const [tags, setTags] = useState([] as Tag[]);
@@ -87,10 +85,10 @@ export default function TagsContainers({title}: TagsContainersProps)
 
     for (const tag of tags) {
       tagArray.push(
-        <TouchableOpacity onPress={() => handleLists(
+        <TouchableOpacity key={tag.id} onPress={() => handleLists(
           tag.id, tags, selectedTags, setTags, setSelectedTags
         )}>
-          <Text style={styles.tag} key={tag.id}>{tag.name}</Text>
+          <Text style={styles.tag}>{tag.name}</Text>
         </TouchableOpacity>
       );
     }
@@ -102,8 +100,8 @@ export default function TagsContainers({title}: TagsContainersProps)
   {
     if (evaluatedTags.length > 0) {
       return evaluatedTags.map((tagValues: any) => (
-        <TouchableOpacity onPress={() => {}} activeOpacity={1}>
-          <Text style={styles.tag} key={tagValues.id}>{tagValues.tag.name}</Text>
+        <TouchableOpacity key={tagValues.id} onPress={() => {}} activeOpacity={1}>
+          <Text style={styles.tag}>{tagValues.tag.name}</Text>
         </TouchableOpacity>
       ));
     }
@@ -144,7 +142,7 @@ export default function TagsContainers({title}: TagsContainersProps)
 
   useEffect(() => {
     getTags();
-  }, [isFocused]);
+  }, []);
 
   useEffect(() => {
     if (tagValueList > 0) {

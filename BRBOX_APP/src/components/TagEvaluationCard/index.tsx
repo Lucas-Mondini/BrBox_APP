@@ -31,6 +31,7 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
   const { post } = useRequest();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
+  const iconColor = (value: number) => darkMode || selectedEvaluationVote === value ? "#fff" : config.mainIconColor;
 
   async function saveVote(vote: number) {
     setLoading(true);
@@ -85,18 +86,21 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
           <CardsButton
             iconName="md-thumbs-up-sharp"
             iconLibrary="Ionicons"
+            iconColor={iconColor(1)}
             onPress={() => saveVote(1)}
             style={selectedEvaluationVote === 1 ? {backgroundColor: config.greenBar} : {}}
           />
           <CardsButton
             iconName="thumbs-up-down"
             iconLibrary="MaterialIcons"
+            iconColor={iconColor(2)}
             onPress={() => saveVote(2)}
             style={selectedEvaluationVote === 2 ? {backgroundColor: config.yellow} : {}}
           />
           <CardsButton
             iconName="md-thumbs-down-sharp"
             iconLibrary="Ionicons"
+            iconColor={iconColor(3)}
             onPress={() => saveVote(3)}
             style={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
           />

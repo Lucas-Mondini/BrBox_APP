@@ -32,7 +32,7 @@ const Home = () => {
 
       setGames(response.games);
     } catch (err) {
-      //return signOut();
+      return signOut();
     }
   }
 
@@ -55,7 +55,7 @@ const Home = () => {
                 tag2={item.tags[1]}
                 tag3={item.tags[2]}
                 imgUri={item.Image.link}
-                editGame={!user?.admin}
+                editGame={user?.admin}
               />
             )
           }

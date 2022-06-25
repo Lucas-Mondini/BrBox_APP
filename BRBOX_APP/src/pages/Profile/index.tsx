@@ -32,6 +32,7 @@ const Profile = () => {
   const params = route.params as Params;
 
   const [loading, setLoading] = useState(true);
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const isFocused = useIsFocused();
   const [username, setUserName] = useState("");
   const [id, setId] = useState(0);
@@ -85,7 +86,7 @@ const Profile = () => {
   async function updateUser()
   {
     try {
-      const response = await put(`/user/update`, setLoading, {
+      const response = await put(`/user/update`, setLoadingRequest, {
         id, username, email, password, new_password: newPassword, confirm_new_password: confirmPassword
       });
 
@@ -107,7 +108,7 @@ const Profile = () => {
   async function createUser()
   {
     try {
-      const response = await post(`/user/create`, setLoading, {
+      const response = await post(`/user/create`, setLoadingRequest, {
         username, email, password, confirm_password: confirmPassword
       });
 
@@ -183,6 +184,7 @@ const Profile = () => {
         <Button
           text={id ? 100015 : 100026}
           onPress={id ? updateUser : createUser}
+          loading={loadingRequest}
         />
 
         {Boolean(id) && <>

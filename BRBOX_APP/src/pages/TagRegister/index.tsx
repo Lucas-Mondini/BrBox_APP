@@ -28,6 +28,7 @@ const TagRegister = () => {
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(Boolean(params));
+  const [loadingRequest, setLoadingRequest] = useState(false);
   const [tag, setTag] = useState({} as Tag);
 
   const { darkMode } = useTheme();
@@ -56,11 +57,11 @@ const TagRegister = () => {
       let response;
 
       if (!params && !tag.id) {
-        response = await post(`/tag/create`, setLoading, {
+        response = await post(`/tag/create`, setLoadingRequest, {
           name: tag.name, description: tag.description
         });
       } else {
-        response = await put(`/tag/update`, setLoading, {
+        response = await put(`/tag/update`, setLoadingRequest, {
           id: tag.id,
           new_name: tag.name,
           new_description: tag.description
@@ -105,6 +106,7 @@ const TagRegister = () => {
           <Button
             text={!params && !tag.id ? 100026 : 100015}
             onPress={saveTag}
+            loading={loadingRequest}
           />
         </View>
       </ScrollView>

@@ -1,5 +1,5 @@
 import { useIsFocused, useRoute } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ScrollView,
   Text,
@@ -24,6 +24,7 @@ const GameInfo = () => {
 
   const route = useRoute();
   const isFocused = useIsFocused();
+  const [tagsContainer, setTagsContainer] = useState<React.ReactElement>();
 
   const params = route.params as Params;
 
@@ -36,6 +37,12 @@ const GameInfo = () => {
       loadGame(params.id);
     }
   }, [isFocused]);
+
+  useEffect(() => {
+    if (isFocused && !loading) {
+      setTagsContainer(<TagsContainers />)
+    }
+  }, [isFocused, loading]);
 
   return (
     <MainView loading={loading}>
@@ -51,8 +58,7 @@ const GameInfo = () => {
 
         {renderLinks()}
 
-        <TagsContainers
-        />
+        {tagsContainer && tagsContainer}
       </ScrollView>
     </MainView>
   );

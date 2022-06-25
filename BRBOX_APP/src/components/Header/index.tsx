@@ -22,8 +22,6 @@ export default function Header({title, addAction}: HeaderProps)
 
   const color = !darkMode ? config.darkGreen : config.mediumGreen;
 
-
-
   return (
     <View style={[styles.headerContainer, {borderBottomColor: color}]}>
       {!dropDownMenu &&
