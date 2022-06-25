@@ -2,10 +2,12 @@ import { StyleSheet } from "react-native";
 import config from "../../../brbox.config.json";
 
 const styles = StyleSheet.create({
+  titleView: {
+    marginTop: "45%",
+    paddingBottom: 30
+  },
   container: {
-    paddingHorizontal: "3%",
-    paddingTop: "55%",
-    height: "100%",
+    paddingHorizontal: "3%"
   },
   title: {
     fontFamily: config.fontFamilyBold,

@@ -3,6 +3,7 @@ import {
   Alert,
   ScrollView,
   Text,
+  View,
 } from 'react-native';
 import Input from '../../components/Input';
 
@@ -44,13 +45,15 @@ const Register = () => {
 
   return (
     <MainView>
-      <ScrollView style={[styles.container]}>
+      <View style={styles.titleView}>
         <Text
           style={[styles.title, titleColorStyle]}
         >
           {getTerm(100021)}
         </Text>
+      </View>
 
+      <ScrollView style={[styles.container]}>
         <Input
           placeholderText={100013}
           value={username}

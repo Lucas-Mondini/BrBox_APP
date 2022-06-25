@@ -6,7 +6,6 @@ import {
   View
 } from 'react-native';
 
-import BottomMenu from '../../components/BottomMenu';
 import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
 import styles from './styles';

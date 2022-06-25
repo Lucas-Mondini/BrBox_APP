@@ -25,9 +25,7 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
   const { darkMode } = useTheme();
   const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(value || 0);
   const [loading, setLoading] = useState(false);
-  
-  console.log(evaluationId)
-  console.log(id)
+
   const [sendRequest, setSendRequest] = useState(Boolean(evaluationId));
   const [evalId, setEvalId] = useState(evaluationId || 0);
   const { post } = useRequest();
@@ -59,13 +57,11 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
 
     try {
       if (evalId > 0 && sendRequest) {
-        console.log(evalId)
         await post("tagValue/remove", setLoading, {
           tagValueListId, tagValueId: evalId
         });
       }
     } catch (e : any) {
-      console.log(e);
     }
 
     setLoading(false);
@@ -104,8 +100,6 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
             onPress={() => saveVote(3)}
             style={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
           />
-
-
         </>}
 
         <CardsButton
