@@ -1,17 +1,17 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, Linking, Text, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
 import config from "../../../brbox.config.json";
 import { getMaxId, removeObjectFromArray, splitText } from '../../utils/functions';
 import { ImageType, LinkType, Platform } from '../../utils/types';
-import Carousel from 'react-native-reanimated-carousel';
-import CarouselImage from '../../components/CarouselImage';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
 import { useTheme } from '../Theme';
+import ImageCarousel from '../../components/ImageCarousel';
+import ImageCarouselPreview from '../../components/ImageCarouselPreview';
 
 type GameData = {
   id: number;
@@ -134,39 +134,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     return links;
   }
 
-  function renderImages(allowRemove = false) {
+  function renderImages(isEdit?: boolean)
+  {
     if (images.length > 0) {
-      return (
-        <Carousel
-            style={{width: "100%", marginBottom: 30}}
-            loop
-            pagingEnabled={true}
-            snapEnabled={true}
-            autoPlay={false}
-            mode="parallax"
-            modeConfig={{
-                parallaxScrollingScale: 1,
-                parallaxScrollingOffset: 0,
-            }}
-            data={images}
-            height={allowRemove ? 230 : 180}
-            width={340}
-            windowSize={1}
-            renderItem={
-              ({item}: any) => {
-                if (!item.link) return <View />;
-                return (
-                  <CarouselImage
-                    key={item.id}
-                    imageUri={item.link}
-                    allowRemove={allowRemove}
-                    callback={() => removeObjectFromArray(item.id, images, setImages)}
-                  />
-                )
-              }
-            }
-          />
+      return !isEdit
+      ? (
+        <ImageCarousel
+          data={images}
+        />
       )
+      : (
+        <ImageCarouselPreview
+          images={images}
+          setImages={setImages}
+        />
+      );
     }
   }
 
@@ -257,7 +239,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       {children}
     </GameContext.Provider>
   );
-
 }
 
 export const useGame = ()=> {

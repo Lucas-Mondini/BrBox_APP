@@ -11,7 +11,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
     fontFamily: config.fontFamilyBold,
-    marginBottom:30,
     textAlign: "center"
   },
   tagsListView: {
