@@ -20,8 +20,8 @@ mainRouter.use('/game', gameRouter);
 
 mainRouter.use('/platform', Auth.admin, platformRouter);
 
-mainRouter.use('/tag', Auth.admin,      tagRouter);
-mainRouter.use('/value', Auth.admin,    valueRouter);
+mainRouter.use('/tag',  tagRouter);
+mainRouter.use('/value', valueRouter);
 mainRouter.use('/tagValue', Auth.user,  tagValueListRouter);
 
 export default mainRouter;
