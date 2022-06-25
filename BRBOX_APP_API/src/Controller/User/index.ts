@@ -216,7 +216,7 @@ export default class UserController implements IController {
     
     Login = async (email: string, password: string) => {
         try {
-            const user = await AppDataSource.getRepository(User).findOneOrFail( {where: {
+            const user = await AppDataSource.getRepository(User).findOne( {where: {
                 email: email
             }, select: ["id", "username", "email", "Password"]});
             
