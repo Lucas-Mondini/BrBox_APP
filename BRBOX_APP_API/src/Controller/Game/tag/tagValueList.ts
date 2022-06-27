@@ -11,6 +11,21 @@ export default class TagValueListController extends Controller {
     constructor() {
         super(TagValueList, ["tagValues", "tagValues.tag", "tagValues.user", "tagValues.value"])
     }
+
+    //@ts-ignore
+    Get = async (req: Request) => {
+        try {
+            const id = req.params.id
+            const tagValue = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+
+            const tagValueFromUser = tagValue.tagValues.filter(i => i.user.id == req.user.id)
+            
+            return {status: 200, value: {tagValueFromUser: tagValueFromUser, tagValue: tagValue}};
+        }
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+        }
+    }
     
     //@ts-ignore
     Create = async (req:Request) => {
