@@ -24,7 +24,7 @@ export default function UserCard({images, setImages}: UserCardProps)
       <FlatList
         horizontal
         showsHorizontalScrollIndicator
-        keyExtractor={(item: any) => item.key}
+        keyExtractor={(item: any) => item.id}
         data={images}
         renderItem={
           ({item}: any) => {
