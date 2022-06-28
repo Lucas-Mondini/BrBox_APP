@@ -4,13 +4,12 @@ import React, { createContext, ReactNode, useContext, useEffect, useState } from
 import api from '../services/api';
 import { User } from '../utils/types';
 
-import config from "../../brbox.config.json";
-
 type AuthData = {
   signed: boolean;
   user: User | null;
   temporaryToken: string;
   loading: boolean;
+  firstLoad: boolean;
   setLoading: (value: boolean) => void;
   signIn: (email: string, pass: string, errorCallback?: Function) => void;
   register: (name: string, email: string, pass: string, confPass: string, errorCallback?: Function) => void;
@@ -31,6 +30,7 @@ const AuthContext = createContext({} as AuthData);
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
 {
   const [loading, setLoading] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
   const [user, setUser] = useState<User | null>(null);
   const [string, setString] = useState('');
   const [temporaryToken, setTemporaryToken] = useState('');
@@ -40,18 +40,21 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
       setLoading(true);
 
       const userData = await AsyncStorage.getItem('user');
+
       if(userData) {
         const userJson = JSON.parse(userData);
 
         let response = await api.get(`/user/${userJson.id}`, {headers: {auth_token: userJson.auth_token}});
 
         setUser({...response.data, auth_token: userJson.auth_token});
-    }
+      }
 
       setLoading(false);
     } catch(err) {
       return signOut();
     }
+
+    setFirstLoad(false);
   }
 
   async function signIn(email: string, password: string, errorCallback?: Function) {
@@ -114,6 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
       user,
       temporaryToken,
       loading,
+      firstLoad,
       setLoading,
       signIn,
       signOut,

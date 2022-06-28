@@ -14,12 +14,17 @@ import { useAuth } from '../../Contexts/Auth';
 import { Game } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import { useGame } from '../../Contexts/Game';
+import Loading from '../../components/Loading';
 
 const Home = () => {
   const isFocused = useIsFocused();
 
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(true);
   const [games, setGames] = useState<Game[]>([]);
+  const [page, setPage] = useState(1);
+  const [amount, setAmount] = useState(30);
+  const [order, setOrder] = useState("name");
 
   const {get} = useRequest();
   const {signOut, user} = useAuth();
@@ -28,12 +33,15 @@ const Home = () => {
   async function getGames()
   {
     try {
-      const response = await get("/game", setLoading);
+      const response = await get(`/game?page=${page}&ammount=${amount}&order=${order}`, setLoadingMore);
 
-      setGames(response.games);
+      setGames([...games, ...response.games]);
+      setPage(page+1);
     } catch (err) {
       return signOut();
     }
+
+    setLoading(false);
   }
 
   function renderGames()
@@ -60,6 +68,9 @@ const Home = () => {
             )
           }
         }
+        onEndReached={getGames}
+        onEndReachedThreshold={0.5}
+        ListFooterComponent={loadingMore ? <Loading styles={{marginBottom: 15}} /> : null}
       />);
   }
 

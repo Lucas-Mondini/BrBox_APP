@@ -16,11 +16,13 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import Button from '../../components/Button';
 import { useTheme } from '../../Contexts/Theme';
+import { useAuth } from '../../Contexts/Auth';
+import Loading from '../../components/Loading';
 
 const Main = () => {
-  const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
-
+  const { darkMode } = useTheme();
+  const {firstLoad} = useAuth();
   const {getTerm} = useTerm();
 
   const registerTextColorStyle = {
@@ -30,15 +32,21 @@ const Main = () => {
   return (
     <MainView>
       <ImageBackground source={bg} style={[styles.container]} resizeMode='cover'>
-        <Button
-          text={100009}
-          onPress={()=>{navigation.navigate("Login")}}
-          extraStyle={{marginTop: "70%"}}
-        />
+        { firstLoad
+        ? <Loading
+            styles={{backgroundColor: "transparent", marginTop: "70%"}}
+          />
+        : <>
+          <Button
+            text={100009}
+            onPress={()=>{navigation.navigate("Login")}}
+            extraStyle={{marginTop: "70%"}}
+          />
 
-        <TouchableOpacity style={styles.registerButton} onPress={()=>{navigation.navigate("Register")}}>
-          <Text style={[styles.buttonText, registerTextColorStyle]}>{getTerm(100010)}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.registerButton} onPress={()=>{navigation.navigate("Register")}}>
+            <Text style={[styles.buttonText, registerTextColorStyle]}>{getTerm(100010)}</Text>
+          </TouchableOpacity>
+        </> }
       </ImageBackground>
     </MainView>
   );
