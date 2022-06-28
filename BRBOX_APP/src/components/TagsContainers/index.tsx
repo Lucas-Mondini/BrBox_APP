@@ -6,9 +6,9 @@ import config from "../../../brbox.config.json";
 import { useTerm } from "../../Contexts/TermProvider";
 import { useTheme } from "../../Contexts/Theme";
 import { useGame } from "../../Contexts/Game";
-import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useRequest } from "../../Contexts/Request";
-import { Tag } from "../../utils/types";
+import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 
@@ -51,24 +51,27 @@ export default function TagsContainers({title}: TagsContainersProps)
     try {
       const response = await get(`/tagValue/${id}`, setEvaluatedTagsLoading);
 
-      setEvaluatedTags(response.tagValues);
-
       if (firstLoad) {
-        setSelectedTags(response.tagValues.map((tag: any) => {
-          return {
-            id: tag.tag.id,
-            evalId: tag.id,
-            name: tag.tag.name,
-            description: tag.tag.description,
-            value: tag.value.id
-          };
-        }));
+        setSelectedTags(filterUsefulInformation(response.tagValueFromUser));
+        setFirstLoad(false);
       }
 
-      setFirstLoad(false);
+      setEvaluatedTags(filterUsefulInformation(response.tagValue.tagValues));
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
+  }
+
+  function filterUsefulInformation(list: Evaluation[]) {
+    return list.map((item) => {
+      return {
+        id: item.tag.id,
+        evalId: item.id,
+        name: item.tag.name,
+        description: item.tag.description,
+        value: item.value.id
+      }
+    });
   }
 
   function handleLists(id: number, tagList: Tag[], oppositeTagList: Tag[], setListFunction: (tag: Tag[]) => void, setOppositeListFunction: (tag: Tag[]) => void) {
@@ -101,7 +104,7 @@ export default function TagsContainers({title}: TagsContainersProps)
     if (evaluatedTags.length > 0) {
       return evaluatedTags.map((tagValues: any) => (
         <TouchableOpacity key={tagValues.id} onPress={() => {}} activeOpacity={1}>
-          <Text style={styles.tag}>{tagValues.tag.name}</Text>
+          <Text style={styles.tag}>{tagValues.name}</Text>
         </TouchableOpacity>
       ));
     }

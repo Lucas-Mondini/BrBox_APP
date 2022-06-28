@@ -22,9 +22,10 @@ export type Params = {
 }
 
 export type Evaluation = {
-  user_ID: string;
-  paid: boolean;
-  participated: boolean;
+  id: number;
+  tag: Tag;
+  user: User;
+  value: Value;
 }
 
 export type ImageType = {
@@ -59,5 +60,10 @@ export type TagValue = {
 export type Platform = {
   id: number;
   platform: number;
+  name: string;
+}
+
+export type Value = {
+  id: number;
   name: string;
 }
