@@ -25,5 +25,7 @@
 
   "isDarkModeDefault" : "true",
 
+  "playStoreUrl":"https://play.google.com/store/apps/details?id=com.brbox_app&hl=pt-BR&ah=RHr4WgG7T5CWol2L_VMcyV1_voA",
+
   "version": "0.0.3"
 }

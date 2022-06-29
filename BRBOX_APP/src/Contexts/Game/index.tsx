@@ -245,8 +245,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   {
       setId(0);
       setName("");
-      setLinkList([]);
       setImages([]);
+      setLinkList([]);
+      setLoading(true);
       setTagValueList(0);
   }
 
