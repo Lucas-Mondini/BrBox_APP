@@ -54,17 +54,19 @@ export default class GameController extends Controller {
     
     Index = async (req: Request) => {
         try {
-            const {page = "1", ammount = "25", order = "name", name} = req.query
+            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name} = req.query
             
             var where = "1 = 1";
             var orderBy = "";
-            var AscOrDesc : any = "ASC"
+            var OrderASCOrDESC = "asc"
+            if((<string>AscDesc).toLowerCase() == "asc" || (<string>AscDesc).toLowerCase() == "desc")
+                OrderASCOrDESC = (<string>AscDesc)
+
             
             if(order == "id" || order == "name") {
-                orderBy = "game."+order
+                orderBy = `order by game.${order} ${OrderASCOrDESC}`
             } else if (order == "tag") {
-                orderBy = "tag"
-                AscOrDesc = "DESC"
+                orderBy = `order by tag DESC`
             }
             
             if(name) {
@@ -73,8 +75,6 @@ export default class GameController extends Controller {
             }
             
             where = where.replace(/"/g, "'");
-            const _order:any = {};
-            _order[<string>order] = "ASC";
             
             const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0
                       
@@ -82,6 +82,8 @@ export default class GameController extends Controller {
             select
                 game.id as gameId,
                 game.name gameName,
+                image.id as imageId,
+                image.link as imageLink,
                 tag_data.name tagname,
                 COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
                 COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
@@ -114,36 +116,35 @@ export default class GameController extends Controller {
                             group by 
                                 tvltvtv."tagValueListId", tag.id, tag."name", value.id, value."name"
                 ) tag_data on (game."tagListId" = tag_data."tagValueListId")
-
+                INNER join (
+                			select image.id, image.link, ilii."imageListId" listId
+                			from image_list_images_image ilii
+         					inner join image on image.id = ilii."imageId"
+							) image on (image.listId = game."imageListId")
                 where (
                         game.id in (
-                                    select 
-                                        game.id as id
-                                    from game
-                                    where game.id in (
-                                                        select game.id from game 
-                                                        where ${where}
-                                                        order by ${orderBy}
-                                                        ${AscOrDesc}
-                                                        limit ${ammount}
-                                                        offset ${skip}
-                                                        )
-                                        )
+                                    select game.id from game 
+                                    where ${where}
+                                    ${orderBy}
+                                    limit ${ammount}
+                                    offset ${skip}
+                                    )
                     )
-
                 group by
                     game.id,
                     game."name",
+                    image.id,
+                    image.link,
                     tag_data."name"
                 order by 
                     game.id
                                 `);
-                            console.log(games)
                             
                             games = games.map((i : any) => {
                                 const game =  {
                                     id: i.gameid,
                                     name: i.gamename,
+                                    image: i.imagelink,
                                     tags: games .filter((j : any) => j.gameid == i.gameid)
                                                 .map((j: any) => {
                                                     if(j.tagname)
@@ -162,7 +163,13 @@ export default class GameController extends Controller {
                             games.findIndex((v: any) => v.gameid === value.id ) == index
                           ).map((game: any) => {
 
-                                if(game.tags) {
+                            game.tags = game.tags.filter( (i:any) => i != undefined)
+                            if(game.tags) {
+
+                                game.tags = game.tags.filter(
+                                    (value: any, index: any, self: any) => index === self.findIndex(
+                                        (t : any) => (t.tag == value.tag)
+                                        ))
                                 const sortedUp = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
                                 const sortedDown = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
 
