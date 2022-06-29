@@ -3,12 +3,50 @@ import {Controller} from "../..";
 
 import { AppDataSource } from "../../../data-source";
 import Tag from "../../../Model/Game/tag";
+import TagValue from "../../../Model/Game/tag/tagValue";
 
 export default class TagController extends Controller {
 
     constructor() {
         super(Tag, []);
     }
+
+    //@ts-ignore
+    Index = async (req: Request) => {
+        try {
+            const {game = null} = req.query
+
+            var tagsEvaluated: any = [];
+            if(game)
+                tagsEvaluated = await AppDataSource.query(` select * from tag
+                                                            where 
+                                                                id in (
+                                                                select 
+                                                                    tv."tagId" as id from tag_value tv 
+                                                                inner join 
+                                                                    tag_value_list_tag_values_tag_value tvltvtv on tvltvtv."tagValueId" = tv.id
+                                                                inner join 
+                                                                    game g on g."tagListId" = tvltvtv."tagValueListId"
+                                                                where 
+                                                                    g.id = ${game} and tv."userId"  = ${req.user.id}
+                                                                            )
+                                                            order by id ASC`
+                                                        )
+            
+            let tags = await AppDataSource.getRepository(Tag).find({});
+            if(tagsEvaluated) {
+                tagsEvaluated.map((i: any) => {
+                    tags = tags.filter(j => j.id != i.id)
+                })
+            }
+
+            return {status: 200, value: tags};
+        }
+         catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+        }
+    }
+
 
     //@ts-ignore
     Create = async (req: Request) => {
