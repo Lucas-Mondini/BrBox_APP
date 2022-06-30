@@ -1,11 +1,8 @@
 export type Game = {
-  title: string;
-  year: number;
-  tag1: string;
-  tag2: string;
-  moreTags: number;
   id: number;
-  evaluations: number;
+  name: string;
+  image: string;
+  tags: any[];
 }
 
 export type User = {
@@ -46,6 +43,7 @@ export type Tag = {
   name: string;
   evalId: number;
   value?: number;
+  count?: number;
   description?: string;
 }
 

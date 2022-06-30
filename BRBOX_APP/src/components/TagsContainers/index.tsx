@@ -12,14 +12,10 @@ import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 
-interface TagsContainersProps {
-  title?: number;
-}
-
-export default function TagsContainers({title}: TagsContainersProps)
+export default function TagsContainers()
 {
   const {
-    tagValueList
+    id: gameId , tagValueList
   } = useGame();
 
   const {get} = useRequest();
@@ -37,11 +33,11 @@ export default function TagsContainers({title}: TagsContainersProps)
 
   const color = darkMode ? "#fff" : config.dark;
 
-  async function getTags() {
+  async function getTags(setTagsState: boolean = true) {
     try {
-      const response = await get("/tag", setLoadingTags);
+      const response = await get(`/tag?game=${gameId}`, setLoadingTags);
 
-      setTags(response);
+      if (setTagsState) setTags(response);
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -56,13 +52,19 @@ export default function TagsContainers({title}: TagsContainersProps)
         setFirstLoad(false);
       }
 
-      setEvaluatedTags(filterUsefulInformation(response.tagValue.tagValues));
+      setEvaluatedTags(groupEvaluatedTags(response.tagValue.tagValues));
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
-  function filterUsefulInformation(list: Evaluation[]) {
+  /**
+   * Receive a list of evaluated tags and returns a list of tags only with the useful information
+   * @param list
+   * @return Tag[]
+   */
+  function filterUsefulInformation(list: Evaluation[])
+  {
     return list.map((item) => {
       return {
         id: item.tag.id,
@@ -74,6 +76,41 @@ export default function TagsContainers({title}: TagsContainersProps)
     });
   }
 
+  /**
+   * Receive a list of evaluated tags and returns a list of tags grouped by tag
+   * @param list
+   * @return Tag[]
+   */
+  function groupEvaluatedTags(list: Evaluation[]): Tag[]
+  {
+    const finalValues: Tag[] = [];
+
+    for (let item1 of list) {
+      const countTags = list.filter((item) => item.tag.id === item1.tag.id)
+
+      finalValues.push({
+        id: countTags[0].tag.id,
+        count: countTags.length,
+        evalId: countTags[0].id,
+        name: countTags[0].tag.name,
+        value: countTags[0].value.id,
+        description: countTags[0].tag.description
+      });
+    }
+
+    return [
+        ...new Map(finalValues.map((item) => [item["id"], item])).values(),
+    ];
+  }
+
+  /**
+   * Remove the value from um list and add it to the other
+   * @param id
+   * @param tagList
+   * @param oppositeTagList
+   * @param setListFunction
+   * @param setOppositeListFunction
+   */
   function handleLists(id: number, tagList: Tag[], oppositeTagList: Tag[], setListFunction: (tag: Tag[]) => void, setOppositeListFunction: (tag: Tag[]) => void) {
     const tagsNotSelected = tagList.filter(item => item.id !== id),
           tagsSelected = tagList.filter(item => item.id === id);
@@ -84,63 +121,46 @@ export default function TagsContainers({title}: TagsContainersProps)
 
   function renderTags()
   {
-    const tagArray: React.ReactNode[] = [];
-
-    for (const tag of tags) {
-      tagArray.push(
-        <TouchableOpacity key={tag.id} onPress={() => handleLists(
-          tag.id, tags, selectedTags, setTags, setSelectedTags
-        )}>
+    return tags.map(tag => (
+      <TouchableOpacity key={tag.id} onPress={() => handleLists(
+        tag.id, tags, selectedTags, setTags, setSelectedTags
+      )}>
           <Text style={styles.tag}>{tag.name}</Text>
         </TouchableOpacity>
-      );
-    }
-
-    return tagArray;
+      ));
   }
 
   function renderEvaluatedTags()
   {
-    if (evaluatedTags.length > 0) {
-      return evaluatedTags.map((tagValues: any) => (
-        <TouchableOpacity key={tagValues.id} onPress={() => {}} activeOpacity={1}>
-          <Text style={styles.tag}>{tagValues.name}</Text>
-        </TouchableOpacity>
-      ));
-    }
-
-    return null;
+    return evaluatedTags.map((tagValues: any, index: number) => (
+      <TouchableOpacity key={index} onPress={() => {}} activeOpacity={1}>
+        <Text style={styles.tag}>{tagValues.count} {tagValues.name}</Text>
+      </TouchableOpacity>
+    ));
   }
 
   function renderSelectedTags()
   {
-    const tagArray: React.ReactNode[] = [];
+    return selectedTags.map(tag => (
+      <TagEvaluationCard
+        key={tag.id}
+        remove={() => {
+          handleLists(
+            tag.id, selectedTags, tags, setSelectedTags, setTags
+          )
 
-    for (const tag of selectedTags) {
-      tagArray.push(
-        <TagEvaluationCard
-          key={tag.id}
-          remove={() => {
-            handleLists(
-              tag.id, selectedTags, tags, setSelectedTags, setTags
-            )
-
-            getEvaluatedTags(tagValueList);
-          }}
-          id={tag.id}
-          evaluationId={tag.evalId}
-          value={tag.value}
-          title={tag.name}
-          description={tag.description || ""}
-          tagValueListId={tagValueList}
-          extraCallback={() => getEvaluatedTags(tagValueList)}
-        />
-      );
-    }
-
-    if (tagArray.length > 0) {
-      return tagArray;
-    }
+          getTags(false)
+          getEvaluatedTags(tagValueList);
+        }}
+        id={tag.id}
+        evaluationId={tag.evalId}
+        value={tag.value}
+        title={tag.name}
+        description={tag.description || ""}
+        tagValueListId={tagValueList}
+        extraCallback={() => getEvaluatedTags(tagValueList)}
+      />
+    ));
   }
 
   useEffect(() => {
