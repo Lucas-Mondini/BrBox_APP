@@ -63,7 +63,7 @@ const Home = () => {
                 tag2={item.tags[1]}
                 tag3={item.tags[2]}
                 imgUri={item.image}
-                editGame={!user?.admin}
+                editGame={user?.admin}
               />
             )
           }
