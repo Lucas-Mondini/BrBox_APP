@@ -27,7 +27,7 @@ export default function GameCard({id, title, tag1, tag2, tag3, editGame, imgUri}
   const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
 
   function navigateToGameInfo() {
-    return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id});
+    return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id, tags: [tag1, tag2, tag3]});
   }
 
   function formatVotes(vote: number) {
