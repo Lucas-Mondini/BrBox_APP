@@ -14,7 +14,22 @@ export default class TagController extends Controller {
     //@ts-ignore
     Index = async (req: Request) => {
         try {
-            const {game = null} = req.query
+            const {game = null, name = "", order = 'ASC'} = req.query
+
+            const orderBy = ((<string>order).toUpperCase() == 'ASC' || (<string>order).toUpperCase() == 'DESC')? order : 'ASC'
+
+            var whereName = "1 = 1";
+            var whereGame = "1 = 1";
+            if(name) {
+                const names = (<string>name).split(',');
+                whereName += ` AND (${names.map(i=> `lower(t.name) = lower('${i}')`).join(" OR ")})`
+            }
+
+            if(game) {
+                const ids = (<string>game).split(',');
+                whereGame += ` AND (${ids.map(i=> "g.id = " + i).join(" OR ")})`
+            }
+            
 
             var tagsEvaluated: any = [];
             if(game)
@@ -28,15 +43,18 @@ export default class TagController extends Controller {
                                                                 inner join 
                                                                     game g on g."tagListId" = tvltvtv."tagValueListId"
                                                                 where 
-                                                                    g.id = ${game} and tv."userId"  = ${req.user.id}
+                                                                    ${whereGame} and tv."userId"  = ${req.user.id}
                                                                             )
                                                             order by id ASC`
                                                         )
             
-            let tags = await AppDataSource.getRepository(Tag).find({});
+            let tags = await AppDataSource.query(`  select * from tag t
+                                                    where ${whereName}
+                                                    order by t.name ${orderBy}
+            `)
             if(tagsEvaluated) {
                 tagsEvaluated.map((i: any) => {
-                    tags = tags.filter(j => j.id != i.id)
+                    tags = tags.filter((j: any) => j.id != i.id)
                 })
             }
 
