@@ -3,10 +3,8 @@ import config from "../../../brbox.config.json"
 
 const styles = StyleSheet.create({
   tagCard: {
-    minHeight: 60,
-    borderBottomWidth: 2,
-    borderBottomColor: config.yellow,
-    marginBottom: 10,
+    height: 60,
+    marginTop: 10,
     width: "100%",
     flexDirection: "row"
   },
@@ -15,14 +13,21 @@ const styles = StyleSheet.create({
     fontSize: 22
   },
   description: {
-    fontFamily: config.fontFamily,
-    fontWeight: '700',
+    fontFamily: config.fontFamilyBold
   },
   buttonView: {
     position: 'absolute',
     flexDirection: 'row',
     right: 5,
     top: 5,
+  },
+  axesView: {
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 50,
+    marginRight: 10
   }
 });
 

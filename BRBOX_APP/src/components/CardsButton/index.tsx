@@ -4,6 +4,8 @@ import MaterialIcon from "react-native-vector-icons/MaterialIcons";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import IoniconsIcon from "react-native-vector-icons/Ionicons";
 import FontistoIcon from "react-native-vector-icons/Fontisto";
+import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import styles from "./styles";
 import Loading from "../Loading";
@@ -13,7 +15,7 @@ interface CardsButtonProps extends TouchableOpacityProps {
   iconName: string;
   iconSize?: number;
   iconColor?: string;
-  iconLibrary?: "MaterialIcons" | "FontAwesome" | "Fontisto" | "Ionicons";
+  iconLibrary?: "MaterialIcons" | "FontAwesome" | "Fontisto" | "Ionicons" | "SimpleLineIcons" | "MaterialCommunityIcons";
   callback?: () => void;
 }
 
@@ -28,10 +30,14 @@ export default function CardsButton({iconName, iconSize, iconColor, iconLibrary,
         return <FontAwesomeIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
       case "MaterialIcons":
         return <MaterialIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
+      case "MaterialCommunityIcons":
+        return <MaterialCommunityIcons name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
       case "Fontisto":
         return <FontistoIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
       case "Ionicons":
         return <IoniconsIcon name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
+      case "SimpleLineIcons":
+        return <SimpleLineIcons name={iconName} size={iconSize || 30} color={iconColor || "#fff"} />
     }
   }
 

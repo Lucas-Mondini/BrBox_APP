@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Image, Text, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -28,10 +28,13 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
 
   const [sendRequest, setSendRequest] = useState(Boolean(evaluationId));
   const [evalId, setEvalId] = useState(evaluationId || 0);
+  const [showButtons, setShowButtons] = useState(!Boolean(evaluationId));
   const { post } = useRequest();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
+  const descriptionColor = {color: darkMode ? "#BFBFBF" : config.dark}
   const iconColor = (value: number) => darkMode || selectedEvaluationVote === value ? "#fff" : config.mainIconColor;
+  const actionsColor = darkMode ? "#fff" : config.mainIconColor;
 
   async function saveVote(vote: number) {
     setLoading(true);
@@ -57,7 +60,7 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
     setLoading(true);
 
     try {
-      if (evalId > 0 && sendRequest) {
+      if (evalId && sendRequest) {
         await post("tagValue/remove", setLoading, {
           tagValueListId, tagValueId: evalId
         });
@@ -69,50 +72,98 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
     remove();
   }
 
+  function toggleButtons()
+  {
+    setShowButtons(!showButtons);
+  }
+
+  function getImage()
+  {
+    switch(selectedEvaluationVote) {
+      case 1:
+        return require('../../../assets/img/axe.png');
+        break;
+      case 2:
+        return require('../../../assets/img/axe-yellow.png');
+        break;
+      case 3:
+        return require('../../../assets/img/axe-red.png');
+        break;
+      default:
+        return require('../../../assets/img/axe-white.png');
+        break;
+    }
+  }
+
   return (
     <View style={styles.tagCard}>
+      {!showButtons &&
+        <View style={[styles.axesView, {backgroundColor: darkMode ? config.darkGray : config.light}]}>
+          <Image source={getImage()} />
+        </View>
+      }
+
       <View>
         <Text style={[styles.title, textColor]}>{splitText(title, 24)}</Text>
-        <Text style={[styles.description, textColor]}>{splitText(description, 50)}</Text>
+        <Text style={[styles.description, descriptionColor]}>{splitText(description, 50)}</Text>
       </View>
 
       <View style={styles.buttonView}>
 
-      {loading
-        ? <Loading
-            styles={{paddingRight: 35}}
-          />
-        : <>
-          <CardsButton
-            iconName="md-thumbs-up-sharp"
-            iconLibrary="Ionicons"
-            iconColor={iconColor(1)}
-            onPress={() => saveVote(1)}
-            style={selectedEvaluationVote === 1 ? {backgroundColor: config.greenBar} : {}}
-          />
-          <CardsButton
-            iconName="thumbs-up-down"
-            iconLibrary="MaterialIcons"
-            iconColor={iconColor(2)}
-            onPress={() => saveVote(2)}
-            style={selectedEvaluationVote === 2 ? {backgroundColor: config.yellow} : {}}
-          />
-          <CardsButton
-            iconName="md-thumbs-down-sharp"
-            iconLibrary="Ionicons"
-            iconColor={iconColor(3)}
-            onPress={() => saveVote(3)}
-            style={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
-          />
-        </>}
+      {showButtons ?
+        <>{loading
+          ? <Loading
+              styles={{paddingRight: 35}}
+            />
+          : <>
+            <CardsButton
+              iconName="arrow-up"
+              iconLibrary="MaterialCommunityIcons"
+              iconColor={iconColor(1)}
+              onPress={() => saveVote(1)}
+              style={selectedEvaluationVote === 1 ? {backgroundColor: config.greenBar} : {}}
+            />
+            <CardsButton
+              iconName="arrow-up-down"
+              iconLibrary="MaterialCommunityIcons"
+              iconColor={iconColor(2)}
+              onPress={() => saveVote(2)}
+              style={selectedEvaluationVote === 2 ? {backgroundColor: config.yellow} : {}}
+            />
+            <CardsButton
+              iconName="arrow-down"
+              iconLibrary="MaterialCommunityIcons"
+              iconColor={iconColor(3)}
+              onPress={() => saveVote(3)}
+              style={selectedEvaluationVote === 3 ? {backgroundColor: config.red} : {}}
+            />
+            <CardsButton
+              iconName="trash"
+              iconColor={actionsColor}
+              iconLibrary="Ionicons"
+              onPress={deleteVote}
+              style={loading ? {opacity: 0} : {}}
+              disabled={loading}
+            />
+          </>}
 
-        <CardsButton
-          iconName="close"
-          iconLibrary="MaterialIcons"
-          onPress={deleteVote}
-          style={loading ? {opacity: 0} : {}}
-          disabled={loading}
-        />
+          <CardsButton
+            iconColor={actionsColor}
+            iconName="close"
+            iconLibrary="MaterialIcons"
+            onPress={toggleButtons}
+            style={loading ? {opacity: 0} : {}}
+            disabled={loading}
+            /></>
+          : <CardsButton
+              iconColor={actionsColor}
+              iconName="options-vertical"
+              iconLibrary="SimpleLineIcons"
+              onPress={toggleButtons}
+              style={loading ? {opacity: 0} : {}}
+              disabled={loading}
+            />
+      }
       </View>
     </View>
   );
