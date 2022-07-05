@@ -101,5 +101,6 @@
   "100099": "Enter your password to continue withe your data deletion",
   "100100": "Name and e-mail are the minimum data to update the user",
   "100101": "Passwords are different",
-  "100102": "The passwords you've entered are different fro each other"
+  "100102": "The passwords you've entered are different fro each other",
+  "100103": "Top rating"
 }

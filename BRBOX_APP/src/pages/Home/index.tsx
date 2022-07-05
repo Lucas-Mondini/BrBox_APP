@@ -59,11 +59,9 @@ const Home = () => {
               <GameCard
                 id={item.id}
                 title={item.name}
-                tag1={item.tags[0]}
-                tag2={item.tags[1]}
-                tag3={item.tags[2]}
+                tags={item.tags}
                 imgUri={item.image}
-                editGame={user?.admin}
+                editGame={!user?.admin}
               />
             )
           }

@@ -7,18 +7,17 @@ import config from "../../../brbox.config.json";
 import { TagValue } from "../../utils/types";
 import { splitText } from "../../utils/functions";
 import { useTheme } from "../../Contexts/Theme";
+import TopTags from "../TopTags";
 
 interface GameCardProps {
   id: number;
   title: string;
-  tag1?: TagValue;
-  tag2?: TagValue;
-  tag3?: TagValue;
+  tags: TagValue[];
   editGame?: boolean;
   imgUri: string;
 }
 
-export default function GameCard({id, title, tag1, tag2, tag3, editGame, imgUri}:GameCardProps)
+export default function GameCard({id, title, tags, editGame, imgUri}:GameCardProps)
 {
   const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
@@ -27,7 +26,7 @@ export default function GameCard({id, title, tag1, tag2, tag3, editGame, imgUri}
   const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
 
   function navigateToGameInfo() {
-    return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id, tags: [tag1, tag2, tag3]});
+    return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id, tags});
   }
 
   function formatVotes(vote: number) {
@@ -43,11 +42,10 @@ export default function GameCard({id, title, tag1, tag2, tag3, editGame, imgUri}
         <View style={styles.info}>
           <View>
             <Text style={[styles.title, textColor]}>{splitText(title, 25)}</Text>
-            <View style={styles.tagsContainer}>
-              {Boolean(tag1) && <Text style={[styles.tag, {backgroundColor: config.mediumGreen}]}>{formatVotes(tag1?.total || 0)} {splitText(tag1?.tag || "", 10)}</Text>}
-              {Boolean(tag2) && <Text style={[styles.tag, {backgroundColor: config.yellow}]}>{formatVotes(tag1?.total || 0)} {splitText(tag2?.tag || "", 10)}</Text>}
-              {Boolean(tag3) && <Text style={[styles.tag, {backgroundColor: config.lightRed}]}>{formatVotes(tag1?.total || 0)} {splitText(tag3?.tag || "", 10)}</Text>}
-            </View>
+
+            <TopTags
+              tags={tags}
+            />
           </View>
         </View>
       </View>

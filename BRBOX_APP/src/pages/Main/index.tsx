@@ -9,8 +9,6 @@ import {
 import MainView from '../../components/MainView';
 import { useTerm } from '../../Contexts/TermProvider';
 
-//@ts-ignore
-import bg from "../../../assets/img/loginbackground.png";
 import config from "../../../brbox.config.json";
 
 import styles from './styles';
@@ -18,6 +16,7 @@ import Button from '../../components/Button';
 import { useTheme } from '../../Contexts/Theme';
 import { useAuth } from '../../Contexts/Auth';
 import Loading from '../../components/Loading';
+import getImage from '../../utils/getImage';
 
 const Main = () => {
   const navigation = useNavigation<any>();
@@ -31,7 +30,7 @@ const Main = () => {
 
   return (
     <MainView>
-      <ImageBackground source={bg} style={[styles.container]} resizeMode='cover'>
+      <ImageBackground source={getImage("loginbackground")} style={[styles.container]} resizeMode='cover'>
         { firstLoad
         ? <Loading
             styles={{backgroundColor: "transparent", marginTop: "70%"}}

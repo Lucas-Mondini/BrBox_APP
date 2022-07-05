@@ -8,6 +8,7 @@ import CardsButton from "../CardsButton";
 import { useRequest } from "../../Contexts/Request";
 import { useTheme } from "../../Contexts/Theme";
 import Loading from "../Loading";
+import getImages from "../../utils/getImage";
 
 interface TagEvaluationCardProps {
   id: number;
@@ -81,16 +82,16 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
   {
     switch(selectedEvaluationVote) {
       case 1:
-        return require('../../../assets/img/axe.png');
+        return getImages('axe');
         break;
       case 2:
-        return require('../../../assets/img/axe-yellow.png');
+        return getImages('axe-yellow');
         break;
       case 3:
-        return require('../../../assets/img/axe-red.png');
+        return getImages('axe-red');
         break;
       default:
-        return require('../../../assets/img/axe-white.png');
+        return getImages('axe-white');
         break;
     }
   }

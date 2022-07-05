@@ -14,8 +14,9 @@ export type User = {
 }
 
 export type Params = {
-  id: number | null;
-  new: boolean | null;
+  id?: number;
+  new?: boolean;
+  tags?: TagValue[];
 }
 
 export type Evaluation = {

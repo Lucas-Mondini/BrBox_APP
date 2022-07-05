@@ -18,6 +18,22 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     minHeight: 70
   },
+  topTagsContainer: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 15,
+    borderRadius: 8,
+    marginVertical: 25
+  },
+  topTagsTitle: {
+    fontFamily: config.fontFamilyBold,
+    fontSize: 18,
+    textTransform: "uppercase",
+    marginBottom: 10,
+    width: "100%",
+    marginLeft: 20
+  },
   tagsListTitles: {
     fontFamily: config.fontFamilyBold,
     fontSize: 20
