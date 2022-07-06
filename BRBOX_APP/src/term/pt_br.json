@@ -79,7 +79,7 @@
   "100077": "Ocorreu um erro ao criar o registro",
   "100078": "Ocorreu algum erro inesperado ao tentar salvar os dados",
   "100079": "Nenhuma tag Selecionada",
-  "100080": "Tags selecionadas",
+  "100080": "Área de votação",
   "100081": "Modo claro",
   "100082": "Modo escuro",
   "100083": "Ocorreu um erro no login",
@@ -102,5 +102,7 @@
   "100100": "Nome e email são os dados mínimos requeridos para atualizar o usuário",
   "100101": "Senhas diferentes",
   "100102": "As senhas digitadas são diferentes uma da outra",
-  "100103": "Mais avaliados"
+  "100103": "Mais avaliados",
+  "100104": "Disponível nas plataformas",
+  "100105": "Links das plataformas"
 }

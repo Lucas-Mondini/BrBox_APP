@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   tagLarge: {
     marginHorizontal: 10,
     padding: 5,
-    flex: 1
+    width: "28%"
   },
   tagText: {
     fontFamily: config.fontFamilyBold,

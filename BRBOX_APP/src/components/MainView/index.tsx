@@ -10,7 +10,7 @@ import BottomMenu from "../BottomMenu";
 interface MainViewProps {
   children: React.ReactElement | React.ReactElement[];
   loading?: boolean;
-  headerTitle?: number;
+  headerTitle?: number | string;
   showTitle?: boolean;
   showBottom?: boolean;
   headerAddButtonAction?: () => void;

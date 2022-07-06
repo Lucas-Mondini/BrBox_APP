@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
+    marginBottom: 20,
     fontFamily: config.fontFamilyBold,
     textAlign: "center"
   },
@@ -24,11 +25,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 15,
     borderRadius: 8,
-    marginVertical: 25
+    marginVertical: 25,
+    marginTop: 40
   },
   topTagsTitle: {
     fontFamily: config.fontFamilyBold,
-    fontSize: 18,
+    fontSize: 15,
     textTransform: "uppercase",
     marginBottom: 10,
     width: "100%",

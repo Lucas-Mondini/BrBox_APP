@@ -31,7 +31,7 @@ export default function TagsContainers()
 
   const { darkMode } = useTheme();
 
-  const color = darkMode ? "#fff" : config.dark;
+  const color = darkMode ? config.subTitleMainColor : config.dark;
 
   async function getTags(setTagsState: boolean = true) {
     try {
@@ -175,7 +175,7 @@ export default function TagsContainers()
 
   return (
     <View>
-      <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100088)}</Text>
+      <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100088).toUpperCase()}</Text>
 
       <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
         {loadingEvaluatedTags
@@ -186,11 +186,11 @@ export default function TagsContainers()
       </View>
 
       <View style={styles.selectedTagsContainer}>
-        <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080)}</Text>
+        <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080).toUpperCase()}</Text>
         {renderSelectedTags() || <Text>{getTerm(100079)}</Text>}
       </View>
 
-      <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030)}</Text>
+      <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030).toUpperCase()}</Text>
 
       <View style={[styles.tagsListView, {marginBottom: 100, borderColor: color}]}>
         {loadingTags

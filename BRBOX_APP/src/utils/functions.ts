@@ -24,14 +24,21 @@ export function splitText(text: string, delimiter: number): string
 }
 
 /**
- * Get first word of a string sentence
+ * Get words of a string sentence
  * @param name string
+ * @param words number
  * @returns string
  */
-export function getFirstName(name: string):string
+export function getWords(name: string, words: number):string
 {
-  const firstName = name.split(" ")[0];
-  return firstName;
+  const firstName = name.split(" ");
+  let phrase = "";
+
+  for (let i = 0; i <= words-1; i++) {
+    phrase += (firstName[i] || "") + " ";
+  }
+
+  return phrase;
 }
 
 /**

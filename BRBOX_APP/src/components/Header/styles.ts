@@ -4,12 +4,12 @@ import config from "../../../brbox.config.json";
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 35,
     textAlign: "center",
     fontFamily: config.fontFamilyBold,
     paddingBottom: 5
   },
   headerContainer: {
+    height: 70,
     borderBottomWidth: 2,
     marginBottom: 10,
     paddingVertical: 10

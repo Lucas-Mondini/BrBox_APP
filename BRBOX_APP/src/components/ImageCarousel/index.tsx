@@ -5,17 +5,14 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Text,
   View,
 } from 'react-native';
 import { ImageType } from '../../utils/types';
 
-import config from "../../../brbox.config.json";
-
 const {width} = Dimensions.get('window');
 
 const SPACING = 5;
-const ITEM_LENGTH = width * 0.8;
+const ITEM_LENGTH = width * 0.7;
 const EMPTY_ITEM_LENGTH = (width - ITEM_LENGTH) / 2;
 const BORDER_RADIUS = 10;
 const CURRENT_ITEM_TRANSLATE_Y = 15;
@@ -93,9 +90,6 @@ const ImageCarousel: FC<ImageCarouselProps> = ({data}) => {
                   styles.itemContent,
                 ]}>
                 <Image source={{uri: item.link}} style={styles.itemImage} />
-                <Text style={styles.itemText} numberOfLines={1}>
-                  {item.name}
-                </Text>
               </Animated.View>
             </View>
           );
@@ -131,22 +125,12 @@ const styles = StyleSheet.create({
   arrowBtn: {},
   flatListContent: {
     height: CURRENT_ITEM_TRANSLATE_Y * 2 + ITEM_LENGTH,
-    alignItems: 'center',
     marginBottom: CURRENT_ITEM_TRANSLATE_Y,
   },
   itemContent: {
-    marginHorizontal: SPACING * 3,
+    marginHorizontal: SPACING * 2,
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: BORDER_RADIUS + SPACING * 2,
-  },
-  itemText: {
-    fontSize: 24,
-    position: 'absolute',
-    bottom: SPACING * 2,
-    right: SPACING * 2,
-    color: 'white',
-    fontFamily: config.fontFamilyBold
+    borderRadius: BORDER_RADIUS + SPACING,
   },
   itemImage: {
     width: '100%',

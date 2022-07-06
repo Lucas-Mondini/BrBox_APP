@@ -61,7 +61,6 @@ const Home = () => {
                 title={item.name}
                 tags={item.tags}
                 imgUri={item.image}
-                editGame={!user?.admin}
               />
             )
           }

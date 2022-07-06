@@ -79,7 +79,7 @@
   "100077": "An error has occurred during register creation",
   "100078": "An error has occurred during the register save",
   "100079": "No tags Selected",
-  "100080": "Selected tags",
+  "100080": "Rating zone",
   "100081": "Light mode",
   "100082": "Dark mode",
   "100083": "Erro while sign in",
@@ -102,5 +102,7 @@
   "100100": "Name and e-mail are the minimum data to update the user",
   "100101": "Passwords are different",
   "100102": "The passwords you've entered are different fro each other",
-  "100103": "Top rating"
+  "100103": "Top rating",
+  "100104": "Available in the platforms",
+  "100105": "Platforms links"
 }

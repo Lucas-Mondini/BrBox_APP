@@ -38,7 +38,7 @@ export default function Header({title, addAction}: HeaderProps)
 
       {dropDownMenu && dropDownMenu}
 
-      <Text style={[styles.title, {color}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
+      <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 25 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
 
       {addAction &&
         <TouchableOpacity style={[styles.addButton]} onPress={addAction}>

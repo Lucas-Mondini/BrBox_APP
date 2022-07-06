@@ -29,7 +29,7 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
 
   const [sendRequest, setSendRequest] = useState(Boolean(evaluationId));
   const [evalId, setEvalId] = useState(evaluationId || 0);
-  const [showButtons, setShowButtons] = useState(!Boolean(evaluationId));
+  const [showButtons, setShowButtons] = useState(false);
   const { post } = useRequest();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
@@ -109,7 +109,7 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
         <Text style={[styles.description, descriptionColor]}>{splitText(description, 50)}</Text>
       </View>
 
-      <View style={styles.buttonView}>
+      <View style={[styles.buttonView, {backgroundColor: !darkMode ? "#fff" : config.dark}]}>
 
       {showButtons ?
         <>{loading

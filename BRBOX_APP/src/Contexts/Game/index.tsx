@@ -1,10 +1,10 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Alert, Linking, Text, TouchableOpacity } from 'react-native';
+import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import styles from './styles';
 import config from "../../../brbox.config.json";
-import { getMaxId, removeObjectFromArray, splitText } from '../../utils/functions';
+import { getMaxId, removeObjectFromArray } from '../../utils/functions';
 import { ImageType, LinkType, Platform } from '../../utils/types';
 
 import { useTerm } from '../TermProvider';
@@ -43,7 +43,7 @@ type GameData = {
   updateGame: () => Promise<void>;
   deleteGame: (callback?: () => void) => Promise<void>;
 
-  renderLinks: (allowRemove?: boolean) => React.ReactElement[];
+  renderLinks: (allowRemove?: boolean) => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
   clearGameContext: () => void;
 }
@@ -105,13 +105,36 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setImages([...images, {id: getMaxId(images), name: imageName, link: imageLink}]);
   }
 
+  function getPlatformIcon(platformName: string)
+  {
+    let icon = "";
+
+    if (platformName.toLocaleLowerCase().includes("steam")) {
+      icon = "steam";
+    } else if (platformName.toLocaleLowerCase().includes("xbox")) {
+      icon = "microsoft-xbox";
+    } else if (platformName.toLocaleLowerCase().includes("ubisoft")) {
+      icon = "ubisoft";
+    } else if (platformName.toLocaleLowerCase().includes("playstation")) {
+      icon = "sony-playstation";
+    } else if (platformName.toLocaleLowerCase().includes("google")) {
+      icon = "google-play";
+    } else if (platformName.toLocaleLowerCase().includes("apple")) {
+      icon = "apple";
+    } else {
+      icon = "shopping"
+    }
+
+    return <Icon name={icon} size={50} color={"#686868"}/>
+  }
+
   function renderLinks(allowRemove = false) {
     const links = new Array();
 
     for (const link of linkList) {
       if (link.link) {
         links.push(
-          <TouchableOpacity style={styles.linkContainer}
+          <TouchableOpacity style={[styles.link]}
             key={link.id}
             activeOpacity={allowRemove ? 1 : 0.8}
             onPress={async () => {
@@ -120,10 +143,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
               }
             }}
           >
-            <Text style={[styles.linkText, textColorStyle]}>{splitText(link.platformName, 40)}</Text>
+            {getPlatformIcon(link.platformName)}
             {allowRemove &&
               <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
-                <Icon name="close" size={35} color={"#686868"}/>
+                <Icon name="close" size={35} color={"#000"}/>
               </TouchableOpacity>
             }
           </TouchableOpacity>
@@ -131,7 +154,15 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       }
     }
 
-    return links;
+    return (
+      <View style={styles.linkContainer}>
+        <Text style={styles.platformsTitle}>{getTerm(allowRemove ? 100105 : 100104)}:</Text>
+
+        <Text>
+          {links}
+        </Text>
+      </View>
+    );
   }
 
   function renderImages(isEdit?: boolean)

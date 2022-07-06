@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
   },
   tagsListTitles: {
     fontFamily: config.fontFamilyBold,
-    fontSize: 20
+    fontSize: 15,
+    marginVertical: 15
   },
   selectedTagsContainer: {
     minHeight: 70

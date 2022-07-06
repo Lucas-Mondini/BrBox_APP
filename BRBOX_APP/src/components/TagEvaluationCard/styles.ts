@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     right: 5,
     top: 5,
+    paddingLeft: 10,
   },
   axesView: {
     width: 50,

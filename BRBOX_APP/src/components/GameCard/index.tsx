@@ -7,34 +7,35 @@ import config from "../../../brbox.config.json";
 import { TagValue } from "../../utils/types";
 import { splitText } from "../../utils/functions";
 import { useTheme } from "../../Contexts/Theme";
+import { useAuth } from "../../Contexts/Auth";
 import TopTags from "../TopTags";
 
 interface GameCardProps {
   id: number;
   title: string;
   tags: TagValue[];
-  editGame?: boolean;
   imgUri: string;
 }
 
-export default function GameCard({id, title, tags, editGame, imgUri}:GameCardProps)
+export default function GameCard({id, title, tags, imgUri}: GameCardProps)
 {
   const { darkMode } = useTheme();
+  const { user } = useAuth();
   const navigation = useNavigation<any>();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
   const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
 
-  function navigateToGameInfo() {
+  function navigateToGameInfo(editGame?: boolean) {
     return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id, tags});
   }
 
-  function formatVotes(vote: number) {
-    return String(vote > 1000 ? vote/1000 + "K" : vote);
-  }
-
   return (
-    <TouchableOpacity style={[styles.gameCard, cardBackgroundColor]} onPress={navigateToGameInfo}>
+    <TouchableOpacity
+      style={[styles.gameCard, cardBackgroundColor]}
+      onPress={() => navigateToGameInfo(false)}
+      onLongPress={() => navigateToGameInfo(user?.admin)}
+    >
       <View style={styles.container}>
         <View>
           <Image style={styles.img} source={{uri: imgUri}} />
