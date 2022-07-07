@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { Image, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
-import { splitText } from "../../utils/functions";
+import { getIcon, splitText } from "../../utils/functions";
 import CardsButton from "../CardsButton";
 import { useRequest } from "../../Contexts/Request";
 import { useTheme } from "../../Contexts/Theme";
 import Loading from "../Loading";
-import getImages from "../../utils/getImage";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface TagEvaluationCardProps {
   id: number;
@@ -80,27 +80,29 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
 
   function getImage()
   {
-    switch(selectedEvaluationVote) {
-      case 1:
-        return getImages('axe');
-        break;
-      case 2:
-        return getImages('axe-yellow');
-        break;
-      case 3:
-        return getImages('axe-red');
-        break;
-      default:
-        return getImages('axe-white');
-        break;
+    const icon = Math.round(Math.random() * 81);
+
+    const iconColor: any = {
+      0: "#FFF",
+      1: config.mediumGreen,
+      2: config.yellow,
+      3: config.lightRed,
     }
+
+    return (
+      <Icon
+        color={iconColor[selectedEvaluationVote] || "#FFF"}
+        size={30}
+        name={getIcon(icon)}
+      />
+    );
   }
 
   return (
     <View style={styles.tagCard}>
       {!showButtons &&
         <View style={[styles.axesView, {backgroundColor: darkMode ? config.darkGray : config.light}]}>
-          <Image source={getImage()} />
+          {getImage()}
         </View>
       }
 

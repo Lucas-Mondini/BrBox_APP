@@ -4,11 +4,12 @@ import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
-import { splitText } from "../../utils/functions";
+import { getIcon, splitText } from "../../utils/functions";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
 import CardsButton from "../CardsButton";
 import { useTheme } from "../../Contexts/Theme";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface TagCardProps {
   id: number;
@@ -25,7 +26,7 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
   const {destroy} = useRequest();
   const {getTerm} = useTerm();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark}
+  const color = darkMode ? "#fff" : config.dark
 
   function navigateToTagInfo() {
     return navigation.navigate("TagRegister", {id});
@@ -44,11 +45,27 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
     ])
   }
 
+  function getImage()
+  {
+    const icon = Math.round(Math.random() * 81);
+
+    return (
+      <Icon
+        color={color}
+        size={30}
+        name={getIcon(icon)}
+      />
+    );
+  }
+
   return (
     <TouchableOpacity style={styles.tagCard} onPress={navigateToTagInfo}>
+      <View style={[styles.iconContainer]}>
+        {getImage()}
+      </View>
       <View>
-        <Text style={[styles.title, textColor]}>{splitText(title, 24)}</Text>
-        <Text style={[styles.description, textColor]}>{splitText(description, 50)}</Text>
+        <Text style={[styles.title, {color}]}>{splitText(title, 24)}</Text>
+        <Text style={[styles.description, {color}]}>{description}</Text>
       </View>
 
       <View style={styles.buttonView}>

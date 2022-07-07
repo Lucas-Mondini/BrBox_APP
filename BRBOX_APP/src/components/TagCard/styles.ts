@@ -2,6 +2,12 @@ import { StyleSheet } from "react-native";
 import config from "../../../brbox.config.json"
 
 const styles = StyleSheet.create({
+  iconContainer: {
+    minHeight: 60,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 50
+  },
   tagCard: {
     minHeight: 60,
     borderBottomWidth: 2,
@@ -17,6 +23,7 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: config.fontFamily,
     fontWeight: '700',
+    width: "48%"
   },
   buttonView: {
     position: 'absolute',

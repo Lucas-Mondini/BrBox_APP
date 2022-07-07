@@ -128,3 +128,15 @@ export function removeObjectFromArray(id: number, objects: any[], setFunction: (
 
   setFunction([...objectList]);
 }
+
+/**
+ * Select an icon from an object
+ * @param id
+ * @returns
+ */
+export function getIcon(id: number): string
+{
+  const icons = require('./tagsIcons.json');
+
+  return icons[id];
+}

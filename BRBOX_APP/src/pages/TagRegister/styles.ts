@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: "3%",
   },
+  icon: {
+    textAlign: "center",
+    marginBottom: 35
+  },
   title: {
     fontSize: 20,
     fontFamily: config.fontFamilyBold,
