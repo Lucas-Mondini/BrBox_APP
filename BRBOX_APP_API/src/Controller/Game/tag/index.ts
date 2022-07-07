@@ -22,7 +22,7 @@ export default class TagController extends Controller {
             var whereGame = "1 = 1";
             if(name) {
                 const names = (<string>name).split(',');
-                whereName += ` AND (${names.map(i=> `lower(t.name) = lower('${i}')`).join(" OR ")})`
+                whereName += ` AND (${names.map(i=> `lower(t.name) like lower('%${i}%')`).join(" OR ")})`
             }
 
             if(game) {
