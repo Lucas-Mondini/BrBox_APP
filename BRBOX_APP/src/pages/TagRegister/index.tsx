@@ -18,6 +18,9 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, Tag } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
+import IconsModal from '../../components/IconsModal';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { getIcon } from '../../utils/functions';
 
 const TagRegister = () => {
   const navigation = useNavigation<any>();
@@ -28,6 +31,8 @@ const TagRegister = () => {
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
 
+  const [icon, setIcon] = useState(0);
+  const [modal, setModal] = useState(false);
   const [loading, setLoading] = useState(Boolean(params));
   const [loadingRequest, setLoadingRequest] = useState(false);
   const [tag, setTag] = useState({} as Tag);
@@ -44,6 +49,7 @@ const TagRegister = () => {
       if (!params) {
         return;
       }
+
       const response = await get(`/tag/${params.id}`, setLoading);
 
       setTag(response);
@@ -85,12 +91,27 @@ const TagRegister = () => {
 
   return (
     <MainView loading={loading}>
+      <IconsModal
+        setModal={() => setModal(!modal)}
+        visible={modal}
+        setIcon={setIcon}
+      />
+
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
         >
           {getTerm(!params ? 100027 : 100028)}
         </Text>
+
+        {icon > 0 &&
+          <Icon
+            color={darkMode ? "#fff" : config.dark}
+            size={50}
+            name={getIcon(icon)}
+            style={styles.icon}
+          />
+        }
 
         <Input
           placeholderText={100013}
@@ -108,6 +129,14 @@ const TagRegister = () => {
         />
 
         <View style={styles.buttonView}>
+          <Button
+            text={100106}
+            onPress={() => setModal(!modal)}
+            loading={loadingRequest}
+            extraStyle={{marginBottom: 15, backgroundColor: "transparent"}}
+            extraTextStyle={{color: darkMode ? "#fff" : config.dark, textDecorationLine: "underline"}}
+          />
+
           <Button
             text={!params && !tag.id ? 100026 : 100015}
             onPress={saveTag}
