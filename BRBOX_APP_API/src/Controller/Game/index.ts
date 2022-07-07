@@ -85,6 +85,7 @@ export default class GameController extends Controller {
                 image.id as imageId,
                 image.link as imageLink,
                 tag_data.name tagname,
+                tag_data.icon tagicon,
                 COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
                 COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
                 COALESCE(SUM(tag_data.qty_neut), 0) as qty_neutral,
@@ -97,6 +98,7 @@ export default class GameController extends Controller {
                                 tvltvtv."tagValueListId",
                                 tag.id,
                                 tag."name",
+                                tag.icon,
                                 value."name" as value_name,
                                 value.id as value_id,
                                 count(tag_value."valueId") as qty_tot,
@@ -135,7 +137,8 @@ export default class GameController extends Controller {
                     game."name",
                     image.id,
                     image.link,
-                    tag_data."name"
+                    tag_data."name",
+                    tag_data.icon
                 order by 
                     game.id
                                 `);
@@ -150,6 +153,7 @@ export default class GameController extends Controller {
                                                     if(j.tagname)
                                                         return {
                                                             tag: j.tagname,
+                                                            icon: j.tagicon,
                                                             total: j.qty_total,
                                                             upVotes: j.qty_up,
                                                             neutralVotes: j.qty_neutral,
