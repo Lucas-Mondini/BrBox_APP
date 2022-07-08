@@ -72,7 +72,7 @@ export default class GameController extends Controller {
             
             if(no_quote_name) {
                 const names = (<string>no_quote_name).split(',');
-                where = names.map(i=> "game.name = " + i).join(" OR ")
+                where = names.map(i=> `lower(game.name) like lower('%${i}%')`).join(" OR ")
             }
             
             where = where.replace(/"/g, "'");
