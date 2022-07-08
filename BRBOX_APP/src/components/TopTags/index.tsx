@@ -32,7 +32,7 @@ export default function TopTags({tags, large}: TopTagsProps)
     return (
       <View style={[styles.tag, large ? styles.tagLarge : styles.tagSmall, bg]}>
         <Icon
-          name={getIcon(icon)}
+          name={getIcon(tag.icon)}
           size={large ? 18 : 16}
           color={"#000"}
           style={large ? styles.imgLarge : styles.imgSmall}

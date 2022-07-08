@@ -53,6 +53,7 @@ const TagList = () => {
             return (
               <TagCard
                 id={item.id}
+                icon={item.icon}
                 title={item.name}
                 description={item.description}
                 setLoading={setLoading}

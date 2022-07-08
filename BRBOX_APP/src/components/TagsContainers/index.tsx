@@ -11,6 +11,7 @@ import { useRequest } from "../../Contexts/Request";
 import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
+import Input from "../Input";
 
 export default function TagsContainers()
 {
@@ -22,6 +23,7 @@ export default function TagsContainers()
   const {getTerm} = useTerm();
   const navigation = useNavigation<any>();
 
+  const [search, setSearch] = useState("");
   const [tags, setTags] = useState([] as Tag[]);
   const [firstLoad, setFirstLoad] = useState(true);
   const [loadingTags, setLoadingTags] = useState(true);
@@ -35,7 +37,7 @@ export default function TagsContainers()
 
   async function getTags(setTagsState: boolean = true) {
     try {
-      const response = await get(`/tag?game=${gameId}`, setLoadingTags);
+      const response = await get(`/tag?game=${gameId}&name=${search}`, setLoadingTags);
 
       if (setTagsState) setTags(response);
     } catch (err) {
@@ -68,6 +70,7 @@ export default function TagsContainers()
     return list.map((item) => {
       return {
         id: item.tag.id,
+        icon: item.tag.icon,
         evalId: item.id,
         name: item.tag.name,
         description: item.tag.description,
@@ -90,6 +93,7 @@ export default function TagsContainers()
 
       finalValues.push({
         id: countTags[0].tag.id,
+        icon: countTags[0].tag.icon,
         count: countTags.length,
         evalId: countTags[0].id,
         name: countTags[0].tag.name,
@@ -153,6 +157,7 @@ export default function TagsContainers()
           getEvaluatedTags(tagValueList);
         }}
         id={tag.id}
+        icon={tag.icon}
         evaluationId={tag.evalId}
         value={tag.value}
         title={tag.name}
@@ -164,8 +169,10 @@ export default function TagsContainers()
   }
 
   useEffect(() => {
-    getTags();
-  }, []);
+    setTimeout(() =>{
+      getTags();
+    }, 500)
+  }, [search]);
 
   useEffect(() => {
     if (tagValueList > 0) {
@@ -190,7 +197,14 @@ export default function TagsContainers()
         {renderSelectedTags() || <Text>{getTerm(100079)}</Text>}
       </View>
 
+
       <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030).toUpperCase()}</Text>
+
+      <Input
+        placeholderText={100000}
+        value={search}
+        onChangeText={setSearch}
+      />
 
       <View style={[styles.tagsListView, {marginBottom: 100, borderColor: color}]}>
         {loadingTags

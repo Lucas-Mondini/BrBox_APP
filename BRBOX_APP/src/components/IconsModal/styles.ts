@@ -5,7 +5,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: "3%",
     height: "100%",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    marginBottom: 50
   }
 });
 

@@ -20,6 +20,7 @@ const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, childre
 {
   const { darkMode } = useTheme();
   const color = darkMode ? "#fff" : config.dark;
+
   return (
     <Modal
       style={[styles.modal, {backgroundColor: color}]}
@@ -31,7 +32,7 @@ const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, childre
       <View
         style={styles.modalBackground}
       >
-        <View style={[styles.modalContent, style ? style : {flex: 1}]}>
+        <View style={[styles.modalContent, style || {flex: 1}]}>
           {loading ? <Loading styles={{borderRadius: 8}} /> : children}
         </View>
       </View>

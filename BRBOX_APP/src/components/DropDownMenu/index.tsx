@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Modal, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
@@ -34,6 +34,17 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
     navigation.navigate(route);
   }
 
+  async function shareApp()
+  {
+    try {
+      await Share.share({
+        message: getTerm(100107)+"\n\n\n"+config.playStoreUrl,
+      });
+    } catch (error) {
+      Alert.alert(getTerm(100108), getTerm(100109))
+    }
+  }
+
   return (
     <Modal transparent onRequestClose={() => setModal(null)}>
       <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setModal(null)}}>
@@ -64,13 +75,11 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             callNavigationFunction("Recommended");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100003).toUpperCase()}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-            callNavigationFunction("Share");
-          }}>
-            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100004).toUpperCase()}</Text>
           </TouchableOpacity> */}
+
+          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={shareApp}>
+            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100004).toUpperCase()}</Text>
+          </TouchableOpacity>
 
           {user?.admin && <>
             <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
