@@ -54,7 +54,7 @@ export default class GameController extends Controller {
     
     Index = async (req: Request) => {
         try {
-            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: _raw_name} = req.query
+            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: _raw_name = ""} = req.query
             
             const no_quote_name = (<string>_raw_name).replace(/['"@#$%\\]+/g, '')
             var where = "1 = 1";
