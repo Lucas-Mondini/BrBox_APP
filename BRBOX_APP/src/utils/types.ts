@@ -41,6 +41,7 @@ export type LinkType = {
 
 export type Tag = {
   id: number;
+  icon: number;
   name: string;
   evalId: number;
   value?: number;
@@ -50,6 +51,7 @@ export type Tag = {
 
 export type TagValue = {
   tag: string;
+  icon: number;
   downVotes: number;
   neutralVotes: number;
   upVotes: number;

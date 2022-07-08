@@ -13,13 +13,14 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface TagCardProps {
   id: number;
+  icon: number;
   title: string;
   description: string;
   setLoading: (value: boolean) => void;
   onDelete: () => void;
 }
 
-export default function TagCard({id, title, description, setLoading, onDelete}: TagCardProps)
+export default function TagCard({id, icon, title, description, setLoading, onDelete}: TagCardProps)
 {
   const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
@@ -47,8 +48,6 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
 
   function getImage()
   {
-    const icon = Math.round(Math.random() * 81);
-
     return (
       <Icon
         color={color}
@@ -65,7 +64,7 @@ export default function TagCard({id, title, description, setLoading, onDelete}: 
       </View>
       <View>
         <Text style={[styles.title, {color}]}>{splitText(title, 24)}</Text>
-        <Text style={[styles.description, {color}]}>{description}</Text>
+        <Text style={[styles.description, {color, width: description.length > 40 ? "47%" : "100%"}]}>{description}</Text>
       </View>
 
       <View style={styles.buttonView}>

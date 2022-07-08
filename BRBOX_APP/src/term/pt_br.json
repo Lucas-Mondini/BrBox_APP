@@ -95,7 +95,7 @@
   "100093": "Nome é requerido",
   "100094": "Seu jogo deve possuir um nome",
   "100095": "Dados requeridos faltando",
-  "100096": "A tag deve possuir nome e descrição",
+  "100096": "A tag deve possuir nome, descrição e ícone",
   "100097": "A plataforma deve possuir nome",
   "100098": "Senha é requerida para essa ação",
   "100099": "Digite sua senha para continuar com a exclusão dos seus dados",
@@ -105,5 +105,8 @@
   "100103": "Mais avaliados",
   "100104": "Disponível nas plataformas",
   "100105": "Links das plataformas",
-  "100106": "Selecionar ícone"
+  "100106": "Selecionar ícone",
+  "100107": "BrBro - Game Score | Vote nos seus jogos favoritos e descubra seu próximo favorito",
+  "100108": "Erro inesperado",
+  "100109": "Ocorreu um erro inesperado, por favor, tente novamente"
 }

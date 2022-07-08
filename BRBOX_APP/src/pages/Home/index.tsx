@@ -27,7 +27,7 @@ const Home = () => {
   const [order, setOrder] = useState("name");
 
   const {get} = useRequest();
-  const {signOut, user} = useAuth();
+  const {signOut} = useAuth();
   const {clearGameContext} = useGame();
 
   async function getGames(loadingMoreGames: boolean = false)
@@ -42,6 +42,14 @@ const Home = () => {
     }
 
     setLoading(false);
+  }
+
+  function resetGameList()
+  {
+    setGames([]);
+    setLoading(true);
+    setLoadingMore(true);
+    setPage(1);
   }
 
   function renderGames()
@@ -61,6 +69,7 @@ const Home = () => {
                 title={item.name}
                 tags={item.tags}
                 imgUri={item.image}
+                extraCallbackOnNavigate={resetGameList}
               />
             )
           }

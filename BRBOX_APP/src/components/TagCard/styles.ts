@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: config.fontFamily,
     fontWeight: '700',
-    width: "48%"
   },
   buttonView: {
     position: 'absolute',

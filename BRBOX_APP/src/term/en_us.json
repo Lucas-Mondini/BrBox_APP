@@ -95,7 +95,7 @@
   "100093": "Name is required",
   "100094": "Your game need to have a name",
   "100095": "Missing required data",
-  "100096": "Tag must have name and description",
+  "100096": "Tag must have name, description and icon",
   "100097": "Platform must have name",
   "100098": "Password is required for this action",
   "100099": "Enter your password to continue withe your data deletion",
@@ -105,5 +105,8 @@
   "100103": "Top rating",
   "100104": "Available in the platforms",
   "100105": "Platforms links",
-  "100106": "Select icon"
+  "100106": "Select icon",
+  "100107": "BrBro - Game Score | Vote on your favorite games and discover your next favorite",
+  "100108": "Unexpected error",
+  "100109": "Ops, we had a unexpected error, please try again"
 }

@@ -15,9 +15,10 @@ interface GameCardProps {
   title: string;
   tags: TagValue[];
   imgUri: string;
+  extraCallbackOnNavigate?: () => void;
 }
 
-export default function GameCard({id, title, tags, imgUri}: GameCardProps)
+export default function GameCard({id, title, tags, imgUri, extraCallbackOnNavigate}: GameCardProps)
 {
   const { darkMode } = useTheme();
   const { user } = useAuth();
@@ -27,6 +28,8 @@ export default function GameCard({id, title, tags, imgUri}: GameCardProps)
   const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
 
   function navigateToGameInfo(editGame?: boolean) {
+    if (extraCallbackOnNavigate) extraCallbackOnNavigate();
+
     return navigation.navigate(editGame ? "AddGame" : "GameInfo", {id, tags});
   }
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import {
+  ScrollView,
   Text,
-  TouchableOpacity,
-  View
+  TouchableOpacity
 } from 'react-native';
 
 import styles from './styles';
@@ -39,6 +39,7 @@ export default function IconsModal({setModal, visible, setIcon}: IconsModalProps
             setIcon(Number(index));
             setModal();
           }}
+          key={index}
         >
           <Icon
             name={iconName}
@@ -63,9 +64,12 @@ export default function IconsModal({setModal, visible, setIcon}: IconsModalProps
       loading={false}
       style={{}}
     >
-      <View style={[styles.container, {backgroundColor: color}]}>
+      <ScrollView
+        contentContainerStyle={styles.container}
+        style={[{backgroundColor: color}]}
+      >
         {renderIcons()}
-      </View>
+      </ScrollView>
     </DefaultModal>
   );
 };

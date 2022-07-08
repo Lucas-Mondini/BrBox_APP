@@ -53,6 +53,7 @@ const TagRegister = () => {
       const response = await get(`/tag/${params.id}`, setLoading);
 
       setTag(response);
+      setIcon(response.icon);
     } catch (error: any) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -67,19 +68,26 @@ const TagRegister = () => {
         return Alert.alert(getTerm(100095), getTerm(100096));
       }
 
+      if (!icon) {
+        return Alert.alert(getTerm(100095), getTerm(100096));
+      }
+
       if (!params && !tag.id) {
         response = await post(`/tag/create`, setLoadingRequest, {
-          name: tag.name, description: tag.description
+          name: tag.name, description: tag.description, icon
         });
       } else {
         response = await put(`/tag/update`, setLoadingRequest, {
+          icon,
           id: tag.id,
+          new_icon: icon,
           new_name: tag.name,
-          new_description: tag.description
+          new_description: tag.description,
         });
       }
 
       setTag(response);
+      setIcon(response.icon);
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -132,7 +140,6 @@ const TagRegister = () => {
           <Button
             text={100106}
             onPress={() => setModal(!modal)}
-            loading={loadingRequest}
             extraStyle={{marginBottom: 15, backgroundColor: "transparent"}}
             extraTextStyle={{color: darkMode ? "#fff" : config.dark, textDecorationLine: "underline"}}
           />

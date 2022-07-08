@@ -12,6 +12,7 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface TagEvaluationCardProps {
   id: number;
+  icon: number;
   evaluationId?: number;
   title: string;
   value?: number;
@@ -21,7 +22,7 @@ interface TagEvaluationCardProps {
   extraCallback?: () => void;
 }
 
-export default function TagEvaluationCard({id, evaluationId, title, value, description, tagValueListId, remove, extraCallback}: TagEvaluationCardProps)
+export default function TagEvaluationCard({id, evaluationId, title, icon, value, description, tagValueListId, remove, extraCallback}: TagEvaluationCardProps)
 {
   const { darkMode } = useTheme();
   const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(value || 0);
@@ -48,6 +49,7 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
       setEvalId(response.tagValueId);
       setSelectedEvaluationVote(response.value);
       setSendRequest(true);
+      setShowButtons(false);
     } catch (error: any) {
       setSelectedEvaluationVote(vote);
     }
@@ -80,8 +82,6 @@ export default function TagEvaluationCard({id, evaluationId, title, value, descr
 
   function getImage()
   {
-    const icon = Math.round(Math.random() * 81);
-
     const iconColor: any = {
       0: "#FFF",
       1: config.mediumGreen,
