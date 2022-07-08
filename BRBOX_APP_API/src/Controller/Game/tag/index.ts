@@ -3,7 +3,6 @@ import {Controller} from "../..";
 
 import { AppDataSource } from "../../../data-source";
 import Tag from "../../../Model/Game/tag";
-import TagValue from "../../../Model/Game/tag/tagValue";
 
 export default class TagController extends Controller {
 
@@ -14,14 +13,15 @@ export default class TagController extends Controller {
     //@ts-ignore
     Index = async (req: Request) => {
         try {
-            const {game = null, name = "", order = 'ASC'} = req.query
+            const {game = null, name: _raw_name = "", order: order = 'ASC'} = req.query
 
+            const no_quote_name = (<string>_raw_name).replace(/['"@#$%\\]+/g, '')
             const orderBy = ((<string>order).toUpperCase() == 'ASC' || (<string>order).toUpperCase() == 'DESC')? order : 'ASC'
 
             var whereName = "1 = 1";
             var whereGame = "1 = 1";
-            if(name) {
-                const names = (<string>name).split(',');
+            if(no_quote_name) {
+                const names = (<string>no_quote_name).split(',');
                 whereName += ` AND (${names.map(i=> `lower(t.name) like lower('%${i}%')`).join(" OR ")})`
             }
 

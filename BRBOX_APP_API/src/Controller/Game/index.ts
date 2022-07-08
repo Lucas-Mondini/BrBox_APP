@@ -54,8 +54,9 @@ export default class GameController extends Controller {
     
     Index = async (req: Request) => {
         try {
-            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name} = req.query
+            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: _raw_name} = req.query
             
+            const no_quote_name = (<string>_raw_name).replace(/['"@#$%\\]+/g, '')
             var where = "1 = 1";
             var orderBy = "";
             var OrderASCOrDESC = "asc"
@@ -69,8 +70,8 @@ export default class GameController extends Controller {
                 orderBy = `order by tag DESC`
             }
             
-            if(name) {
-                const names = (<string>name).split(',');
+            if(no_quote_name) {
+                const names = (<string>no_quote_name).split(',');
                 where = names.map(i=> "game.name = " + i).join(" OR ")
             }
             
