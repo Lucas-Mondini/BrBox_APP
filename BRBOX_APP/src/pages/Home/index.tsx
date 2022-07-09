@@ -1,5 +1,5 @@
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   RefreshControl,
@@ -11,13 +11,18 @@ import MainView from '../../components/MainView';
 import styles from './styles';
 
 import { useAuth } from '../../Contexts/Auth';
-import { Game } from '../../utils/types';
+import { Game, Params } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import { useGame } from '../../Contexts/Game';
 import Loading from '../../components/Loading';
+import Input from '../../components/Input';
+import { useTerm } from '../../Contexts/TermProvider';
 
 const Home = () => {
   const isFocused = useIsFocused();
+  const route = useRoute();
+
+  const params = route.params as Params;
 
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(true);
@@ -25,17 +30,23 @@ const Home = () => {
   const [page, setPage] = useState(1);
   const [amount, setAmount] = useState(10);
   const [order, setOrder] = useState("name");
+  const [gameName, setGameName] = useState("");
+  const [hideButton, setHideButton] = useState(params ? params.search : false);
 
   const {get} = useRequest();
+  const {getTerm} = useTerm();
   const {signOut} = useAuth();
   const {clearGameContext} = useGame();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
     try {
-      const response = await get(`/game?page=${page}&ammount=${amount}&order=${order}`, loadingMoreGames ? setLoadingMore : setLoading);
+      console.log(gameName)
+      const response = await get(`/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`, loadingMoreGames ? setLoadingMore : setLoading);
 
-      setGames([...games, ...response.games]);
+      const gamesList = gameName ? [] : games;
+
+      setGames([...gamesList, ...response.games]);
       setPage(page+1);
     } catch (err) {
       return signOut();
@@ -50,6 +61,7 @@ const Home = () => {
     setLoading(true);
     setLoadingMore(true);
     setPage(1);
+    setGameName("");
   }
 
   function renderGames()
@@ -80,18 +92,46 @@ const Home = () => {
       />);
   }
 
+  function toggleSearch()
+  {
+    setGameName("");
+    setHideButton(!hideButton);
+  }
+
+  function header()
+  {
+    if (!hideButton) {
+      return;
+    }
+
+    return (
+      <View style={[styles.inputView]}>
+        <Input
+          placeholder={getTerm(100110)}
+          extraStyles={styles.input}
+          value={gameName}
+          onChangeText={setGameName}
+        />
+      </View>
+    );
+  }
+
   useEffect(() => {
     if (isFocused) {
       getGames();
       clearGameContext();
     }
-  }, [isFocused]);
+  }, [isFocused, gameName]);
 
   return (
     <MainView
       showTitle
       showBottom
       loading={loading}
+      customHeader={header()}
+      hideMenuButton={hideButton}
+      headerAddButtonAction={toggleSearch}
+      headerAddButtonIcon={hideButton ? "x" : "search"}
     >
       <View style={styles.container}>
         {renderGames()}

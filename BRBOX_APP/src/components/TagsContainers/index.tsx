@@ -12,6 +12,7 @@ import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 import Input from "../Input";
+import Icon from "react-native-vector-icons/FontAwesome5";
 
 export default function TagsContainers()
 {
@@ -30,6 +31,9 @@ export default function TagsContainers()
   const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
+
+  const [showEvaluatedTags, setShowEvaluatedTags] = useState(true);
+  const [showSelectedTags, setShowSelectedTags] = useState(true);
 
   const { darkMode } = useTheme();
 
@@ -136,6 +140,10 @@ export default function TagsContainers()
 
   function renderEvaluatedTags()
   {
+    if (evaluatedTags.length === 0) {
+      return <Text style={[styles.noContent, {color}]}>{getTerm(100111)}</Text>;
+    }
+
     return evaluatedTags.map((tagValues: any, index: number) => (
       <TouchableOpacity key={index} onPress={() => {}} activeOpacity={1}>
         <Text style={styles.tag}>{tagValues.count} {tagValues.name}</Text>
@@ -145,6 +153,10 @@ export default function TagsContainers()
 
   function renderSelectedTags()
   {
+    if (selectedTags.length === 0) {
+      return <Text style={[styles.noContent, {color}]}>{getTerm(100079)}</Text>;
+    }
+
     return selectedTags.map(tag => (
       <TagEvaluationCard
         key={tag.id}
@@ -182,21 +194,44 @@ export default function TagsContainers()
 
   return (
     <View>
-      <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100088).toUpperCase()}</Text>
+      <TouchableOpacity
+        style={styles.toggle}
+        onPress={() => {
+          setShowEvaluatedTags(!showEvaluatedTags);
+        }}
+      >
+        <View>
+          <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100088).toUpperCase()}</Text>
+        </View>
 
-      <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
-        {loadingEvaluatedTags
-        ? <Loading />
-        : <View style={styles.tagsContainer}>
-            <Text>{renderEvaluatedTags()}</Text>
-          </View>}
-      </View>
+        <Icon name={showEvaluatedTags ? "caret-up" : "caret-down"} color={color} size={25}/>
+      </TouchableOpacity>
+
+      {showEvaluatedTags &&
+        <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
+          {loadingEvaluatedTags
+          ? <Loading styles={{borderRadius: 8}} />
+          : <View style={styles.tagsContainer}>
+              <Text>{renderEvaluatedTags()}</Text>
+            </View>}
+        </View>
+      }
 
       <View style={styles.selectedTagsContainer}>
-        <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080).toUpperCase()}</Text>
-        {renderSelectedTags() || <Text>{getTerm(100079)}</Text>}
-      </View>
+        <TouchableOpacity
+          style={styles.toggle}
+          onPress={() => {
+            setShowSelectedTags(!showSelectedTags);
+          }}
+        >
+          <View>
+            <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080).toUpperCase()}</Text>
+          </View>
 
+          <Icon name={showSelectedTags ? "caret-up" : "caret-down"} color={color} size={25}/>
+        </TouchableOpacity>
+        {showSelectedTags && renderSelectedTags()}
+      </View>
 
       <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030).toUpperCase()}</Text>
 
@@ -208,7 +243,7 @@ export default function TagsContainers()
 
       <View style={[styles.tagsListView, {marginBottom: 100, borderColor: color}]}>
         {loadingTags
-        ? <Loading />
+        ? <Loading styles={{borderRadius: 8}} />
         : <View style={styles.tagsContainer}>
             <Text>{renderTags()}</Text>
           </View>}

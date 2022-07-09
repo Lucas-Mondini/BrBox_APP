@@ -9,14 +9,17 @@ import BottomMenu from "../BottomMenu";
 
 interface MainViewProps {
   children: React.ReactElement | React.ReactElement[];
+  customHeader?: React.ReactElement | React.ReactElement[];
   loading?: boolean;
   headerTitle?: number | string;
   showTitle?: boolean;
   showBottom?: boolean;
+  headerAddButtonIcon?: string;
+  hideMenuButton?: boolean;
   headerAddButtonAction?: () => void;
 }
 
-export default function MainView({children, loading, headerTitle, showTitle, showBottom, headerAddButtonAction}: MainViewProps)
+export default function MainView({children, customHeader, loading, headerTitle, showTitle, showBottom, headerAddButtonIcon, hideMenuButton, headerAddButtonAction}: MainViewProps)
 {
   const { darkMode } = useTheme();
 
@@ -28,7 +31,7 @@ export default function MainView({children, loading, headerTitle, showTitle, sho
       }}>
       <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
 
-      {showTitle && <Header title={headerTitle || 100008} addAction={headerAddButtonAction} />}
+      {showTitle && (<Header title={headerTitle || 100008} hideMenuButton={hideMenuButton} customHeader={customHeader} buttonIcon={headerAddButtonIcon} addAction={headerAddButtonAction} />)}
 
       {loading ? <Loading /> : children}
 

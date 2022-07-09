@@ -5,6 +5,15 @@ const styles = StyleSheet.create({
     paddingBottom: 135,
     paddingHorizontal: "3%",
     height: "100%",
+  },
+  input: {
+    //width: "85%",
+  },
+  inputView: {
+    width: "82%",
+    justifyContent: "center",
+    height: 60,
+    marginLeft: "3%"
   }
 });
 

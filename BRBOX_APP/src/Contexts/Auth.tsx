@@ -36,6 +36,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
   const [temporaryToken, setTemporaryToken] = useState('');
 
   async function checkLogin() {
+    let user: User | null = null;
+
     try {
       setLoading(true);
 
@@ -46,7 +48,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
 
         let response = await api.get(`/user/${userJson.id}`, {headers: {auth_token: userJson.auth_token}});
 
-        setUser({...response.data, auth_token: userJson.auth_token});
+        user = {...response.data, auth_token: userJson.auth_token};
       }
 
       setLoading(false);
@@ -54,7 +56,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
       return signOut();
     }
 
-    setFirstLoad(false);
+    setTimeout(() => {
+      setUser(user);
+      setFirstLoad(false);
+    }, 3500);
   }
 
   async function signIn(email: string, password: string, errorCallback?: Function) {

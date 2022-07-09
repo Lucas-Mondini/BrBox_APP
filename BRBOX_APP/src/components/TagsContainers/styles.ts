@@ -13,14 +13,23 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginVertical: 15
   },
+  noContent: {
+    fontFamily: config.fontFamilyBold,
+  },
   selectedTagsContainer: {
-    minHeight: 70
+    minHeight: 70,
+    marginTop: 30
   },
   tagsContainer: {
     flexDirection: "row",
     marginLeft: 2,
     marginRight: 2,
     padding: 5
+  },
+  toggle: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   tag: {
     backgroundColor: "blue",
