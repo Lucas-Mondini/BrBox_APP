@@ -54,10 +54,10 @@ export default class GameController extends Controller {
     
     Index = async (req: Request) => {
         try {
-            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: _raw_name = ""} = req.query
+            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = ""} = req.query
             
-            const no_quote_name = (<string>_raw_name).replace(/['"@#$%\\]+/g, '')
-            var where = "1 = 1";
+            var where = "1 = $1";
+            let wherename = "1"
             var orderBy = "";
             var OrderASCOrDESC = "asc"
             if((<string>AscDesc).toLowerCase() == "asc" || (<string>AscDesc).toLowerCase() == "desc")
@@ -70,12 +70,10 @@ export default class GameController extends Controller {
                 orderBy = `order by tag DESC`
             }
             
-            if(no_quote_name) {
-                const names = (<string>no_quote_name).split(',');
-                where = names.map(i=> `lower(game.name) like lower('%${i}%')`).join(" OR ")
+            if(game_name) {
+                where = `lower(game.name) like lower($1)`;
+                wherename = `%${game_name}%`
             }
-            
-            where = where.replace(/"/g, "'");
             
             const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0
                       
@@ -129,8 +127,8 @@ export default class GameController extends Controller {
                                     select game.id from game 
                                     where ${where}
                                     ${orderBy}
-                                    limit ${ammount}
-                                    offset ${skip}
+                                    limit $2
+                                    offset $3
                                     )
                     )
                 group by
@@ -142,7 +140,12 @@ export default class GameController extends Controller {
                     tag_data.icon
                 order by 
                     game.id
-                                `);
+                                `,
+                                [   
+                                    wherename,
+                                    ammount,
+                                    skip
+                                ]);
                             
                             games = games.map((i : any) => {
                                 const game =  {
