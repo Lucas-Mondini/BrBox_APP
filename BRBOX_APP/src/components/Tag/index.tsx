@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -11,9 +11,13 @@ interface TagProps {
   tag: TagValue;
   specificStyle?: string;
   large?: boolean;
+  showName?: boolean;
+  showTotalVotes?: boolean;
+  extraStyles?: object;
+  callback?: () => void;
 }
 
-export default function Tag({tag, specificStyle, large}: TagProps)
+export default function Tag({tag, specificStyle, large, showName, showTotalVotes, callback, extraStyles}: TagProps)
 {
   // @ts-ignore
   const bg = specificStyle ? {backgroundColor: config[specificStyle]} : {};
@@ -26,7 +30,10 @@ export default function Tag({tag, specificStyle, large}: TagProps)
   if (!tag) return null;
 
   return (
-    <View style={[styles.tag, large ? styles.tagLarge : styles.tagSmall, bg]}>
+    <TouchableOpacity
+      onPress={callback}
+      style={[styles.tag, extraStyles, large ? styles.tagLarge : styles.tagSmall, bg]}
+    >
       <Icon
         name={getIcon(tag.icon)}
         size={large ? 18 : 16}
@@ -35,8 +42,8 @@ export default function Tag({tag, specificStyle, large}: TagProps)
       />
 
       <Text style={[styles.tagText, large ? styles.tagTextLarge : styles.tagTextSmall]}>
-        {formatVotes(tag.total || 0)}
+        {showName ? ((showTotalVotes ? tag.count + " " : "") + tag.name) : formatVotes(tag.total || 0)}
       </Text>
-    </View>
+    </TouchableOpacity>
   );
 }

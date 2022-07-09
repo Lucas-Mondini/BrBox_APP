@@ -41,7 +41,6 @@ const Home = () => {
   async function getGames(loadingMoreGames: boolean = false)
   {
     try {
-      console.log(gameName)
       const response = await get(`/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`, loadingMoreGames ? setLoadingMore : setLoading);
 
       const gamesList = gameName ? [] : games;

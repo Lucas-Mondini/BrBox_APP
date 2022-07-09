@@ -52,7 +52,9 @@ export type Tag = {
 
 export type TagValue = {
   tag: string;
+  name: string;
   icon: number;
+  count: number;
   downVotes: number;
   neutralVotes: number;
   upVotes: number;

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json";
@@ -13,6 +13,7 @@ import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 import Input from "../Input";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import TagCard from "../Tag";
 
 export default function TagsContainers()
 {
@@ -129,13 +130,20 @@ export default function TagsContainers()
 
   function renderTags()
   {
-    return tags.map(tag => (
-      <TouchableOpacity key={tag.id} onPress={() => handleLists(
-        tag.id, tags, selectedTags, setTags, setSelectedTags
-      )}>
-          <Text style={styles.tag}>{tag.name}</Text>
-        </TouchableOpacity>
-      ));
+    return tags.map((tag: any) => (
+      <View>
+        <TagCard
+          showName
+          extraStyles={{margin: 3}}
+          callback={() => handleLists(
+            tag.id, tags, selectedTags, setTags, setSelectedTags
+          )}
+          key={tag.id}
+          tag={tag}
+          specificStyle="greenBar"
+        />
+      </View>
+    ));
   }
 
   function renderEvaluatedTags()
@@ -144,10 +152,18 @@ export default function TagsContainers()
       return <Text style={[styles.noContent, {color}]}>{getTerm(100111)}</Text>;
     }
 
-    return evaluatedTags.map((tagValues: any, index: number) => (
-      <TouchableOpacity key={index} onPress={() => {}} activeOpacity={1}>
-        <Text style={styles.tag}>{tagValues.count} {tagValues.name}</Text>
-      </TouchableOpacity>
+    return evaluatedTags.map((tag: any, index: number) => (
+      <View>
+        <TagCard
+          showName
+          showTotalVotes
+          extraStyles={{margin: 3}}
+          callback={() => {}}
+          key={index}
+          tag={tag}
+          specificStyle="greenBar"
+        />
+      </View>
     ));
   }
 
