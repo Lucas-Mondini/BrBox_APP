@@ -33,6 +33,7 @@ const port = Number(process.env.DATABASE_PORT);
 const username = process.env.DATABASE_USERNAME;
 const password = process.env.DATABASE_PASSWORD;
 const database = process.env.DATABASE_DATABASE;
+const heroku    = process.env.HEROKU ? true : false;
 
 export const AppDataSource = new DataSource({
     type:   'postgres',
@@ -43,6 +44,12 @@ export const AppDataSource = new DataSource({
     database:   database,
     synchronize:    true,
     logging:        false,
+    ssl: heroku,
+    extra: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
     entities: [
         User, 
         Admin, 
