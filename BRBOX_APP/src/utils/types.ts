@@ -17,6 +17,7 @@ export type Params = {
   id?: number;
   new?: boolean;
   tags?: TagValue[];
+  search?: boolean;
 }
 
 export type Evaluation = {

@@ -10,10 +10,13 @@ import { useTheme } from "../../Contexts/Theme";
 
 interface HeaderProps {
   title: number | string;
+  buttonIcon?: string;
+  customHeader?: React.ReactElement | React.ReactElement[];
+  hideMenuButton?: boolean;
   addAction?: () => void;
 }
 
-export default function Header({title, addAction}: HeaderProps)
+export default function Header({title, buttonIcon, customHeader, hideMenuButton, addAction}: HeaderProps)
 {
   const { darkMode } = useTheme();
   const {getTerm} = useTerm();
@@ -24,7 +27,7 @@ export default function Header({title, addAction}: HeaderProps)
 
   return (
     <View style={[styles.headerContainer, {borderBottomColor: color}]}>
-      {!dropDownMenu &&
+      {(!dropDownMenu && !hideMenuButton) &&
         <TouchableOpacity style={[styles.menuButton]} onPress={() => {
           setDropDownMenu(<DropDownMenu setModal={setDropDownMenu}/>);
         }}>
@@ -38,12 +41,14 @@ export default function Header({title, addAction}: HeaderProps)
 
       {dropDownMenu && dropDownMenu}
 
-      <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 25 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
+      {customHeader
+      || <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 25 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
+      }
 
       {addAction &&
         <TouchableOpacity style={[styles.addButton]} onPress={addAction}>
           <Icon
-            name="plus"
+            name={buttonIcon || "plus"}
             size={35}
             color={color}
           />
