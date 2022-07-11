@@ -18,6 +18,7 @@ export type Params = {
   new?: boolean;
   tags?: TagValue[];
   search?: boolean;
+  filterUser?: boolean;
 }
 
 export type Evaluation = {

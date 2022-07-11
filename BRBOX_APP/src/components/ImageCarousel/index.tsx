@@ -54,6 +54,8 @@ const ImageCarousel: FC<ImageCarouselProps> = ({data}) => {
     index,
   });
 
+  if (dataWithPlaceholders.length === 0) return null;
+
   return (
     <View style={styles.container}>
       <FlatList

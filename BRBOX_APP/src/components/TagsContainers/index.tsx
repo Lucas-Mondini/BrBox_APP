@@ -131,14 +131,13 @@ export default function TagsContainers()
   function renderTags()
   {
     return tags.map((tag: any) => (
-      <View>
+      <View key={tag.id}>
         <TagCard
           showName
           extraStyles={{margin: 3}}
           callback={() => handleLists(
             tag.id, tags, selectedTags, setTags, setSelectedTags
           )}
-          key={tag.id}
           tag={tag}
           specificStyle="greenBar"
         />
@@ -152,14 +151,13 @@ export default function TagsContainers()
       return <Text style={[styles.noContent, {color}]}>{getTerm(100111)}</Text>;
     }
 
-    return evaluatedTags.map((tag: any, index: number) => (
-      <View>
+    return evaluatedTags.map((tag: any) => (
+      <View key={tag.id}>
         <TagCard
           showName
           showTotalVotes
           extraStyles={{margin: 3}}
           callback={() => {}}
-          key={index}
           tag={tag}
           specificStyle="greenBar"
         />
