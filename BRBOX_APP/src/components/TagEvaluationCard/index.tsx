@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -37,6 +37,7 @@ export default function TagEvaluationCard({id, evaluationId, title, icon, value,
   const descriptionColor = {color: darkMode ? "#BFBFBF" : config.dark}
   const iconColor = (value: number) => darkMode || selectedEvaluationVote === value ? "#fff" : config.mainIconColor;
   const actionsColor = darkMode ? "#fff" : config.mainIconColor;
+  const {width} = Dimensions.get('window');
 
   async function saveVote(vote: number) {
     setLoading(true);
@@ -107,8 +108,8 @@ export default function TagEvaluationCard({id, evaluationId, title, icon, value,
       }
 
       <View>
-        <Text style={[styles.title, textColor]}>{splitText(title, 24)}</Text>
-        <Text style={[styles.description, descriptionColor]}>{splitText(description, 50)}</Text>
+        <Text style={[styles.title, textColor]}>{splitText(title, width >= 400 ? 20 : 15)}</Text>
+        <Text style={[styles.description, descriptionColor]}>{splitText(description, width >= 400 ? 35 : 25)}</Text>
       </View>
 
       <View style={[styles.buttonView, {backgroundColor: !darkMode ? "#fff" : config.dark}]}>

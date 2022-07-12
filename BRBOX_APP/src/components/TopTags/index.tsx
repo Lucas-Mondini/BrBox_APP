@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View } from "react-native";
+import { Dimensions, Text, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -15,10 +15,12 @@ interface TopTagsProps {
 
 export default function TopTags({tags, large}: TopTagsProps)
 {
+  const {width} = Dimensions.get('window');
+
   if (!tags) return null;
 
   return (
-    <View style={large ? styles.tagsContainerLarge : styles.tagsContainerSmall}>
+    <View style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall, {marginLeft: width >= 400 ? 60 : 30}]}>
       <Tag
         tag={tags[0]}
         specificStyle="greenBar"

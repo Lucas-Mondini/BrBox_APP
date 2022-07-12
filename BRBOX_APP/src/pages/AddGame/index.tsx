@@ -26,7 +26,7 @@ import { useTheme } from '../../Contexts/Theme';
 const AddGame = () => {
   const {
     id, name, link, loading, imageName, imageLink, platform,
-    setName, setLink, setPlatform, setImageName, setImageLink,
+    setName, setLink, setPlatform, setImageName, setImageLink, setLoading,
     addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages
   } = useGame();
 
@@ -51,9 +51,11 @@ const AddGame = () => {
   }
 
   useEffect(() => {
-    if (isFocused && params.id) {
+    if (isFocused && params.id && !params.new) {
       loadGame(params.id);
     }
+
+    if (params.new) setLoading(false);
   }, [isFocused]);
 
   return (

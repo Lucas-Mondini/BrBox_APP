@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -24,6 +24,8 @@ export default function GameCard({id, title, tags, imgUri, extraCallbackOnNaviga
   const { user } = useAuth();
   const navigation = useNavigation<any>();
 
+  const {width} = Dimensions.get('window');
+
   const textColor = {color: darkMode ? "#fff" : config.dark}
   const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
 
@@ -45,7 +47,7 @@ export default function GameCard({id, title, tags, imgUri, extraCallbackOnNaviga
         </View>
         <View style={styles.info}>
           <View>
-            <Text style={[styles.title, textColor]}>{splitText(title, 25)}</Text>
+            <Text style={[styles.title, textColor]}>{splitText(title, width >= 400 ? 25 : 18)}</Text>
 
             <TopTags
               tags={tags}
