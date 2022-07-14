@@ -20,13 +20,13 @@ export default function Button({text, onPress, buttonColor, extraStyle, extraTex
 {
   const {getTerm} = useTerm();
 
-  const buttonColorStyle = {backgroundColor: buttonColor || config.mediumGreen, ...extraStyle}
+  const buttonColorStyle = {backgroundColor: buttonColor || config.mediumGreen}
 
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity
         onPress={onPress}
-        style={[styles.button, buttonColorStyle]}
+        style={[styles.button, buttonColorStyle, extraStyle]}
         disabled={loading}
       >
         {loading
