@@ -8,14 +8,19 @@ import { useTheme } from "../../Contexts/Theme";
 import { useGame } from "../../Contexts/Game";
 import { useNavigation } from "@react-navigation/native";
 import { useRequest } from "../../Contexts/Request";
-import { Evaluation, Tag } from "../../utils/types";
+import { Evaluation, Tag, TagValue } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 import Input from "../Input";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import TagCard from "../Tag";
+import TagInfoModal from "../TagInfoModal";
 
-export default function TagsContainers()
+interface TagContainersProps {
+  setEvaluationTags: (tags: Tag[]) => void
+}
+
+export default function TagsContainers({setEvaluationTags}: TagContainersProps)
 {
   const {
     id: gameId , tagValueList
@@ -32,6 +37,7 @@ export default function TagsContainers()
   const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
+  const [modal, setModal] = useState<React.ReactElement | null>(null);
 
   const [showEvaluatedTags, setShowEvaluatedTags] = useState(true);
   const [showSelectedTags, setShowSelectedTags] = useState(true);
@@ -60,6 +66,7 @@ export default function TagsContainers()
       }
 
       setEvaluatedTags(groupEvaluatedTags(response.tagValue.tagValues));
+      if (setEvaluationTags) setEvaluationTags(groupEvaluatedTags(response.tagValue.tagValues));
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -95,11 +102,17 @@ export default function TagsContainers()
 
     for (let item1 of list) {
       const countTags = list.filter((item) => item.tag.id === item1.tag.id)
+      const countUpVotes = list.filter((item) => item.value.id === 1).length
+      const countNeutralVotes = list.filter((item) => item.value.id === 2).length
+      const countDownVotes = list.filter((item) => item.value.id === 3).length
 
       finalValues.push({
         id: countTags[0].tag.id,
         icon: countTags[0].tag.icon,
         count: countTags.length,
+        upVotes: countUpVotes,
+        neutralVotes: countNeutralVotes,
+        downVotes: countDownVotes,
         evalId: countTags[0].id,
         name: countTags[0].tag.name,
         value: countTags[0].value.id,
@@ -157,7 +170,14 @@ export default function TagsContainers()
           showName
           showTotalVotes
           extraStyles={{margin: 3}}
-          callback={() => {}}
+          callback={() => {
+            setModal(
+              <TagInfoModal
+                setModal={() => setModal(null)}
+                tagInfo={tag}
+              />
+            );
+          }}
           tag={tag}
           specificStyle="greenBar"
         />
@@ -208,6 +228,7 @@ export default function TagsContainers()
 
   return (
     <View>
+      {modal && modal}
       <TouchableOpacity
         style={styles.toggle}
         onPress={() => {

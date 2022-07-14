@@ -9,13 +9,13 @@ import { TermProvider } from './Contexts/TermProvider';
 import { ThemeProvider } from './Contexts/Theme';
 
 const linking = {
-  prefixes: ['gamescore://']
+  prefixes: ['gamescore://gameinfo']
 };
 
 const App: React.FC = () => (
   <NavigationContainer
     linking={linking}
-    fallback={<ActivityIndicator color="blue" size="large" />}
+    //fallback={<ActivityIndicator color="blue" size="large" />}
   >
     <StatusBar barStyle="light-content" />
     <TermProvider>

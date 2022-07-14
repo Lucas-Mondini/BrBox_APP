@@ -32,6 +32,7 @@ export default function Tag({tag, specificStyle, large, showName, showTotalVotes
   return (
     <TouchableOpacity
       onPress={callback}
+      disabled={!callback}
       style={[styles.tag, extraStyles, large ? styles.tagLarge : styles.tagSmall, bg]}
     >
       <Icon

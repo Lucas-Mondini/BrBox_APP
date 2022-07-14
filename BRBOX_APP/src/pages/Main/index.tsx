@@ -2,6 +2,8 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
   ImageBackground,
+  Linking,
+  Platform,
   Text,
   TouchableOpacity,
   View,
@@ -30,9 +32,31 @@ const Main = () => {
     color: !darkMode ? config.dark : config.mediumGreen,
   };
 
+  function navigate(url: string)
+  {
+    console.log(url)
+    const route = url.replace(/.*?:\/\//g, '') || "";
+    //@ts-ignore
+    const id = route.match(/\/([^\/]+)\/?$/)[1];
+
+    const routeName = route.split('/')[0];
+
+    if (routeName === 'gameinfo') {
+      navigation.navigate('GameInfo', { id });
+    };
+  }
+
   useEffect(() => {
     setTimeout(() => {
       setTitle({first: "GAME", last: "SCORE"});
+
+      if (Platform.OS === 'android') {
+        Linking.getInitialURL().then(url => {
+          if (url) navigate(url || "");
+        });
+      } else {
+        Linking.addEventListener('url', (url) => navigation.navigate(url));
+      }
     }, 2500);
   }, []);
 

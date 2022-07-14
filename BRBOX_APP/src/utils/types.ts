@@ -48,10 +48,14 @@ export type Tag = {
   evalId: number;
   value?: number;
   count?: number;
+  upVotes?: number;
+  neutralVotes?: number;
+  downVotes?: number;
   description?: string;
 }
 
 export type TagValue = {
+  id: number;
   tag: string;
   name: string;
   icon: number;
@@ -60,6 +64,7 @@ export type TagValue = {
   neutralVotes: number;
   upVotes: number;
   total: number;
+  description?: string;
 }
 
 export type Platform = {

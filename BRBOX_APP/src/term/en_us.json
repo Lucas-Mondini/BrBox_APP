@@ -112,5 +112,9 @@
   "100110": "Game name",
   "100111": "The game doesn't have any evaluations yet",
   "100112": "Show less",
-  "100113": "Click for info"
+  "100113": "Click for info",
+  "100114": "Evaluation info",
+  "100115": "Positive evaluations",
+  "100116": "Neutral evaluations",
+  "100117": "Negative evaluations"
 }
