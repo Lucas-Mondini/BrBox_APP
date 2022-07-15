@@ -47,7 +47,7 @@ export default function TagEvaluationCard({id, evaluationId, title, icon, value,
   const { getTerm } = useTerm();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
-  const descriptionColor = {color: darkMode ? "#BFBFBF" : config.dark}
+  const descriptionColor = {color: darkMode ? config.subTitleMainColor : config.dark}
   const iconColor = (value: number) => darkMode || selectedEvaluationVote === value ? "#fff" : config.mainIconColor;
   const actionsColor = darkMode ? "#fff" : config.mainIconColor;
   const {width} = Dimensions.get('window');
@@ -145,7 +145,7 @@ export default function TagEvaluationCard({id, evaluationId, title, icon, value,
       <View  style={showInfo ? styles.infoButtonView: {}}>
         {showInfo &&
           <View style={styles.descriptionsView}>
-            <Text style={[styles.description, styles.descriptionInfo]}>{desc}</Text>
+            <Text style={[styles.description, styles.descriptionInfo, descriptionColor]}>{desc}</Text>
           </View>
         }
         <View style={showInfo ? styles.button : {}}>
