@@ -12,5 +12,12 @@ export default class Tag {
     name: string
 
     @Column()
-    description: string
+    description_positive: string
+
+    @Column()
+    description_neutral: string
+
+    @Column()
+    description_negative: string
+
 }

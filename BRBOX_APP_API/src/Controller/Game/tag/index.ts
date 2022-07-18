@@ -69,11 +69,13 @@ export default class TagController extends Controller {
     //@ts-ignore
     Create = async (req: Request) => {
         try {
-            const {name, description, icon} = req.body;
+            const {name, description_positive, description_neutral, description_negative, icon} = req.body;
             
             const tag = await new Tag();
             tag.name        = name;
-            tag.description = description;
+            tag.description_positive    = description_positive;
+            tag.description_neutral     = description_neutral;
+            tag.description_negative    = description_negative;
             tag.icon        = icon;
             await AppDataSource.getRepository(Tag).save(tag);
             
@@ -89,15 +91,17 @@ export default class TagController extends Controller {
     //@ts-ignore
     Update = async (req: Request) => {
         try {
-            const {id, new_name, new_description, new_icon} = req.body
+            const {id, new_name, new_description_positive, new_description_neutral, new_description_negative, new_icon} = req.body
             const tag = await AppDataSource.getRepository(Tag).findOneBy({id: Number(id)});
 
             if(!tag)
                 return { status: 404, value: {message: "tag not found" }};
 
-            tag.name = new_name || tag.name;
-            tag.description = new_description || tag.description;
-            tag.icon        = new_icon || tag.icon;
+            tag.name                    = new_name || tag.name;
+            tag.description_positive    = new_description_positive  || new_description_positive;
+            tag.description_neutral     = new_description_neutral   || new_description_neutral;
+            tag.description_negative    = new_description_negative  || new_description_negative;
+            tag.icon                    = new_icon || tag.icon;
             
             await AppDataSource.getRepository(Tag).save(tag);
             
