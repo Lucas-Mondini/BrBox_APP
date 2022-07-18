@@ -2,6 +2,7 @@ import axios from 'axios'
 import { finished } from 'stream';
 import { AppDataSource } from '../../../data-source';
 import Game from '../../../Model/Game';
+import BusinessModelList from '../../../Model/Game/businessModel/businessModelList';
 import ExternalLink from '../../../Model/Game/externalLink';
 import ExternalLinkList from '../../../Model/Game/externalLink/externalLinkList';
 import Image from '../../../Model/Game/image';
@@ -57,6 +58,7 @@ export default class SteamLoader {
             game.imageList = imageList;
             game.linkList = externalLinkList;
             game.tagList = new TagValueList()
+            game.businessModelList = new BusinessModelList();
             gamesArray.push(game);
             counter++;
         }
