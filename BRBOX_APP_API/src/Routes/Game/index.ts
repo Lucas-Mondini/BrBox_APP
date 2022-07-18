@@ -8,5 +8,7 @@ gameRouter.post("/addLink",     view.AddLink)
 gameRouter.post("/removeLink",  view.RemoveLink)
 gameRouter.post("/addImage",     view.AddImage)
 gameRouter.post("/removeImage",  view.RemoveImage)
+gameRouter.post("/addBusinessModel",     view.AddBusinessModel)
+gameRouter.post("/removeBusinessModel",  view.RemoveBusinessModel)
 
 export default gameRouter;
