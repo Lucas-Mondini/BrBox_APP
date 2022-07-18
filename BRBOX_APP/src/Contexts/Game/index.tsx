@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import styles from './styles';
 import config from "../../../brbox.config.json";
 import { getMaxId, removeObjectFromArray } from '../../utils/functions';
-import { ImageType, LinkType, Platform } from '../../utils/types';
+import { BusinessModel, ImageType, LinkType, Platform } from '../../utils/types';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
@@ -24,6 +24,8 @@ type GameData = {
   imageName: string;
   imageLink: string;
   tagValueList: number;
+  businessModelId: number;
+  businessModelList: BusinessModel[];
 
   setId: (value: number) => void;
   setName: (value: string) => void;
@@ -35,6 +37,7 @@ type GameData = {
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
   setTagValueList: (value: number) => void;
+  setBusinessModelList: (value: BusinessModel[]) => void;
 
   addLink: () => void;
   addImage: () => void;
@@ -68,6 +71,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [tagValueList, setTagValueList] = useState(0);
+  const [businessModelId, setBusinessModelId] = useState(0);
+  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -193,6 +198,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setLinkList(response.linkList.externalLinks);
       setImages(response.imageList.images);
       setTagValueList(response.tagList.id);
+      setBusinessModelList(response.businessModelList.businessModels);
+      setBusinessModelId(response.businessModelList.id);
     } catch (error) {
       Alert.alert(getTerm(100071), getTerm(100072));
     }
@@ -224,6 +231,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setImages(response.imageList.images);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
+        setBusinessModelList(response.businessModelList.businessModels);
+        setBusinessModelId(response.businessModelList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100075), getTerm(100076));
@@ -284,8 +293,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setTagValueList,
+      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList, businessModelList, businessModelId,
+      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setTagValueList, setBusinessModelList,
       addLink, addImage, renderLinks, renderImages, loadGame, createGame, updateGame, deleteGame, clearGameContext
     }}>
       {children}
