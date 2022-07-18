@@ -88,6 +88,7 @@ export default class GameController extends Controller {
                 image.id as imageId,
                 image.link as imageLink,
                 tag_data.name tagname,
+                tag_data.id tagid,
                 tag_data.icon tagicon,
                 COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
                 COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
@@ -141,6 +142,7 @@ export default class GameController extends Controller {
                     image.id,
                     image.link,
                     tag_data."name",
+                    tag_data."id",
                     tag_data.icon
                 order by 
                     game.id
@@ -161,6 +163,7 @@ export default class GameController extends Controller {
                                                     if(j.tagname)
                                                         return {
                                                             tag: j.tagname,
+                                                            id: j.tagid,
                                                             icon: j.tagicon,
                                                             total: j.qty_total,
                                                             upVotes: j.qty_up,
