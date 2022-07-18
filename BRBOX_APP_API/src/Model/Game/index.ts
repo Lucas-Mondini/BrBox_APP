@@ -2,6 +2,7 @@ import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, O
 import ImageList from "./image/imageList";
 import TagValueList from "./tag/tagValueList";
 import ExtternalLinkList from "./externalLink/externalLinkList"
+import BusinessModelList from "./businessModel/businessModelList";
 
 @Entity()
 export default class Game {
@@ -22,6 +23,10 @@ export default class Game {
     @OneToOne(() => TagValueList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
     tagList: TagValueList;
+
+    @OneToOne(() => BusinessModelList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
+    @JoinColumn({referencedColumnName: "id"})
+    businessModelList: BusinessModelList;
 
     @CreateDateColumn()
     createdDate: Date
