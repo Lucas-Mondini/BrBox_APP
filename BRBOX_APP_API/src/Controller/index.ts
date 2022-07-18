@@ -50,7 +50,7 @@ class Controller implements IController {
             return {status: 200, value: values};
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 
@@ -77,7 +77,7 @@ class Controller implements IController {
             return {status: 200, value};
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 
@@ -111,7 +111,7 @@ class Controller implements IController {
                 }
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 

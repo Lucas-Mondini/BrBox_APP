@@ -61,7 +61,7 @@ export default class TagController extends Controller {
             return {status: 200, value: tags};
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 
@@ -82,7 +82,7 @@ export default class TagController extends Controller {
             }};
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 
@@ -106,7 +106,7 @@ export default class TagController extends Controller {
             }};
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 }

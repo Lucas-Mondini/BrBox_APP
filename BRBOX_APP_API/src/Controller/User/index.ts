@@ -56,7 +56,7 @@ export default class UserController implements IController {
         
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     /**
@@ -76,7 +76,7 @@ export default class UserController implements IController {
                         value: [...usersToReturn]
                     };
         }  catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     /**
@@ -105,7 +105,7 @@ export default class UserController implements IController {
                 value: {...userToReturn}
             };
         }  catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     /**
@@ -166,7 +166,7 @@ export default class UserController implements IController {
             }
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
         return {status: 500, value: {message: "an unexpected error ocurred"}};
     }
@@ -210,7 +210,7 @@ export default class UserController implements IController {
                 }   
             return {status: 400, value: {message: "user not found"}}
         }  catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     
@@ -240,7 +240,7 @@ export default class UserController implements IController {
                 }
             };
         }  catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 

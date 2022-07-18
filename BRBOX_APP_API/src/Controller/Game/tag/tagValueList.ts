@@ -23,7 +23,7 @@ export default class TagValueListController extends Controller {
             return {status: 200, value: {tagValueFromUser: tagValueFromUser, tagValue: tagValue}};
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     
@@ -83,7 +83,7 @@ export default class TagValueListController extends Controller {
             return {status: 200, value: {...req.body, tagValueId: tagValue.id}}
         }
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     
@@ -105,7 +105,7 @@ export default class TagValueListController extends Controller {
             return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
         }        
          catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
 }
