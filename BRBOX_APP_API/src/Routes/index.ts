@@ -10,6 +10,7 @@ import tagRouter from './Game/Tag';
 import valueRouter from './Game/Tag/value'
 import tagValueListRouter from './Game/Tag/tagValueList';
 import platformRouter from './Game/Platform';
+import businessModelRouter from './Game/businessModel';
 
 const mainRouter = Router();
 
@@ -23,5 +24,7 @@ mainRouter.use('/platform', Auth.admin, platformRouter);
 mainRouter.use('/tag', Auth.user,  tagRouter);
 mainRouter.use('/value', Auth.user, valueRouter);
 mainRouter.use('/tagValue', Auth.user,  tagValueListRouter);
+
+mainRouter.use('/businessModel', Auth.user, businessModelRouter)
 
 export default mainRouter;
