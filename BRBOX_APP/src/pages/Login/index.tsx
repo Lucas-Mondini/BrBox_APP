@@ -42,16 +42,16 @@ const Login = () => {
 
   return (
     <MainView>
-      <View style={styles.titleView}>
-        <Text
-          style={[styles.title, titleColorStyle]}
-        >
-          {getTerm(100020)}
-        </Text>
-      </View>
 
       <View style={[styles.container]}>
         <ScrollView>
+          <View style={styles.titleView}>
+            <Text
+              style={[styles.title, titleColorStyle]}
+            >
+              {getTerm(100020)}
+            </Text>
+          </View>
           <Input
             placeholderText={100011}
             value={mail}

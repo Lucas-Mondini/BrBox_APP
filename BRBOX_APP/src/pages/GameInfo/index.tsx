@@ -12,7 +12,7 @@ import { useGame } from '../../Contexts/Game';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 
-import { Params } from '../../utils/types';
+import { Params, Tag } from '../../utils/types';
 
 import { useTheme } from '../../Contexts/Theme';
 import TagsContainers from '../../components/TagsContainers';
@@ -30,6 +30,7 @@ const GameInfo = () => {
   const {getTerm} = useTerm();
   const isFocused = useIsFocused();
   const [tagsContainer, setTagsContainer] = useState<React.ReactElement>();
+  const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
 
   const params = route.params as Params;
 
@@ -45,7 +46,7 @@ const GameInfo = () => {
 
   useEffect(() => {
     if (isFocused && !loading) {
-      setTagsContainer(<TagsContainers />)
+      setTagsContainer(<TagsContainers setEvaluationTags={setEvaluationTags}/>)
     }
   }, [isFocused, loading]);
 
@@ -78,6 +79,7 @@ const GameInfo = () => {
             <TopTags
               tags={params.tags}
               large
+              evaluations={evaluationTags}
             />
           </View>
         }

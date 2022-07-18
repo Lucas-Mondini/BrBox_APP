@@ -31,7 +31,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
 
     if (specificFunction) return specificFunction();
 
-    navigation.navigate(route);
+    return navigation.reset({index: 0, routes: [{name: "Home"}, {name: route}]});
   }
 
   async function shareApp()

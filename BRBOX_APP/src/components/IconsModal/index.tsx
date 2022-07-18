@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Dimensions,
   ScrollView,
   Text,
   TouchableOpacity
@@ -26,6 +27,8 @@ export default function IconsModal({setModal, visible, setIcon}: IconsModalProps
 
   const color = darkMode ? config.dark : "#fff";
 
+  const {width} = Dimensions.get('window');
+
   function renderIcons()
   {
     let iconList = [];
@@ -43,7 +46,7 @@ export default function IconsModal({setModal, visible, setIcon}: IconsModalProps
         >
           <Icon
             name={iconName}
-            size={45}
+            size={width >= 400 ? 45 : 35}
             color={darkMode ? "#fff" :config.dark}
           />
         </TouchableOpacity>

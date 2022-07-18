@@ -35,14 +35,16 @@ const Home = () => {
 
   const {get} = useRequest();
   const {getTerm} = useTerm();
-  const {signOut} = useAuth();
+  const {signOut, user} = useAuth();
   const {clearGameContext} = useGame();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
     try {
-      console.log(gameName)
-      const response = await get(`/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`, loadingMoreGames ? setLoadingMore : setLoading);
+      const response = await get(
+        `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&userId=${params && params.filterUser ? user?.id : ""}`,
+        loadingMoreGames ? setLoadingMore : setLoading
+      );
 
       const gamesList = gameName ? [] : games;
 

@@ -19,13 +19,9 @@ export default function BottomMenu()
   const iconColor = darkMode ? "#fff" : config.mainIconColor;
   const backgroundColor = {backgroundColor: darkMode ? config.dark : "#fff"}
 
-  function goTo(route: string, params?: Params, reset?: boolean)
+  function goTo(route: string, params?: Params)
   {
-    if (reset) {
-      return navigation.reset({index: 0, routes: [{name: route, params}]});
-    }
-
-    return navigation.navigate(route, params);
+    return navigation.reset({index: 0, routes: [{name: "Home"}, {name: route, params}]});
   }
 
   async function shareApp()
@@ -41,20 +37,20 @@ export default function BottomMenu()
 
   return (
     <View style={[styles.bottomMenuContainer, backgroundColor]}>
-      <TouchableOpacity style={styles.button} onPress={() => goTo("Home", {search: true}, true)}>
+      <TouchableOpacity style={styles.button} onPress={() => goTo("Home", {search: true})}>
         <Icon name="search" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {return Alert.alert("Sem rotas", "Ainda não foram implementadas rotas nesse menu"); goTo("TagsRatedByUser")}}>
+      <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {filterUser: true})}}>
         <Icon name="check-square" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {return Alert.alert("Sem rotas", "Ainda não foram implementadas rotas nesse menu"); goTo("TagsRatedByUser")}}>
+      <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {})}}>
         <Icon name="star" size={35} color={iconColor}/>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {return Alert.alert("Sem rotas", "Ainda não foram implementadas rotas nesse menu"); goTo("TagsRatedByUser")}}>
-        <Icon name="thumbs-up" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={shareApp}>
         <Icon name="share-square" size={35} color={iconColor}/>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => {goTo("Profile")}}>
+        <Icon name="user-circle" size={35} color={iconColor}/>
       </TouchableOpacity>
     </View>
   );
