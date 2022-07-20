@@ -117,7 +117,13 @@
   "100115": "Positive evaluations",
   "100116": "Neutral evaluations",
   "100117": "Negative evaluations",
-  "100118": "Business rule",
-  "100119": "Add business rule",
-  "100120": "Edit business ruleEditar"
+  "100118": "Business model",
+  "100119": "Add business model",
+  "100120": "Edit business model",
+  "100121": "Business models",
+  "100122": "No business model",
+  "100123": "Delete business model?",
+  "100124": "Are you sure you want to delete the business model",
+  "100125": "No business model selected",
+  "100126": "Select a business model by clicking the field called \"Business model\""
 }

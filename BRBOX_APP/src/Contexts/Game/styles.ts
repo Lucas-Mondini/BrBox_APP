@@ -25,7 +25,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: config.fontFamilyBold,
   },
-
+  subtitle: {
+    fontSize: 18,
+    fontFamily: config.fontFamilyBold,
+    marginTop: 30,
+    marginBottom: 10,
+  },
+  noContentText: {
+    fontSize: 15,
+    fontFamily: config.fontFamilyBold,
+    marginBottom: 30,
+    color: config.subTitleMainColor
+  }
 });
 
 export default styles

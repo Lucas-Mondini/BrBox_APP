@@ -2,11 +2,15 @@ import { StyleSheet } from "react-native";
 import config from "../../../brbox.config.json"
 
 const styles = StyleSheet.create({
-  businessModelCard: {
-    minHeight: 55,
+
+  businessModelCardBottom: {
     borderBottomWidth: 2,
     borderBottomColor: config.yellow,
+  },
+  businessModelCard: {
+    minHeight: 55,
     marginBottom: 10,
+    paddingBottom: 5,
     width: "100%",
     flexDirection: "row"
   },
@@ -14,9 +18,6 @@ const styles = StyleSheet.create({
     fontFamily: config.fontFamilyBold,
     fontSize: 22,
     paddingTop: 8
-  },
-  descriptionContainer: {
-    width: "95%",
   },
   description: {
     fontFamily: config.fontFamilyBold,

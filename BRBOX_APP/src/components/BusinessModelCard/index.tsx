@@ -14,12 +14,15 @@ interface BusinessModelCardProps {
   id: number;
   name: string;
   description: string;
-  setLoading: (value: boolean) => void;
-  onDelete?: () => void;
+  hideBottom?: boolean;
+
   onPress?: () => void;
+  onDelete?: () => void;
+  setLoading: (value: boolean) => void;
+  deleteCustomFunction?: () => void;
 }
 
-export default function BusinessModelCard({id, name, description, setLoading, onDelete, onPress}: BusinessModelCardProps)
+export default function BusinessModelCard({id, name, description, hideBottom, setLoading, onDelete, deleteCustomFunction, onPress}: BusinessModelCardProps)
 {
   const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
@@ -31,17 +34,19 @@ export default function BusinessModelCard({id, name, description, setLoading, on
   const textColor = {color: darkMode ? "#fff" : config.dark, width: name.length > 30 ? (width >= 400 ? "29%" : "25%") : "100%"};
   const descriptionColor = {color: darkMode ? config.subTitleMainColor : config.dark};
 
-  function navigateToPlatformInfo() {
+  function navigateToBusinessModelInfo() {
     return navigation.navigate("AddBusinessModel", {id});
   }
 
-  async function deletePlatform() {
+  async function deleteBusinessModel() {
+    if (deleteCustomFunction) return deleteCustomFunction();
+
     if (!onDelete) return;
 
-    Alert.alert(getTerm(100057), getTerm(100058),[
+    Alert.alert(getTerm(100123), getTerm(100124),[
       {text: getTerm(100040), onPress: async () => {
         try {
-          await destroy(`/platform/destroy/${id}`, onDelete, setLoading);
+          await destroy(`/businessModel/destroy/${id}`, onDelete, setLoading);
         } catch (error) {
           return navigation.reset({index: 0, routes: [{name: "Home"}]});
         }
@@ -52,22 +57,22 @@ export default function BusinessModelCard({id, name, description, setLoading, on
 
   return (
     <TouchableOpacity
-      style={styles.businessModelCard}
-      onPress={onPress || navigateToPlatformInfo}
+      style={[styles.businessModelCard, !hideBottom && styles.businessModelCardBottom]}
+      onPress={onPress || navigateToBusinessModelInfo}
     >
       <View>
         <Text style={[styles.title, textColor]}>{name}</Text>
-        <View style={styles.descriptionContainer}>
+        <View style={{width: (onDelete || deleteCustomFunction) && description.length > 40 ? "95%" : "100%"}}>
           <Text style={[styles.description, descriptionColor]}>{description}</Text>
         </View>
       </View>
 
-      {onDelete &&
+      {(onDelete || deleteCustomFunction) &&
         <View style={styles.buttonView}>
           <CardsButton
             iconName="trash"
             style={styles.deleteButton}
-            onPress={deletePlatform}
+            onPress={deleteBusinessModel}
           />
         </View>
       }
