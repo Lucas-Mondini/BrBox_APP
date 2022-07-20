@@ -22,12 +22,13 @@ import { Params } from '../../utils/types';
 import PlatformsModal from '../../components/PlatformsModal';
 import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
+import BusinessModelModal from '../../components/BusinessModelModal';
 
 const AddGame = () => {
   const {
-    id, name, link, loading, imageName, imageLink, platform,
-    setName, setLink, setPlatform, setImageName, setImageLink, setLoading,
-    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages
+    id, name, link, loading, imageName, imageLink, platform, businessModel,
+    setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel,
+    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel
   } = useGame();
 
   const route = useRoute();
@@ -37,7 +38,7 @@ const AddGame = () => {
 
   const params = route.params as Params;
 
-  const [modal, setModal] = useState(false);
+  const [modal, setModal] = useState<React.ReactElement | null>(null);
 
   const { darkMode } = useTheme();
 
@@ -58,16 +59,36 @@ const AddGame = () => {
     if (params.new) setLoading(false);
   }, [isFocused]);
 
+  function showModal(platform?: boolean)
+  {
+    let modalEl = null;
+
+    if (platform) {
+      modalEl = (
+        <PlatformsModal
+          setModal={() => setModal(null)}
+          visible={true}
+          setPlatform={setPlatform}
+        />
+      );
+    } else {
+      modalEl = (
+        <BusinessModelModal
+          setModal={() => setModal(null)}
+          visible={true}
+          setBusinessModel={setBusinessModel}
+        />
+      );
+    }
+
+    setModal(modalEl);
+  }
+
   return (
     <MainView loading={loading}>
-
-      <PlatformsModal
-        setModal={() => setModal(!modal)}
-        visible={modal}
-        setPlatform={setPlatform}
-      />
-
       <ScrollView style={[styles.container]}>
+        {modal && modal}
+
         <Text
           style={[styles.title, textColorStyle]}
         >
@@ -89,7 +110,7 @@ const AddGame = () => {
           onSubmitEditing={addLink}
         />
 
-        <TouchableOpacity onPress={() => setModal(!modal)}>
+        <TouchableOpacity onPress={() => showModal(true)}>
           <View pointerEvents="none">
             <Input
               placeholderText={100050}
@@ -131,10 +152,29 @@ const AddGame = () => {
           buttonColor="#17A2B8"
         />
 
+        {renderBusinessModel(true)}
+
+        <TouchableOpacity onPress={() => showModal()}>
+          <View pointerEvents="none">
+            <Input
+              placeholderText={100118}
+              value={businessModel?.name}
+            />
+          </View>
+        </TouchableOpacity>
+
+        <Button
+          text={100119}
+          onPress={addBusinessModel}
+          extraStyle={{marginBottom: 15, paddingHorizontal: 10}}
+          extraTextStyle={{color: "#fff"}}
+          buttonColor="#17A2B8"
+        />
+
         <Button
           text={id ? 100015 : 100026}
           onPress={id ? updateGame : createGame}
-          extraStyle={{marginBottom: 15}}
+          extraStyle={{marginVertical: 15}}
         />
 
         {Boolean(id) ? <>

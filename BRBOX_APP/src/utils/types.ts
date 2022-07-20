@@ -73,6 +73,12 @@ export type Platform = {
   name: string;
 }
 
+export type BusinessModel = {
+  id: number;
+  name: string;
+  description: string;
+}
+
 export type Value = {
   id: number;
   name: string;

@@ -10,6 +10,8 @@ import UserList from '../pages/UserList';
 import AddGame from '../pages/AddGame';
 import AddPlatform from '../pages/AddPlatform';
 import Platforms from '../pages/Platforms';
+import BusinessModelList from '../pages/BusinessModelList';
+import AddBusinessModel from '../pages/AddBusinessModel';
 import { useAuth } from '../Contexts/Auth';
 import { GameProvider } from '../Contexts/Game';
 
@@ -48,6 +50,14 @@ const AppRoutes: React.FC = () => {
           <App.Screen
             name="TagList"
             component={TagList}
+          />
+          <App.Screen
+            name="BusinessModelList"
+            component={BusinessModelList}
+          />
+          <App.Screen
+            name="AddBusinessModel"
+            component={AddBusinessModel}
           />
           <App.Screen
             name="UserList"
