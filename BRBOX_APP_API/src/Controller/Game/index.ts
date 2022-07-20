@@ -185,8 +185,9 @@ export default class GameController extends Controller {
                                     (value: any, index: any, self: any) => index === self.findIndex(
                                         (t : any) => (t.tag == value.tag)
                                         ))
-                                const sortedUp = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
-                                const sortedDown = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
+                                const sortedUp      = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
+                                const sortedNeutral = [...game.tags.sort((a: any, b: any) => b.neutralVotes - a.neutralVotes)]
+                                const sortedDown    = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
 
                                 game.tags = []
                                 if(sortedUp[0])
@@ -194,14 +195,18 @@ export default class GameController extends Controller {
                                         value: "up",
                                         ...sortedUp[0]
                                     })
-                                if(sortedUp[1])
+                                if( sortedNeutral[0] &&
+                                    sortedNeutral[0] != sortedUp[0])
                                     game.tags.push({
-                                        value: "up",
-                                        ...sortedUp[1]
+                                        value: "neutral",
+                                        ...sortedNeutral[0]
                                     })
 
 
-                                if(sortedDown[0] && sortedDown[0] != sortedUp[0] && sortedUp[1] && sortedDown[0] != sortedUp[1])
+                                if( sortedDown[0] && 
+                                    sortedDown[0] != sortedUp[0] && 
+                                    sortedNeutral[0] && 
+                                    sortedDown[0] != sortedNeutral[0])
                                     game.tags.push({
                                         value: "down",
                                         ...sortedDown[0]

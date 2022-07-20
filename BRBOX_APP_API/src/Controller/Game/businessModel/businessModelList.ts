@@ -43,7 +43,8 @@ export default class BusinessModelListController extends Controller {
             return businessModelList;
         }
 
-        AppDataSource.getRepository(BusinessModel).remove(businessModelList.businessModels);
+        //clear array without 
+        businessModelList.businessModels.splice(0);
         
         const businessModelArray = new Array<BusinessModel>();
         for (let element of businessModel) {
