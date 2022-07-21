@@ -19,11 +19,12 @@ import TagsContainers from '../../components/TagsContainers';
 import TopTags from '../../components/TopTags';
 import { useTerm } from '../../Contexts/TermProvider';
 import { getWords } from '../../utils/functions';
+import ToggleContent from '../../components/ToggleContent';
 
 const GameInfo = () => {
   const {
     name, loading,
-    loadGame, renderLinks, renderImages
+    loadGame, renderLinks, renderImages, renderBusinessModel
   } = useGame();
 
   const route = useRoute();
@@ -67,6 +68,12 @@ const GameInfo = () => {
         {renderImages()}
 
         {renderLinks()}
+
+        <ToggleContent
+          title={100121}
+          content={renderBusinessModel()}
+          colapseOnStart
+        />
 
         {params.tags?.length != 0 &&
           <View style={[styles.topTagsContainer, {backgroundColor: darkMode ? config.darkGray : config.light}]}>

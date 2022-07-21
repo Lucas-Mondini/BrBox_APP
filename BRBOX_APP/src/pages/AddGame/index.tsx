@@ -152,7 +152,7 @@ const AddGame = () => {
           buttonColor="#17A2B8"
         />
 
-        {renderBusinessModel(true)}
+        {renderBusinessModel(true, true)}
 
         <TouchableOpacity onPress={() => showModal()}>
           <View pointerEvents="none">

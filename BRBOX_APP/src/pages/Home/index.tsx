@@ -26,11 +26,13 @@ const Home = () => {
 
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(true);
+  const [loadingNoMore, setLoadingNoMore] = useState(false);
   const [games, setGames] = useState<Game[]>([]);
   const [page, setPage] = useState(1);
   const [amount, setAmount] = useState(10);
   const [order, setOrder] = useState("name");
   const [gameName, setGameName] = useState("");
+  const [gameSearch, setGameSearch] = useState("");
   const [hideButton, setHideButton] = useState(params ? params.search : false);
 
   const {get} = useRequest();
@@ -41,12 +43,23 @@ const Home = () => {
   async function getGames(loadingMoreGames: boolean = false)
   {
     try {
+      if (loadingNoMore) {
+        setLoadingMore(false);
+        setLoading(false);
+        return;
+      };
+
+      console.log("Aqui")
       const response = await get(
         `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&userId=${params && params.filterUser ? user?.id : ""}`,
         loadingMoreGames ? setLoadingMore : setLoading
       );
 
       const gamesList = gameName ? [] : games;
+
+      if (response.games.length < amount) {
+        setLoadingNoMore(true);
+      }
 
       setGames([...gamesList, ...response.games]);
       setPage(page+1);
@@ -90,7 +103,7 @@ const Home = () => {
         }
         onEndReached={() => getGames(true)}
         onEndReachedThreshold={0.1}
-        ListFooterComponent={loadingMore ? <Loading styles={{marginBottom: 15}} /> : null}
+        ListFooterComponent={loadingMore && !loadingNoMore ? <Loading styles={{marginBottom: 15}} /> : null}
       />);
   }
 
@@ -123,7 +136,19 @@ const Home = () => {
       getGames();
       clearGameContext();
     }
-  }, [isFocused, gameName]);
+  }, [isFocused, gameSearch]);
+
+  useEffect(() => {
+    setLoadingNoMore(false);
+
+    const a = setTimeout(() => {
+      setGameSearch(gameName);
+    }, 500);
+
+    return () => {
+      clearTimeout(a);
+    }
+  }, [gameName]);
 
   return (
     <MainView

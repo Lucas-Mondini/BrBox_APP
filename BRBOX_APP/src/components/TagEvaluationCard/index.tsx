@@ -18,14 +18,17 @@ interface TagEvaluationCardProps {
   evaluationId?: number;
   title: string;
   value?: number;
-  description: string;
+  descriptionNegative: string;
+  descriptionNeutral: string;
+  descriptionPositive: string;
   tagValueListId: number;
   remove: () => void;
   extraCallback?: () => void;
 }
 
-export default function TagEvaluationCard({id, evaluationId, title, icon, value, description, tagValueListId, remove, extraCallback}: TagEvaluationCardProps)
-{
+export default function TagEvaluationCard(
+  {id, evaluationId, title, icon, value, descriptionNegative, descriptionNeutral, descriptionPositive, tagValueListId, remove, extraCallback}: TagEvaluationCardProps
+) {
   const iconColors: any = {
     0: "#FFF",
     1: config.greenBar,
@@ -193,9 +196,9 @@ export default function TagEvaluationCard({id, evaluationId, title, icon, value,
               styles={{paddingRight: 35}}
             />
           : <>
-            {returnButton(description, "arrow-up", "MaterialCommunityIcons", 1)}
-            {returnButton(description, "arrow-up-down", "MaterialCommunityIcons", 2)}
-            {returnButton(description, "arrow-down", "MaterialCommunityIcons", 3)}
+            {returnButton(descriptionPositive, "arrow-up", "MaterialCommunityIcons", 1)}
+            {returnButton(descriptionNeutral, "arrow-up-down", "MaterialCommunityIcons", 2)}
+            {returnButton(descriptionNegative, "arrow-down", "MaterialCommunityIcons", 3)}
 
             {returnInfoButton(100032, config.red, deleteVote, true)}
             {returnInfoButton(100112, "transparent", () => setShowInfo(!showInfo))}

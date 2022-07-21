@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: config.yellow,
     marginBottom: 10,
+    paddingBottom: 10,
     width: "100%",
     flexDirection: "row"
   },

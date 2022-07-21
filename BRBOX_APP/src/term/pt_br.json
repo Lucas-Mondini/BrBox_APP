@@ -125,5 +125,8 @@
   "100123": "Excluir modelo de negócio?",
   "100124": "Tem certeza que deseja excluir o modelo de negócio",
   "100125": "Nenhum modelo de negócio selecionado",
-  "100126": "Selecione um modelo de negócio clicando no campo \"Modelo de negócio\""
+  "100126": "Selecione um modelo de negócio clicando no campo \"Modelo de negócio\"",
+  "100127": "Descrição da avaliação positiva",
+  "100128": "Descrição da avaliação neutra",
+  "100129": "Descrição da avaliação negativa"
 }

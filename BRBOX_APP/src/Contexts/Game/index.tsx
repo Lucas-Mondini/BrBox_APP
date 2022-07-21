@@ -52,7 +52,7 @@ type GameData = {
 
   renderLinks: (allowRemove?: boolean) => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
-  renderBusinessModel: (isEdit?: boolean) => React.ReactElement | undefined;
+  renderBusinessModel: (isEdit?: boolean, showTitle?: boolean) => React.ReactElement;
 
   clearGameContext: () => void;
 }
@@ -205,7 +205,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     }
   }
 
-  function renderBusinessModel(isEdit?: boolean)
+  function renderBusinessModel(isEdit?: boolean, showTitle?: boolean)
   {
     let content;
 
@@ -227,18 +227,20 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
           description={businessModel.description}
           setLoading={setLoading}
           onPress={() => {}}
-          deleteCustomFunction={() => removeObjectFromArray(businessModel.id, businessModelList, setBusinessModelList)}
+          disabled={!isEdit}
+          deleteCustomFunction={isEdit ? () => removeObjectFromArray(businessModel.id, businessModelList, setBusinessModelList) : () => {}}
         />
       ));
     }
 
     return (
       <View>
-        <Text
-          style={[styles.subtitle, textColorStyle]}
-        >
-          {getTerm(100121)}:
-        </Text>
+        {showTitle &&
+          <Text
+            style={[styles.subtitle, textColorStyle]}
+          >
+            {getTerm(100121)}:
+          </Text>}
 
         {content}
       </View>
