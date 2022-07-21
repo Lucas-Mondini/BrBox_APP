@@ -1,0 +1,61 @@
+import React from "react";
+import { Linking, TouchableOpacity } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
+import { LinkType } from "../../utils/types";
+import { removeObjectFromArray } from "../../utils/functions";
+
+import styles from "./styles";
+
+interface PlatformLinkProps {
+  link: LinkType;
+  linkList: LinkType[];
+  allowRemove: boolean;
+
+  setLinkList: (value: LinkType[]) => void;
+}
+
+export default function PlatformLink({link, linkList, allowRemove, setLinkList}: PlatformLinkProps)
+{
+  function getPlatformIcon(platformName: string)
+  {
+    let icon = "";
+
+    if (platformName.toLocaleLowerCase().includes("steam")) {
+      icon = "steam";
+    } else if (platformName.toLocaleLowerCase().includes("xbox")) {
+      icon = "microsoft-xbox";
+    } else if (platformName.toLocaleLowerCase().includes("ubisoft")) {
+      icon = "ubisoft";
+    } else if (platformName.toLocaleLowerCase().includes("playstation")) {
+      icon = "sony-playstation";
+    } else if (platformName.toLocaleLowerCase().includes("google")) {
+      icon = "google-play";
+    } else if (platformName.toLocaleLowerCase().includes("apple")) {
+      icon = "apple";
+    } else {
+      icon = "shopping"
+    }
+
+    return <Icon name={icon} size={50} color={"#686868"}/>
+  }
+
+  return (
+    <TouchableOpacity style={[styles.link]}
+      key={link.id}
+      activeOpacity={allowRemove ? 1 : 0.8}
+      onPress={async () => {
+        if (!allowRemove) {
+          await Linking.openURL(link.link);
+        }
+      }}
+    >
+      {getPlatformIcon(link.platformName)}
+      {allowRemove &&
+        <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
+          <Icon name="close" size={35} color={"#000"}/>
+        </TouchableOpacity>
+      }
+    </TouchableOpacity>
+  );
+}

@@ -1,6 +1,5 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Alert, FlatList, Linking, RefreshControl, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Alert, Text, View } from 'react-native';
 
 import styles from './styles';
 import config from "../../../brbox.config.json";
@@ -11,8 +10,8 @@ import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
 import { useTheme } from '../Theme';
 import ImageCarousel from '../../components/ImageCarousel';
-import ImageCarouselPreview from '../../components/ImageCarouselPreview';
 import BusinessModelCard from '../../components/BusinessModelCard';
+import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
 
 type GameData = {
   id: number;
@@ -127,79 +126,24 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setBusinessModel(null);
   }
 
-  function getPlatformIcon(platformName: string)
-  {
-    let icon = "";
-
-    if (platformName.toLocaleLowerCase().includes("steam")) {
-      icon = "steam";
-    } else if (platformName.toLocaleLowerCase().includes("xbox")) {
-      icon = "microsoft-xbox";
-    } else if (platformName.toLocaleLowerCase().includes("ubisoft")) {
-      icon = "ubisoft";
-    } else if (platformName.toLocaleLowerCase().includes("playstation")) {
-      icon = "sony-playstation";
-    } else if (platformName.toLocaleLowerCase().includes("google")) {
-      icon = "google-play";
-    } else if (platformName.toLocaleLowerCase().includes("apple")) {
-      icon = "apple";
-    } else {
-      icon = "shopping"
-    }
-
-    return <Icon name={icon} size={50} color={"#686868"}/>
-  }
-
   function renderLinks(allowRemove = false) {
-    const links = new Array();
-
-    for (const link of linkList) {
-      if (link.link) {
-        links.push(
-          <TouchableOpacity style={[styles.link]}
-            key={link.id}
-            activeOpacity={allowRemove ? 1 : 0.8}
-            onPress={async () => {
-              if (!allowRemove) {
-                await Linking.openURL(link.link);
-              }
-            }}
-          >
-            {getPlatformIcon(link.platformName)}
-            {allowRemove &&
-              <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
-                <Icon name="close" size={35} color={"#000"}/>
-              </TouchableOpacity>
-            }
-          </TouchableOpacity>
-        );
-      }
-    }
-
     return (
-      <View style={styles.linkContainer}>
-        <Text style={styles.platformsTitle}>{getTerm(allowRemove ? 100105 : 100104)}:</Text>
-
-        <Text>
-          {links}
-        </Text>
-      </View>
-    );
+      <PlatformLinkList
+        linkList={linkList}
+        setLinkList={setLinkList}
+        allowRemove={allowRemove}
+      />
+    )
   }
 
   function renderImages(isEdit?: boolean)
   {
     if (images.length > 0) {
-      return !isEdit
-      ? (
+      return (
         <ImageCarousel
+          imageCarouselPreview={isEdit}
           data={images}
-        />
-      )
-      : (
-        <ImageCarouselPreview
-          images={images}
-          setImages={setImages}
+          setData={setImages}
         />
       );
     }
@@ -296,7 +240,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setBusinessModelId(response.businessModelList.id);
       }
     } catch (error) {
-      console.log(error)
       Alert.alert(getTerm(100075), getTerm(100076));
     }
   }

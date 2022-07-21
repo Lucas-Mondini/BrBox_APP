@@ -1,5 +1,6 @@
 /**
  * Import all images and custom icons
+ * @param image string
  */
 export default function getImages(image: string)
 {

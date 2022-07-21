@@ -140,3 +140,17 @@ export function getIcon(id: number): string
 
   return icons[id];
 }
+
+/**
+ * Replace value into any format os mask
+ * @param value string
+ * @param pattern string
+ * @return string
+ */
+export function mask(value: string, pattern: string): string
+{
+  let i = 0;
+  const v = value.toString();
+
+  return pattern.replace(/#/g, () => v[i++] || "");
+}

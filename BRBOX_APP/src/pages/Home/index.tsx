@@ -1,6 +1,6 @@
+import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
 import { useIsFocused, useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
 import {
   RefreshControl,
   View
@@ -8,37 +8,41 @@ import {
 
 import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
-import styles from './styles';
 
 import { useAuth } from '../../Contexts/Auth';
-import { Game, Params } from '../../utils/types';
-import { useRequest } from '../../Contexts/Request';
-import { useGame } from '../../Contexts/Game';
-import Loading from '../../components/Loading';
-import Input from '../../components/Input';
 import { useTerm } from '../../Contexts/TermProvider';
+import { useRequest } from '../../Contexts/Request';
+import { Game, Params } from '../../utils/types';
+
+import Input from '../../components/Input';
+import Loading from '../../components/Loading';
+
+import styles from './styles';
+import useDelay from '../../hooks/Delay';
 
 const Home = () => {
-  const isFocused = useIsFocused();
   const route = useRoute();
+  const isFocused = useIsFocused();
 
   const params = route.params as Params;
 
   const [loading, setLoading] = useState(true);
   const [loadingMore, setLoadingMore] = useState(true);
   const [loadingNoMore, setLoadingNoMore] = useState(false);
-  const [games, setGames] = useState<Game[]>([]);
+
+  const [amount] = useState(10);
+  const [order] = useState("name");
   const [page, setPage] = useState(1);
-  const [amount, setAmount] = useState(10);
-  const [order, setOrder] = useState("name");
+
+  const [games, setGames] = useState<Game[]>([]);
   const [gameName, setGameName] = useState("");
   const [gameSearch, setGameSearch] = useState("");
+
   const [hideButton, setHideButton] = useState(params ? params.search : false);
 
   const {get} = useRequest();
   const {getTerm} = useTerm();
   const {signOut, user} = useAuth();
-  const {clearGameContext} = useGame();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
@@ -49,7 +53,6 @@ const Home = () => {
         return;
       };
 
-      console.log("Aqui")
       const response = await get(
         `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&userId=${params && params.filterUser ? user?.id : ""}`,
         loadingMoreGames ? setLoadingMore : setLoading
@@ -134,20 +137,13 @@ const Home = () => {
   useEffect(() => {
     if (isFocused) {
       getGames();
-      clearGameContext();
     }
   }, [isFocused, gameSearch]);
 
   useEffect(() => {
     setLoadingNoMore(false);
 
-    const a = setTimeout(() => {
-      setGameSearch(gameName);
-    }, 500);
-
-    return () => {
-      clearTimeout(a);
-    }
+    useDelay(gameName, setGameSearch);
   }, [gameName]);
 
   return (
