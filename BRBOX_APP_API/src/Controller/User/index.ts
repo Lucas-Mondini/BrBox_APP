@@ -1,6 +1,6 @@
 import { Request } from "express";
 import bcrypt from "bcrypt";
-import jwt, { JsonWebTokenError } from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import 'dotenv/config';
 
 import {IController} from "..";
@@ -8,8 +8,8 @@ import {IController} from "..";
 import User from "../../Model/User";
 import Admin from "../../Model/User/Admin";
 import { AppDataSource } from "../../data-source";
-import { FindOptionsUtils, Timestamp } from "typeorm";
-import { Console } from "console";
+
+import Mailer from "../../services/mailer";
 
 export default class UserController implements IController {
     
@@ -240,6 +240,17 @@ export default class UserController implements IController {
                 }
             };
         }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+
+    ForgetPassword = async (email: string) => {
+        try {
+        const user = await AppDataSource.getRepository(User).findOneByOrFail({email: email});
+        
+        Mailer.getInstance().Send(email, 'Forgot the Password', 'forgotPass', {name: user.email, code: 0})
+        return {status: 200, value: "Mail sent to the email"};
+        } catch (e : any) {
             return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
