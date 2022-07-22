@@ -66,7 +66,11 @@ export default function TagCard({id, icon, title, description, setLoading, onDel
       </View>
       <View>
         <Text style={[styles.title, {color}]}>{splitText(title, width >= 400 ? 21 : 15)}</Text>
-        <Text style={[styles.description, {color, width: description.length > 40 ? (width >= 400 ? "47%" : "40%") : "100%"}]}>{description}</Text>
+        <View
+          style={{width: description.length > 40 ? "85%" : "100%"}}
+        >
+          <Text style={[styles.description, {color}]}>{description}</Text>
+        </View>
       </View>
 
       <View style={styles.buttonView}>

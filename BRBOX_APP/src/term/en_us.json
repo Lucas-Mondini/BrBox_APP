@@ -125,5 +125,8 @@
   "100123": "Delete business model?",
   "100124": "Are you sure you want to delete the business model",
   "100125": "No business model selected",
-  "100126": "Select a business model by clicking the field called \"Business model\""
+  "100126": "Select a business model by clicking the field called \"Business model\"",
+  "100127": "Positive evaluation description",
+  "100128": "Neutral evaluation description",
+  "100129": "Negative evaluation description"
 }

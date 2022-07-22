@@ -51,7 +51,9 @@ export type Tag = {
   upVotes?: number;
   neutralVotes?: number;
   downVotes?: number;
-  description?: string;
+  description_positive?: string;
+  description_neutral?: string;
+  description_negative?: string;
 }
 
 export type TagValue = {
@@ -60,11 +62,14 @@ export type TagValue = {
   name: string;
   icon: number;
   count: number;
+  value: number | string;
   downVotes: number;
   neutralVotes: number;
   upVotes: number;
   total: number;
-  description?: string;
+  description_positive?: string;
+  description_neutral?: string;
+  description_negative?: string;
 }
 
 export type Platform = {

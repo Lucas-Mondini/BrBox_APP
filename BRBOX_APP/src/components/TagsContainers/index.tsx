@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json";
@@ -8,13 +8,14 @@ import { useTheme } from "../../Contexts/Theme";
 import { useGame } from "../../Contexts/Game";
 import { useNavigation } from "@react-navigation/native";
 import { useRequest } from "../../Contexts/Request";
-import { Evaluation, Tag, TagValue } from "../../utils/types";
+import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 import Input from "../Input";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import TagCard from "../Tag";
 import TagInfoModal from "../TagInfoModal";
+import ToggleContent from "../ToggleContent";
 
 interface TagContainersProps {
   setEvaluationTags: (tags: Tag[]) => void
@@ -38,9 +39,6 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
   const [modal, setModal] = useState<React.ReactElement | null>(null);
-
-  const [showEvaluatedTags, setShowEvaluatedTags] = useState(true);
-  const [showSelectedTags, setShowSelectedTags] = useState(true);
 
   const { darkMode } = useTheme();
 
@@ -85,7 +83,9 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
         icon: item.tag.icon,
         evalId: item.id,
         name: item.tag.name,
-        description: item.tag.description,
+        description_positive: item.tag.description_positive,
+        description_neutral: item.tag.description_neutral,
+        description_negative: item.tag.description_negative,
         value: item.value.id
       }
     });
@@ -116,7 +116,9 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
         evalId: countTags[0].id,
         name: countTags[0].tag.name,
         value: countTags[0].value.id,
-        description: countTags[0].tag.description
+        description_positive: countTags[0].tag.description_positive,
+        description_neutral: countTags[0].tag.description_neutral,
+        description_negative: countTags[0].tag.description_negative
       });
     }
 
@@ -207,7 +209,9 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
         evaluationId={tag.evalId}
         value={tag.value}
         title={tag.name}
-        description={tag.description || ""}
+        descriptionPositive={tag.description_positive || ""}
+        descriptionNeutral={tag.description_neutral || ""}
+        descriptionNegative={tag.description_negative || ""}
         tagValueListId={tagValueList}
         extraCallback={() => getEvaluatedTags(tagValueList)}
       />
@@ -229,43 +233,24 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   return (
     <View>
       {modal && modal}
-      <TouchableOpacity
-        style={styles.toggle}
-        onPress={() => {
-          setShowEvaluatedTags(!showEvaluatedTags);
-        }}
-      >
-        <View>
-          <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100088).toUpperCase()}</Text>
-        </View>
-
-        <Icon name={showEvaluatedTags ? "caret-up" : "caret-down"} color={color} size={25}/>
-      </TouchableOpacity>
-
-      {showEvaluatedTags &&
-        <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
-          {loadingEvaluatedTags
-          ? <Loading styles={{borderRadius: 8}} />
-          : <View style={styles.tagsContainer}>
-              <Text>{renderEvaluatedTags()}</Text>
-            </View>}
-        </View>
-      }
+      <ToggleContent
+        title={100088}
+        content={
+          <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
+            {loadingEvaluatedTags
+            ? <Loading styles={{borderRadius: 8}} />
+            : <View style={styles.tagsContainer}>
+                <Text>{renderEvaluatedTags()}</Text>
+              </View>}
+          </View>
+        }
+      />
 
       <View style={styles.selectedTagsContainer}>
-        <TouchableOpacity
-          style={styles.toggle}
-          onPress={() => {
-            setShowSelectedTags(!showSelectedTags);
-          }}
-        >
-          <View>
-            <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080).toUpperCase()}</Text>
-          </View>
-
-          <Icon name={showSelectedTags ? "caret-up" : "caret-down"} color={color} size={25}/>
-        </TouchableOpacity>
-        {showSelectedTags && renderSelectedTags()}
+        <ToggleContent
+          title={100080}
+          content={renderSelectedTags()}
+        />
       </View>
 
       <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030).toUpperCase()}</Text>

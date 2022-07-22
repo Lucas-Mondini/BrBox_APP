@@ -4,7 +4,6 @@ import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
-import { splitText } from "../../utils/functions";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
 import CardsButton from "../CardsButton";
@@ -13,6 +12,7 @@ import { useTheme } from "../../Contexts/Theme";
 interface BusinessModelCardProps {
   id: number;
   name: string;
+  disabled?: boolean;
   description: string;
   hideBottom?: boolean;
 
@@ -22,7 +22,7 @@ interface BusinessModelCardProps {
   deleteCustomFunction?: () => void;
 }
 
-export default function BusinessModelCard({id, name, description, hideBottom, setLoading, onDelete, deleteCustomFunction, onPress}: BusinessModelCardProps)
+export default function BusinessModelCard({id, name, disabled, description, hideBottom, setLoading, onDelete, deleteCustomFunction, onPress}: BusinessModelCardProps)
 {
   const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
@@ -57,17 +57,18 @@ export default function BusinessModelCard({id, name, description, hideBottom, se
 
   return (
     <TouchableOpacity
+      disabled={disabled}
       style={[styles.businessModelCard, !hideBottom && styles.businessModelCardBottom]}
       onPress={onPress || navigateToBusinessModelInfo}
     >
       <View>
         <Text style={[styles.title, textColor]}>{name}</Text>
-        <View style={{width: (onDelete || deleteCustomFunction) && description.length > 40 ? "95%" : "100%"}}>
+        <View style={{width: (onDelete || deleteCustomFunction) && !disabled && description.length > 40 ? "93%" : "100%"}}>
           <Text style={[styles.description, descriptionColor]}>{description}</Text>
         </View>
       </View>
 
-      {(onDelete || deleteCustomFunction) &&
+      {((onDelete || deleteCustomFunction) && !disabled) &&
         <View style={styles.buttonView}>
           <CardsButton
             iconName="trash"

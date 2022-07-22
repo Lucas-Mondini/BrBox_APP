@@ -21,7 +21,7 @@ const AppRoutes: React.FC = () => {
   const {user} = useAuth();
 
   return (
-    <GameProvider>
+    
       <App.Navigator
         screenOptions={{headerShown: false}}
       >
@@ -81,7 +81,6 @@ const AppRoutes: React.FC = () => {
           /></>
         }
       </App.Navigator>
-    </GameProvider>
   );
 };
 

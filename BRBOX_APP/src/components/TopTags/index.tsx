@@ -20,14 +20,20 @@ export default function TopTags({tags, large, evaluations}: TopTagsProps)
 
   if (!tags) return null;
 
-  function returnTags(specificStyle: "greenBar" | "lightRed" | "mediumGreen", tag?: TagValue)
+  function returnTags(tag?: TagValue)
   {
     if (!tag) return null;
+
+    const style: any = {
+      "up": "greenBar",
+      "neutral": "yellow",
+      "down": "lightRed"
+    }
 
     return (
       <Tag
         tag={tag}
-        specificStyle={specificStyle}
+        specificStyle={style[tag.value]}
         large={large}
         callback={!large ? () => {} : () => {
           if (!evaluations) return null;
@@ -49,9 +55,9 @@ export default function TopTags({tags, large, evaluations}: TopTagsProps)
     <View style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall, large ? {} : {marginLeft: width >= 400 ? 60 : 30}]}>
       {modal && modal}
 
-      {returnTags("greenBar", tags[0])}
-      {returnTags(tags.length === 2 ? "lightRed" : "mediumGreen", tags[1])}
-      {returnTags("lightRed", tags[2])}
+      {returnTags(tags[0])}
+      {returnTags(tags[1])}
+      {returnTags(tags[2])}
     </View>
   );
 }

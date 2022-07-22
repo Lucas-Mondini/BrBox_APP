@@ -34,7 +34,6 @@ const Main = () => {
 
   function navigate(url: string)
   {
-    console.log(url)
     const route = url.replace(/.*?:\/\//g, '') || "";
     //@ts-ignore
     const id = route.match(/\/([^\/]+)\/?$/)[1];

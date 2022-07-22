@@ -38,9 +38,15 @@ export default function PlatformsModal({setModal, tagInfo}: PlatformsModalProps)
       "down": config.red,
     }
 
+    const description = {
+      "up": tagInfo.description_positive,
+      "up-down": tagInfo.description_neutral,
+      "down": tagInfo.description_negative,
+    }
+
     return (
       <View style={styles.descriptionContainer}>
-        <Text style={[styles.descriptionText, {color: descriptionColor}]}>{tagInfo.description}</Text>
+        <Text style={[styles.descriptionText, {color: descriptionColor}]}>{description[vote]}</Text>
 
         <View>
           <CardsButton
@@ -90,7 +96,7 @@ export default function PlatformsModal({setModal, tagInfo}: PlatformsModalProps)
 
         <View style={[styles.evaluations]}>
           <Button
-            text={100045}
+            text={100025}
             onPress={setModal}
             extraStyle={[{marginTop: 10}]}
             extraTextStyle={{textDecorationLine: 'underline', color: titleColor}}
