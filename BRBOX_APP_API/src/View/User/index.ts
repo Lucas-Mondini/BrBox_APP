@@ -41,5 +41,11 @@ export default class UserView {
         const Login = await this.userController.Login(email, password);
         return res.status(Login.status).json(Login.value);
     }
+
+    ForgotPassword = async(req: Request, res: Response) => {
+        const {email, password} = req.body;
+        const response = await this.userController.ForgetPassword(email);
+        return res.status(response.status).json(response.value);
+    }
     
 } 
