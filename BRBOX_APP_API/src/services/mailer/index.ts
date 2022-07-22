@@ -1,13 +1,11 @@
 import nodeMailer, {Transporter} from "nodemailer";
-import { google } from 'googleapis'
 
 import 'dotenv/config';
 import ejs from 'ejs';
-import { OAuth2 } from "nodemailer/lib/smtp-connection";
 
 interface Data {
   name?: string;
-  code?: number;
+  code?: string;
 }
 
 class MailTemplateConfigurator
@@ -35,15 +33,6 @@ interface MailInfo {
   html?: string;
 }
 
-interface Auth {
-  type: string;
-  user: string;
-  clientId: string;
-  clientSecret: string;
-  refreshToken: string;
-  accessToken: string;
-}
-
 interface ConnectionSettings {
   host: string;
   service: string;
@@ -69,23 +58,6 @@ export default class Mailer {
   public static getInstance() : Mailer {
     if(!this.instance) {
       this.instance = new Mailer();
-
-
-      /*
-    this.instance.oAuth2 = new google.auth.OAuth2(
-      process.env.OAUTH_CLIENT_ID,
-      process.env.OAUTH_CLIENT_SECRET,
-      "https://developers.google.com/oauthplayground"
-    )
-
-    const url = this.instance.oAuth2.generateAuthUrl({
-      access_type: 'offline',
-      scope: 'https://www.googleapis.com/auth/gmail.send',
-      prompt: 'none'
-    });
-    const code = process.env.OAUTH_AUTH_CODE;
-    const {tokens} = await this.instance.oAuth2.getToken(code)
-    */
       
       this.instance.connSettings = {
         host: process.env.MAIL_HOST || 'smtp-relay.sendinblue.com', 
@@ -95,11 +67,6 @@ export default class Mailer {
         auth: { 
           user: process.env.MAIL, 
           pass: process.env.MAIL_PASS
-          //type: "OAuth2",
-          //clientId:     process.env.OAUTH_CLIENT_ID,
-          //clientSecret: process.env.OAUTH_CLIENT_SECRET,
-          //refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-          //accessToken: process.env.OAUTH_ACCESS_TOKEN,
         } 
       }
     }
