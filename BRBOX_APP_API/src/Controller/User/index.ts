@@ -10,6 +10,7 @@ import Admin from "../../Model/User/Admin";
 import { AppDataSource } from "../../data-source";
 
 import Mailer from "../../services/mailer";
+import Code from "../../Model/User/code";
 
 export default class UserController implements IController {
     
@@ -246,10 +247,57 @@ export default class UserController implements IController {
 
     ForgetPassword = async (email: string) => {
         try {
-        const user = await AppDataSource.getRepository(User).findOneByOrFail({email: email});
+        const user = await AppDataSource.getRepository(User).findOneOrFail({where: {email: email}, select: ["id", "username", "Password", "email", "createdDate"]});
         
-        Mailer.getInstance().Send(email, 'Forgot the Password', 'forgotPass', {name: user.email, code: 0})
+        var code = await AppDataSource.getRepository(Code).findOneBy({user: user});
+        if(!code) {
+            code = new Code();
+            code.user = user;
+        }
+        const _code = Math.floor(Math.random() * (9999 - 1) + 1).toString().padStart(4, "0")
+        code.code = await bcrypt.hash(_code, 10);
+        await AppDataSource.getRepository(Code).save(code);
+        
+        Mailer.getInstance().Send(email, 'Forgot the Password', 'forgotPass', {name: user.username, code: _code})
         return {status: 200, value: "Mail sent to the email"};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+
+    retrievePassword = async (email: string, new_password: string, confirm_new_password: string, code: string) => {
+        try {
+            if (new_password != confirm_new_password)
+                return {status: 401, value: {message: "password and password confirmation do not match"}};
+            
+            const hash = await bcrypt.hash(new_password, 10);
+            
+            if(!hash) {
+                return {status: 500, value: {message: "an unexpected error ocurred"}};
+            }
+
+            const user = await AppDataSource.getRepository(User).findOneByOrFail({email: email});
+            const _code = await AppDataSource.getRepository(Code).findOneByOrFail({user: user});
+
+            if(!await bcrypt.compare(code, _code.code)) {
+                return {status: 401, value: {message: "Invalid code"}};
+            }
+
+            user.Password = hash;
+            AppDataSource.getRepository(User).save(user);
+            const adm = AppDataSource.getRepository(Admin).findOneBy({user: user});
+
+            const jwt = await this.generateJwt(user)
+
+            AppDataSource.getRepository(Code).delete(_code);
+            return {status: 200, value: {
+                    id:         user.id,
+                    username:   user.username,
+                    email:      user.email,
+                    admin:      await adm? true  : false,
+                    auth_token: jwt.token
+            }};
+
         } catch (e : any) {
             return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }

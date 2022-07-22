@@ -47,5 +47,11 @@ export default class UserView {
         const response = await this.userController.ForgetPassword(email);
         return res.status(response.status).json(response.value);
     }
+
+    RetrievePassword = async(req: Request, res: Response) => {
+        const {email, new_password, confirm_new_password, code} = req.body;
+        const response = await this.userController.retrievePassword(email, new_password, confirm_new_password, code);
+        return res.status(response.status).json(response.value);
+    }
     
 } 
