@@ -23,10 +23,11 @@ import PlatformsModal from '../../components/PlatformsModal';
 import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
 import BusinessModelModal from '../../components/BusinessModelModal';
+import ToggleContent from '../../components/ToggleContent';
 
 const AddGame = () => {
   const {
-    id, name, link, loading, imageName, imageLink, platform, businessModel,
+    id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList,
     setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel,
     addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel
   } = useGame();
@@ -66,17 +67,19 @@ const AddGame = () => {
     if (platform) {
       modalEl = (
         <PlatformsModal
-          setModal={() => setModal(null)}
           visible={true}
+          setModal={() => setModal(null)}
+          usedPlatforms={linkList}
           setPlatform={setPlatform}
         />
       );
     } else {
       modalEl = (
         <BusinessModelModal
-          setModal={() => setModal(null)}
           visible={true}
+          setModal={() => setModal(null)}
           setBusinessModel={setBusinessModel}
+          usedBusinessModels={businessModelList}
         />
       );
     }
@@ -152,23 +155,31 @@ const AddGame = () => {
           buttonColor="#17A2B8"
         />
 
-        {renderBusinessModel(true, true)}
+        <ToggleContent
+          title={100119}
+          colapseOnStart
+          content={
+            <View>
+              {renderBusinessModel(true, true)}
 
-        <TouchableOpacity onPress={() => showModal()}>
-          <View pointerEvents="none">
-            <Input
-              placeholderText={100118}
-              value={businessModel?.name}
-            />
-          </View>
-        </TouchableOpacity>
+              <TouchableOpacity onPress={() => showModal()}>
+                <View pointerEvents="none">
+                  <Input
+                    placeholderText={100118}
+                    value={businessModel?.name}
+                  />
+                </View>
+              </TouchableOpacity>
 
-        <Button
-          text={100119}
-          onPress={addBusinessModel}
-          extraStyle={{marginBottom: 15, paddingHorizontal: 10}}
-          extraTextStyle={{color: "#fff"}}
-          buttonColor="#17A2B8"
+              <Button
+                text={100119}
+                onPress={addBusinessModel}
+                extraStyle={{marginBottom: 15, paddingHorizontal: 10}}
+                extraTextStyle={{color: "#fff"}}
+                buttonColor="#17A2B8"
+              />
+            </View>
+          }
         />
 
         <Button
