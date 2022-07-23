@@ -7,7 +7,7 @@ const view = new UserView();
 
 userRouter.post('/login',                   view.Login);
 userRouter.post('/create',                  view.Create);
-userRouter.post('/ForgotPassword',          view.ForgotPassword);
+userRouter.post('/forgotPassword',          view.ForgotPassword);
 userRouter.post('/retrievePassword',         view.RetrievePassword);
 userRouter.get('/:id',          Auth.user,  view.Get);
 userRouter.put('/update',       Auth.user,  view.Update);

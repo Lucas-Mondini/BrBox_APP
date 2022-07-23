@@ -259,7 +259,9 @@ export default class UserController implements IController {
         await AppDataSource.getRepository(Code).save(code);
         
         Mailer.getInstance().Send(email, 'Forgot the Password', 'forgotPass', {name: user.username, code: _code})
-        return {status: 200, value: "Mail sent to the email"};
+        return {status: 200, value: {
+            message: "Mail sent to the email"}
+        };
         } catch (e : any) {
             return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
