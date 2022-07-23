@@ -68,7 +68,7 @@ export default class SteamLoader {
         var batchToSave = new Array<Game>();
         for (const g of gamesArray) {
             batchToSave.push(g)
-            if(counter%200 == 0 || counter >= 59800) {
+            if(counter%40 == 0 || counter >= 40) {
                 await this.saveIndividually(batchToSave, counter);
                 batchToSave = new Array<Game>();
             }
