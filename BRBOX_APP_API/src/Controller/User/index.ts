@@ -287,7 +287,7 @@ export default class UserController implements IController {
 
             user.Password = hash;
             AppDataSource.getRepository(User).save(user);
-            const adm = AppDataSource.getRepository(Admin).findOneBy({user: user});
+            const adm = await  AppDataSource.getRepository(Admin).findOneBy({user: user});
 
             const jwt = await this.generateJwt(user)
 
@@ -296,7 +296,7 @@ export default class UserController implements IController {
                     id:         user.id,
                     username:   user.username,
                     email:      user.email,
-                    admin:      await adm? true  : false,
+                    admin:      adm? true  : false,
                     auth_token: jwt.token
             }};
 
