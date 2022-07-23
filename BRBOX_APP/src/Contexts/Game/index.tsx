@@ -1,17 +1,17 @@
 import React, { createContext, ReactNode, useContext, useState } from 'react';
-import { Alert, Linking, Text, TouchableOpacity, View } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Alert, Text, View } from 'react-native';
 
 import styles from './styles';
 import config from "../../../brbox.config.json";
 import { getMaxId, removeObjectFromArray } from '../../utils/functions';
-import { ImageType, LinkType, Platform } from '../../utils/types';
+import { BusinessModel, ImageType, LinkType, Platform } from '../../utils/types';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
 import { useTheme } from '../Theme';
 import ImageCarousel from '../../components/ImageCarousel';
-import ImageCarouselPreview from '../../components/ImageCarouselPreview';
+import BusinessModelCard from '../../components/BusinessModelCard';
+import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
 
 type GameData = {
   id: number;
@@ -24,6 +24,9 @@ type GameData = {
   imageName: string;
   imageLink: string;
   tagValueList: number;
+  businessModel: BusinessModel | null;
+  businessModelId: number;
+  businessModelList: BusinessModel[];
 
   setId: (value: number) => void;
   setName: (value: string) => void;
@@ -35,6 +38,8 @@ type GameData = {
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
   setTagValueList: (value: number) => void;
+  setBusinessModel: (value: BusinessModel | null) => void;
+  setBusinessModelList: (value: BusinessModel[]) => void;
 
   addLink: () => void;
   addImage: () => void;
@@ -42,9 +47,12 @@ type GameData = {
   createGame: () => Promise<void>;
   updateGame: () => Promise<void>;
   deleteGame: (callback?: () => void) => Promise<void>;
+  addBusinessModel: () => void;
 
   renderLinks: (allowRemove?: boolean) => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
+  renderBusinessModel: (isEdit?: boolean, showTitle?: boolean) => React.ReactElement;
+
   clearGameContext: () => void;
 }
 
@@ -68,6 +76,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [tagValueList, setTagValueList] = useState(0);
+  const [businessModel, setBusinessModel] = useState<BusinessModel | null>(null);
+  const [businessModelId, setBusinessModelId] = useState(0);
+  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
 
   const [loading, setLoading] = useState(false);
 
@@ -105,82 +116,79 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setImages([...images, {id: getMaxId(images), name: imageName, link: imageLink}]);
   }
 
-  function getPlatformIcon(platformName: string)
+  function addBusinessModel()
   {
-    let icon = "";
-
-    if (platformName.toLocaleLowerCase().includes("steam")) {
-      icon = "steam";
-    } else if (platformName.toLocaleLowerCase().includes("xbox")) {
-      icon = "microsoft-xbox";
-    } else if (platformName.toLocaleLowerCase().includes("ubisoft")) {
-      icon = "ubisoft";
-    } else if (platformName.toLocaleLowerCase().includes("playstation")) {
-      icon = "sony-playstation";
-    } else if (platformName.toLocaleLowerCase().includes("google")) {
-      icon = "google-play";
-    } else if (platformName.toLocaleLowerCase().includes("apple")) {
-      icon = "apple";
-    } else {
-      icon = "shopping"
+    if (!businessModel) {
+      return Alert.alert(getTerm(100125), getTerm(100126));
     }
 
-    return <Icon name={icon} size={50} color={"#686868"}/>
+    setBusinessModelList([...businessModelList, businessModel]);
+    setBusinessModel(null);
   }
 
   function renderLinks(allowRemove = false) {
-    const links = new Array();
-
-    for (const link of linkList) {
-      if (link.link) {
-        links.push(
-          <TouchableOpacity style={[styles.link]}
-            key={link.id}
-            activeOpacity={allowRemove ? 1 : 0.8}
-            onPress={async () => {
-              if (!allowRemove) {
-                await Linking.openURL(link.link);
-              }
-            }}
-          >
-            {getPlatformIcon(link.platformName)}
-            {allowRemove &&
-              <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
-                <Icon name="close" size={35} color={"#000"}/>
-              </TouchableOpacity>
-            }
-          </TouchableOpacity>
-        );
-      }
-    }
-
     return (
-      <View style={styles.linkContainer}>
-        <Text style={styles.platformsTitle}>{getTerm(allowRemove ? 100105 : 100104)}:</Text>
-
-        <Text>
-          {links}
-        </Text>
-      </View>
-    );
+      <PlatformLinkList
+        linkList={linkList}
+        setLinkList={setLinkList}
+        allowRemove={allowRemove}
+      />
+    )
   }
 
   function renderImages(isEdit?: boolean)
   {
     if (images.length > 0) {
-      return !isEdit
-      ? (
+      return (
         <ImageCarousel
+          imageCarouselPreview={isEdit}
           data={images}
-        />
-      )
-      : (
-        <ImageCarouselPreview
-          images={images}
-          setImages={setImages}
+          setData={setImages}
         />
       );
     }
+  }
+
+  function renderBusinessModel(isEdit?: boolean, showTitle?: boolean)
+  {
+    let content;
+
+    if (businessModelList.length == 0) {
+      content = (
+        <Text
+          style={[styles.noContentText]}
+        >
+          {getTerm(100122)}
+        </Text>
+      );
+    } else {
+      content = businessModelList.map((businessModel) => (
+        <BusinessModelCard
+          hideBottom
+          key={businessModel.id}
+          id={businessModel.id}
+          name={businessModel.name}
+          description={businessModel.description}
+          setLoading={setLoading}
+          onPress={() => {}}
+          disabled={!isEdit}
+          deleteCustomFunction={isEdit ? () => removeObjectFromArray(businessModel.id, businessModelList, setBusinessModelList) : () => {}}
+        />
+      ));
+    }
+
+    return (
+      <View>
+        {showTitle &&
+          <Text
+            style={[styles.subtitle, textColorStyle]}
+          >
+            {getTerm(100121)}:
+          </Text>}
+
+        {content}
+      </View>
+    );
   }
 
   async function loadGame(id: number)
@@ -193,6 +201,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setLinkList(response.linkList.externalLinks);
       setImages(response.imageList.images);
       setTagValueList(response.tagList.id);
+      setBusinessModelList(response.businessModelList.businessModels);
+      setBusinessModelId(response.businessModelList.id);
     } catch (error) {
       Alert.alert(getTerm(100071), getTerm(100072));
     }
@@ -215,8 +225,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       const imageList = images.filter(image => image.link !== "");
 
       if (validateGame(externalLinks, imageList)) {
+        const businessModel = businessModelList.map(businessModel => businessModel.id);
+
         const response = await put(`/game/update`, setLoading, {
-          id, new_name: name, new_description: name, externalLinks, images: imageList
+          id, new_name: name, new_description: name, externalLinks, images: imageList, businessModel
         });
 
         setId(response.id);
@@ -224,6 +236,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setImages(response.imageList.images);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
+        setBusinessModelList(response.businessModelList.businessModels);
+        setBusinessModelId(response.businessModelList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100075), getTerm(100076));
@@ -237,8 +251,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       const imageList = images.filter(image => image.link !== "");
 
       if (validateGame(externalLinks, imageList)) {
+        const businessModel = businessModelList.map(businessModel => businessModel.id);
+
         const response = await post(`/game/create`, setLoading, {
-          name, externalLinks, images: imageList
+          name, externalLinks, images: imageList, businessModel
         });
 
         setId(response.id);
@@ -246,6 +262,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setImages(response.imageList.images);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
+        setBusinessModelList(response.businessModelList.businessModels);
+        setBusinessModelId(response.businessModelList.id);
       }
     } catch (error) {
       Alert.alert(getTerm(100077), getTerm(100078));
@@ -274,19 +292,22 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
   function clearGameContext()
   {
-      setId(0);
-      setName("");
-      setImages([]);
-      setLinkList([]);
-      setLoading(true);
-      setTagValueList(0);
+    setId(0);
+    setName("");
+    setImages([]);
+    setLinkList([]);
+    setLoading(true);
+    setTagValueList(0);
+    setBusinessModel(null);
+    setBusinessModelId(0);
+    setBusinessModelList([]);
   }
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setTagValueList,
-      addLink, addImage, renderLinks, renderImages, loadGame, createGame, updateGame, deleteGame, clearGameContext
+      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList, businessModel, businessModelList, businessModelId,
+      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList,
+      addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, createGame, updateGame, deleteGame, clearGameContext, addBusinessModel
     }}>
       {children}
     </GameContext.Provider>

@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -27,7 +27,9 @@ export default function TagCard({id, icon, title, description, setLoading, onDel
   const {destroy} = useRequest();
   const {getTerm} = useTerm();
 
-  const color = darkMode ? "#fff" : config.dark
+  const color = darkMode ? "#fff" : config.dark;
+
+  const {width} = Dimensions.get('window');
 
   function navigateToTagInfo() {
     return navigation.navigate("TagRegister", {id});
@@ -63,8 +65,12 @@ export default function TagCard({id, icon, title, description, setLoading, onDel
         {getImage()}
       </View>
       <View>
-        <Text style={[styles.title, {color}]}>{splitText(title, 24)}</Text>
-        <Text style={[styles.description, {color, width: description.length > 40 ? "47%" : "100%"}]}>{description}</Text>
+        <Text style={[styles.title, {color}]}>{splitText(title, width >= 400 ? 21 : 15)}</Text>
+        <View
+          style={{width: description.length > 40 ? "85%" : "100%"}}
+        >
+          <Text style={[styles.description, {color}]}>{description}</Text>
+        </View>
       </View>
 
       <View style={styles.buttonView}>

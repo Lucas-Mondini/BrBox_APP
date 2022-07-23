@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import Home from '../pages/Home';
@@ -10,6 +10,8 @@ import UserList from '../pages/UserList';
 import AddGame from '../pages/AddGame';
 import AddPlatform from '../pages/AddPlatform';
 import Platforms from '../pages/Platforms';
+import BusinessModelList from '../pages/BusinessModelList';
+import AddBusinessModel from '../pages/AddBusinessModel';
 import { useAuth } from '../Contexts/Auth';
 import { GameProvider } from '../Contexts/Game';
 
@@ -19,7 +21,7 @@ const AppRoutes: React.FC = () => {
   const {user} = useAuth();
 
   return (
-    <GameProvider>
+    
       <App.Navigator
         screenOptions={{headerShown: false}}
       >
@@ -50,6 +52,14 @@ const AppRoutes: React.FC = () => {
             component={TagList}
           />
           <App.Screen
+            name="BusinessModelList"
+            component={BusinessModelList}
+          />
+          <App.Screen
+            name="AddBusinessModel"
+            component={AddBusinessModel}
+          />
+          <App.Screen
             name="UserList"
             component={UserList}
           />
@@ -71,7 +81,6 @@ const AppRoutes: React.FC = () => {
           /></>
         }
       </App.Navigator>
-    </GameProvider>
   );
 };
 

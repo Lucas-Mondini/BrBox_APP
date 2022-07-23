@@ -21,8 +21,11 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
+    "ejs": "^3.1.8",
     "express": "^4.18.1",
+    "googleapis": "^105.0.0",
     "jsonwebtoken": "^8.5.1",
+    "nodemailer": "^6.7.7",
     "pg": "^8.7.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.6",
@@ -30,8 +33,10 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/ejs": "^3.1.1",
     "@types/express": "^4.17.13",
     "@types/node": "^17.0.32",
+    "@types/nodemailer": "^6.4.4",
     "nodemon": "^2.0.16",
     "ts-node": "^10.7.0",
     "ts-node-dev": "^1.1.8"

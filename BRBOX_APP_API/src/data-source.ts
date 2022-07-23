@@ -27,6 +27,10 @@ import Game from './Model/Game/'
 
 import 'dotenv/config';
 import Platform from './Model/Game/platform';
+import BusinessModel from './Model/Game/businessModel';
+import BusinessModelList from './Model/Game/businessModel/businessModelList';
+import Code from './Model/User/code';
+import GameTime from './Model/Game/gameTime';
 
 const host = process.env.DATABASE_HOST;
 const port = Number(process.env.DATABASE_PORT);
@@ -62,7 +66,11 @@ export const AppDataSource = new DataSource({
         Value, 
         TagValue, 
         TagValueList, 
-        Platform
+        Platform,
+        BusinessModel,
+        BusinessModelList,
+        Code,
+        GameTime
     ],
     subscribers: [],
     migrations: [],

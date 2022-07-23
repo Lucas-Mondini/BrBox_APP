@@ -6,6 +6,7 @@ import { AppDataSource } from "../../data-source";
 import Game from "../../Model/Game";
 import TagValue from "../../Model/Game/tag/tagValue";
 import Value from "../../Model/Game/tag/value";
+import BusinessModelListController from "./businessModel/businessModelList";
 import ExternalLinkListController from "./externalLink/externalLinkList";
 import ImageListController from "./image/imageList";
 import TagValueListController from "./tag/tagValueList";
@@ -19,7 +20,8 @@ export default class GameController extends Controller {
         "linkList.externalLinks.platform",
         "imageList.images",
         "tagList.tagValues",
-        "tagList.tagValues.tag", "tagList.tagValues.value"])
+        "tagList.tagValues.tag", "tagList.tagValues.value",
+        "businessModelList", "businessModelList.businessModels"])
     }
     
     //@ts-ignore
@@ -34,11 +36,13 @@ export default class GameController extends Controller {
             const linkList = new ExternalLinkListController().Create(req);;
             const game_imageList = new ImageListController().Create(req);
             const game_tagValueList = new TagValueListController().Create(req);
+            const game_businessModelList = new BusinessModelListController().Create(req);
             
             
             game.linkList = await linkList
             game.imageList = await game_imageList;
             game.tagList = await game_tagValueList;
+            game.businessModelList = await game_businessModelList;
             
             
             await AppDataSource.getRepository(Game).save(game);
@@ -48,7 +52,7 @@ export default class GameController extends Controller {
             }};
         }
         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
     
@@ -84,6 +88,7 @@ export default class GameController extends Controller {
                 image.id as imageId,
                 image.link as imageLink,
                 tag_data.name tagname,
+                tag_data.id tagid,
                 tag_data.icon tagicon,
                 COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
                 COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
@@ -137,6 +142,7 @@ export default class GameController extends Controller {
                     image.id,
                     image.link,
                     tag_data."name",
+                    tag_data."id",
                     tag_data.icon
                 order by 
                     game.id
@@ -157,6 +163,7 @@ export default class GameController extends Controller {
                                                     if(j.tagname)
                                                         return {
                                                             tag: j.tagname,
+                                                            id: j.tagid,
                                                             icon: j.tagicon,
                                                             total: j.qty_total,
                                                             upVotes: j.qty_up,
@@ -178,8 +185,9 @@ export default class GameController extends Controller {
                                     (value: any, index: any, self: any) => index === self.findIndex(
                                         (t : any) => (t.tag == value.tag)
                                         ))
-                                const sortedUp = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
-                                const sortedDown = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
+                                const sortedUp      = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
+                                const sortedNeutral = [...game.tags.sort((a: any, b: any) => b.neutralVotes - a.neutralVotes)]
+                                const sortedDown    = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
 
                                 game.tags = []
                                 if(sortedUp[0])
@@ -187,14 +195,18 @@ export default class GameController extends Controller {
                                         value: "up",
                                         ...sortedUp[0]
                                     })
-                                if(sortedUp[1])
+                                if( sortedNeutral[0] &&
+                                    sortedNeutral[0] != sortedUp[0])
                                     game.tags.push({
-                                        value: "up",
-                                        ...sortedUp[1]
+                                        value: "neutral",
+                                        ...sortedNeutral[0]
                                     })
 
 
-                                if(sortedDown[0] && sortedDown[0] != sortedUp[0] && sortedUp[1] && sortedDown[0] != sortedUp[1])
+                                if( sortedDown[0] && 
+                                    sortedDown[0] != sortedUp[0] && 
+                                    sortedNeutral[0] && 
+                                    sortedDown[0] != sortedNeutral[0])
                                     game.tags.push({
                                         value: "down",
                                         ...sortedDown[0]
@@ -209,7 +221,7 @@ export default class GameController extends Controller {
                         }};
                     }
                     catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail || e.message}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e) || e.message}}};
                     }
                 }
                 
@@ -226,7 +238,7 @@ export default class GameController extends Controller {
                             ...this.linkFormatter(game)
                         }};
                     }  catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                     
                 }
@@ -243,10 +255,12 @@ export default class GameController extends Controller {
                         
                         const externalLinkList = new ExternalLinkListController().Update(req, game.linkList.id);
                         const imageList = new ImageListController().Update(req, game.imageList.id);
+                        const businessModelList = new BusinessModelListController().Update(req, game.businessModelList.id);
                         
                         game.name = new_name || game.name;
                         game.linkList = await externalLinkList;
                         game.imageList = await imageList;
+                        game.businessModelList = await businessModelList;
                         
                         AppDataSource.getRepository(Game).save(game);
                         
@@ -255,7 +269,7 @@ export default class GameController extends Controller {
                         }};
                     }
                     catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                 }
                 
@@ -270,14 +284,18 @@ export default class GameController extends Controller {
                         const reqExternalLinkList = req;
                         const reqImageList = req;
                         const reqTagValueList = req;
-                        reqExternalLinkList.params.id   = game.linkList.id.toString();
-                        reqImageList.params._id         = game.imageList.id.toString();
-                        reqTagValueList.params._id      = game.tagList.id.toString();
+                        const reqBusinessModelList = req;
+
+                        reqExternalLinkList.params.id           = game.linkList.id.toString();
+                        reqImageList.params._id                 = game.imageList.id.toString();
+                        reqTagValueList.params._id              = game.tagList.id.toString();
+                        reqBusinessModelList.params._id         = game.businessModelList.id.toString();
                         
                         
                         await new ExternalLinkListController().Delete(reqExternalLinkList);
                         await new ImageListController().Delete(reqImageList);
                         await new TagValueListController().Delete(reqTagValueList);
+                        await new BusinessModelListController().Delete(reqBusinessModelList);
                         
                         
                         
@@ -296,7 +314,7 @@ export default class GameController extends Controller {
                         }
                     }
                     catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                 }
                 
@@ -315,7 +333,7 @@ export default class GameController extends Controller {
                             ...this.linkFormatter(game)
                         }};
                     } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                     
                 }
@@ -335,7 +353,7 @@ export default class GameController extends Controller {
                         }};
                         
                     } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                 }
                 
@@ -353,7 +371,7 @@ export default class GameController extends Controller {
                             ...this.linkFormatter(game)
                         }};
                     } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                     
                 }
@@ -373,7 +391,45 @@ export default class GameController extends Controller {
                         }};
                         
                     } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : e.detail}}};
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                }
+
+                AddBusinessModel = async(req: Request) => {
+                    try {
+                        const {gameId} = req.body
+                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                        
+                        const BMReq = req;
+                        BMReq.body.businessModelListId = game.businessModelList.id
+                        
+                        game.businessModelList = await new BusinessModelListController().AddBusinessModels(BMReq);
+                        
+                        return {status: 200, value: {
+                            ...this.linkFormatter(game)
+                        }};
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                    
+                }
+                
+                RemoveBusinessModel = async (req: Request) => {
+                    try {
+                        const {gameId} = req.body
+                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                        
+                        const BMReq = req;
+                        BMReq.body.businessModelListId = game.businessModelList.id
+                        
+                        game.businessModelList = await new BusinessModelListController().RemoveBusinessModel(BMReq);
+                        
+                        return {status: 200, value: {
+                            ...this.linkFormatter(game)
+                        }};
+                        
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                 }
                 

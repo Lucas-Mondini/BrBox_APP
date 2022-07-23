@@ -31,7 +31,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
 
     if (specificFunction) return specificFunction();
 
-    navigation.navigate(route);
+    return navigation.reset({index: 0, routes: [{name: "Home"}, {name: route}]});
   }
 
   async function shareApp()
@@ -59,13 +59,13 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100007).toUpperCase()}</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-            callNavigationFunction("Search");
+          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+            callNavigationFunction("BusinessModelList");
           }}>
-            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100000).toUpperCase()}</Text>
+            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100118).toUpperCase()}</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+          {/* <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
             callNavigationFunction("YourRatings");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100002).toUpperCase()}</Text>

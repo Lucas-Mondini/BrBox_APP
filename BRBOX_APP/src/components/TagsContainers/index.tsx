@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Text, View } from "react-native";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json";
@@ -12,8 +12,16 @@ import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 import Input from "../Input";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import TagCard from "../Tag";
+import TagInfoModal from "../TagInfoModal";
+import ToggleContent from "../ToggleContent";
 
-export default function TagsContainers()
+interface TagContainersProps {
+  setEvaluationTags: (tags: Tag[]) => void
+}
+
+export default function TagsContainers({setEvaluationTags}: TagContainersProps)
 {
   const {
     id: gameId , tagValueList
@@ -30,6 +38,7 @@ export default function TagsContainers()
   const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
+  const [modal, setModal] = useState<React.ReactElement | null>(null);
 
   const { darkMode } = useTheme();
 
@@ -55,6 +64,7 @@ export default function TagsContainers()
       }
 
       setEvaluatedTags(groupEvaluatedTags(response.tagValue.tagValues));
+      if (setEvaluationTags) setEvaluationTags(groupEvaluatedTags(response.tagValue.tagValues));
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
@@ -73,7 +83,9 @@ export default function TagsContainers()
         icon: item.tag.icon,
         evalId: item.id,
         name: item.tag.name,
-        description: item.tag.description,
+        description_positive: item.tag.description_positive,
+        description_neutral: item.tag.description_neutral,
+        description_negative: item.tag.description_negative,
         value: item.value.id
       }
     });
@@ -90,15 +102,23 @@ export default function TagsContainers()
 
     for (let item1 of list) {
       const countTags = list.filter((item) => item.tag.id === item1.tag.id)
+      const countUpVotes = list.filter((item) => item.value.id === 1).length
+      const countNeutralVotes = list.filter((item) => item.value.id === 2).length
+      const countDownVotes = list.filter((item) => item.value.id === 3).length
 
       finalValues.push({
         id: countTags[0].tag.id,
         icon: countTags[0].tag.icon,
         count: countTags.length,
+        upVotes: countUpVotes,
+        neutralVotes: countNeutralVotes,
+        downVotes: countDownVotes,
         evalId: countTags[0].id,
         name: countTags[0].tag.name,
         value: countTags[0].value.id,
-        description: countTags[0].tag.description
+        description_positive: countTags[0].tag.description_positive,
+        description_neutral: countTags[0].tag.description_neutral,
+        description_negative: countTags[0].tag.description_negative
       });
     }
 
@@ -125,26 +145,54 @@ export default function TagsContainers()
 
   function renderTags()
   {
-    return tags.map(tag => (
-      <TouchableOpacity key={tag.id} onPress={() => handleLists(
-        tag.id, tags, selectedTags, setTags, setSelectedTags
-      )}>
-          <Text style={styles.tag}>{tag.name}</Text>
-        </TouchableOpacity>
-      ));
+    return tags.map((tag: any) => (
+      <View key={tag.id}>
+        <TagCard
+          showName
+          extraStyles={{margin: 3}}
+          callback={() => handleLists(
+            tag.id, tags, selectedTags, setTags, setSelectedTags
+          )}
+          tag={tag}
+          specificStyle="greenBar"
+        />
+      </View>
+    ));
   }
 
   function renderEvaluatedTags()
   {
-    return evaluatedTags.map((tagValues: any, index: number) => (
-      <TouchableOpacity key={index} onPress={() => {}} activeOpacity={1}>
-        <Text style={styles.tag}>{tagValues.count} {tagValues.name}</Text>
-      </TouchableOpacity>
+    if (evaluatedTags.length === 0) {
+      return <Text style={[styles.noContent, {color}]}>{getTerm(100111)}</Text>;
+    }
+
+    return evaluatedTags.map((tag: any) => (
+      <View key={tag.id}>
+        <TagCard
+          showName
+          showTotalVotes
+          extraStyles={{margin: 3}}
+          callback={() => {
+            setModal(
+              <TagInfoModal
+                setModal={() => setModal(null)}
+                tagInfo={tag}
+              />
+            );
+          }}
+          tag={tag}
+          specificStyle="greenBar"
+        />
+      </View>
     ));
   }
 
   function renderSelectedTags()
   {
+    if (selectedTags.length === 0) {
+      return <Text style={[styles.noContent, {color}]}>{getTerm(100079)}</Text>;
+    }
+
     return selectedTags.map(tag => (
       <TagEvaluationCard
         key={tag.id}
@@ -161,7 +209,9 @@ export default function TagsContainers()
         evaluationId={tag.evalId}
         value={tag.value}
         title={tag.name}
-        description={tag.description || ""}
+        descriptionPositive={tag.description_positive || ""}
+        descriptionNeutral={tag.description_neutral || ""}
+        descriptionNegative={tag.description_negative || ""}
         tagValueListId={tagValueList}
         extraCallback={() => getEvaluatedTags(tagValueList)}
       />
@@ -182,21 +232,26 @@ export default function TagsContainers()
 
   return (
     <View>
-      <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100088).toUpperCase()}</Text>
-
-      <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
-        {loadingEvaluatedTags
-        ? <Loading />
-        : <View style={styles.tagsContainer}>
-            <Text>{renderEvaluatedTags()}</Text>
-          </View>}
-      </View>
+      {modal && modal}
+      <ToggleContent
+        title={100088}
+        content={
+          <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
+            {loadingEvaluatedTags
+            ? <Loading styles={{borderRadius: 8}} />
+            : <View style={styles.tagsContainer}>
+                <Text>{renderEvaluatedTags()}</Text>
+              </View>}
+          </View>
+        }
+      />
 
       <View style={styles.selectedTagsContainer}>
-        <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100080).toUpperCase()}</Text>
-        {renderSelectedTags() || <Text>{getTerm(100079)}</Text>}
+        <ToggleContent
+          title={100080}
+          content={renderSelectedTags()}
+        />
       </View>
-
 
       <Text style={[styles.tagsListTitles, {color}]}>{getTerm(100030).toUpperCase()}</Text>
 
@@ -208,7 +263,7 @@ export default function TagsContainers()
 
       <View style={[styles.tagsListView, {marginBottom: 100, borderColor: color}]}>
         {loadingTags
-        ? <Loading />
+        ? <Loading styles={{borderRadius: 8}} />
         : <View style={styles.tagsContainer}>
             <Text>{renderTags()}</Text>
           </View>}

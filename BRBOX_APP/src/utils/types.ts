@@ -17,6 +17,8 @@ export type Params = {
   id?: number;
   new?: boolean;
   tags?: TagValue[];
+  search?: boolean;
+  filterUser?: boolean;
 }
 
 export type Evaluation = {
@@ -46,22 +48,40 @@ export type Tag = {
   evalId: number;
   value?: number;
   count?: number;
-  description?: string;
+  upVotes?: number;
+  neutralVotes?: number;
+  downVotes?: number;
+  description_positive?: string;
+  description_neutral?: string;
+  description_negative?: string;
 }
 
 export type TagValue = {
+  id: number;
   tag: string;
+  name: string;
   icon: number;
+  count: number;
+  value: number | string;
   downVotes: number;
   neutralVotes: number;
   upVotes: number;
   total: number;
+  description_positive?: string;
+  description_neutral?: string;
+  description_negative?: string;
 }
 
 export type Platform = {
   id: number;
   platform: number;
   name: string;
+}
+
+export type BusinessModel = {
+  id: number;
+  name: string;
+  description: string;
 }
 
 export type Value = {

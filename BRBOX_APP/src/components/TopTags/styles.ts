@@ -12,7 +12,6 @@ const styles = StyleSheet.create({
   },
   tagsContainerSmall: {
     flexDirection: "row",
-    marginLeft: 60,
     position: "absolute",
     bottom: 5,
   },

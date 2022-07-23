@@ -55,7 +55,7 @@ const TagList = () => {
                 id={item.id}
                 icon={item.icon}
                 title={item.name}
-                description={item.description}
+                description={item.description_positive}
                 setLoading={setLoading}
                 onDelete={getTags}
               />

@@ -1,9 +1,12 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ImageBackground,
+  Linking,
+  Platform,
   Text,
   TouchableOpacity,
+  View,
 } from 'react-native';
 
 import MainView from '../../components/MainView';
@@ -23,23 +26,58 @@ const Main = () => {
   const { darkMode } = useTheme();
   const {firstLoad} = useAuth();
   const {getTerm} = useTerm();
+  const [title, setTitle] = useState({first: "BR", last: "BOX"});
 
   const registerTextColorStyle = {
     color: !darkMode ? config.dark : config.mediumGreen,
   };
 
+  function navigate(url: string)
+  {
+    const route = url.replace(/.*?:\/\//g, '') || "";
+    //@ts-ignore
+    const id = route.match(/\/([^\/]+)\/?$/)[1];
+
+    const routeName = route.split('/')[0];
+
+    if (routeName === 'gameinfo') {
+      navigation.navigate('GameInfo', { id });
+    };
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      setTitle({first: "GAME", last: "SCORE"});
+
+      if (Platform.OS === 'android') {
+        Linking.getInitialURL().then(url => {
+          if (url) navigate(url || "");
+        });
+      } else {
+        Linking.addEventListener('url', (url) => navigation.navigate(url));
+      }
+    }, 2500);
+  }, []);
+
   return (
     <MainView>
       <ImageBackground source={getImage("loginbackground")} style={[styles.container]} resizeMode='cover'>
+        <View style={[styles.titleContainer]}>
+          <Text style={[styles.title, {color: !darkMode ? config.dark : "#fff"}]}>{title.first}</Text>
+          <View  style={[styles.last]}>
+            <Text style={[styles.title, {color: darkMode ? config.dark : "#fff"}]}>{title.last}</Text>
+          </View>
+        </View>
+
         { firstLoad
         ? <Loading
-            styles={{backgroundColor: "transparent", marginTop: "70%"}}
+            styles={{flex: 0, marginTop: "70%"}}
           />
         : <>
           <Button
             text={100009}
             onPress={()=>{navigation.navigate("Login")}}
-            extraStyle={{marginTop: "70%"}}
+            extraStyle={{marginTop: "60%"}}
           />
 
           <TouchableOpacity style={styles.registerButton} onPress={()=>{navigation.navigate("Register")}}>

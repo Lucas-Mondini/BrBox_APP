@@ -64,7 +64,12 @@ const TagRegister = () => {
     try {
       let response;
 
-      if (!tag.name || !tag.name.trim() || !tag.description || !tag.description?.trim()) {
+      if (
+        !tag.name || !tag.name.trim() 
+        || !tag.description_negative || !tag.description_negative?.trim()
+        || !tag.description_neutral || !tag.description_neutral?.trim()
+        || !tag.description_positive || !tag.description_positive?.trim()
+      ) {
         return Alert.alert(getTerm(100095), getTerm(100096));
       }
 
@@ -74,7 +79,11 @@ const TagRegister = () => {
 
       if (!params && !tag.id) {
         response = await post(`/tag/create`, setLoadingRequest, {
-          name: tag.name, description: tag.description, icon
+          icon,
+          name: tag.name,
+          description_negative: tag.description_negative,
+          description_neutral: tag.description_neutral,
+          description_positive: tag.description_positive,
         });
       } else {
         response = await put(`/tag/update`, setLoadingRequest, {
@@ -82,14 +91,16 @@ const TagRegister = () => {
           id: tag.id,
           new_icon: icon,
           new_name: tag.name,
-          new_description: tag.description,
+          new_description_positive: tag.description_positive,
+          new_description_neutral: tag.description_neutral,
+          new_description_negative: tag.description_negative
         });
       }
 
       setTag(response);
       setIcon(response.icon);
     } catch (error) {
-      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+      return Alert.alert(getTerm(100073), getTerm(100074));
     }
   }
 
@@ -128,12 +139,29 @@ const TagRegister = () => {
         />
 
         <Input
-          placeholderText={100029}
-          value={tag?.description}
+          placeholderText={100127}
+          value={tag?.description_positive}
           multiline
           numberOfLines={10}
           extraStyles={styles.description}
-          onChangeText={description => setTag({...tag, description})}
+          onChangeText={description => setTag({...tag, description_positive: description})}
+        />
+
+        <Input
+          placeholderText={100128}
+          value={tag?.description_neutral}
+          multiline
+          numberOfLines={10}
+          extraStyles={styles.description}
+          onChangeText={description => setTag({...tag, description_neutral: description})}
+        />
+        <Input
+          placeholderText={100129}
+          value={tag?.description_negative}
+          multiline
+          numberOfLines={10}
+          extraStyles={styles.description}
+          onChangeText={description => setTag({...tag, description_negative: description})}
         />
 
         <View style={styles.buttonView}>

@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -27,6 +27,8 @@ export default function UserCard({id, username, email, admin, setLoading, callba
   const {getTerm} = useTerm();
 
   const textColor = {color: darkMode ? "#fff" : config.dark}
+
+  const {width} = Dimensions.get('window');
 
   function navigateToUserInfo() {
     return navigation.navigate("Profile", {id});
@@ -68,8 +70,8 @@ export default function UserCard({id, username, email, admin, setLoading, callba
   return (
     <TouchableOpacity style={styles.tagCard} onPress={navigateToUserInfo}>
       <View>
-        <Text style={[styles.title, textColor]}>{splitText(username, 18)}</Text>
-        <Text style={[styles.description, textColor]}>{splitText(email, 50)}</Text>
+        <Text style={[styles.title, textColor]}>{splitText(username, width >= 400 ? 18 : 15)}</Text>
+        <Text style={[styles.description, textColor]}>{splitText(email, width >= 400 ? 40 : 30)}</Text>
       </View>
 
       <View style={styles.buttonsView}>

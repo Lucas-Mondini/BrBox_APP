@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -25,7 +25,9 @@ export default function PlatformCard({id, name, setLoading, onDelete, onPress}: 
   const {destroy} = useRequest();
   const {getTerm} = useTerm();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark}
+  const {width} = Dimensions.get('window');
+
+  const textColor = {color: darkMode ? "#fff" : config.dark, width: name.length > 30 ? (width >= 400 ? "29%" : "25%") : "100%"}
 
   function navigateToPlatformInfo() {
     return navigation.navigate("AddPlatform", {id});
@@ -52,7 +54,7 @@ export default function PlatformCard({id, name, setLoading, onDelete, onPress}: 
       onPress={onPress || navigateToPlatformInfo}
     >
       <View>
-        <Text style={[styles.title, textColor]}>{splitText(name, 24)}</Text>
+        <Text style={[styles.title, textColor]}>{name}</Text>
       </View>
 
       {onDelete &&

@@ -1,57 +1,63 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, View } from "react-native";
 
 import styles from "./styles";
-import config from "../../../brbox.config.json";
-import { TagValue } from "../../utils/types";
-import getImages from "../../utils/getImage";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { getIcon } from "../../utils/functions";
+import { Tag as TagType, TagValue } from "../../utils/types";
+import Tag from "../Tag";
+import TagInfoModal from "../TagInfoModal";
 
 interface TopTagsProps {
   tags?: TagValue[];
   large?: boolean;
+  evaluations?: TagType[];
 }
 
-export default function TopTags({tags, large}: TopTagsProps)
+export default function TopTags({tags, large, evaluations}: TopTagsProps)
 {
-  function formatVotes(vote: number): string
-  {
-    return String(vote > 1000 ? vote/1000 + "K" : vote);
-  }
+  const {width} = Dimensions.get('window');
 
-  function returnTags(tag: TagValue, specificStyle: string, image: string)
-  {
-    // @ts-ignore
-    const bg = {backgroundColor: config[specificStyle]};
-
-    if (!tag) return null;
-
-    const icon = Math.round(Math.random() * 81);
-
-    return (
-      <View style={[styles.tag, large ? styles.tagLarge : styles.tagSmall, bg]}>
-        <Icon
-          name={getIcon(tag.icon)}
-          size={large ? 18 : 16}
-          color={"#000"}
-          style={large ? styles.imgLarge : styles.imgSmall}
-        />
-
-        <Text style={[styles.tagText, large ? styles.tagTextLarge : styles.tagTextSmall]}>
-          {formatVotes(tag.total || 0)}
-        </Text>
-      </View>
-    )
-  }
+  const [modal, setModal] = useState<React.ReactElement | null>(null);
 
   if (!tags) return null;
 
+  function returnTags(tag?: TagValue)
+  {
+    if (!tag) return null;
+
+    const style: any = {
+      "up": "greenBar",
+      "neutral": "yellow",
+      "down": "lightRed"
+    }
+
+    return (
+      <Tag
+        tag={tag}
+        specificStyle={style[tag.value]}
+        large={large}
+        callback={!large ? () => {} : () => {
+          if (!evaluations) return null;
+
+          const tagInfoObj: any = evaluations.filter(e => e.name === tag.tag)[0];
+
+          setModal(
+            <TagInfoModal
+              setModal={() => setModal(null)}
+              tagInfo={tagInfoObj}
+            />
+          );
+        }}
+      />
+    );
+  }
+
   return (
-    <View style={large ? styles.tagsContainerLarge : styles.tagsContainerSmall}>
-      {returnTags(tags[0], "greenBar", "controls")}
-      {returnTags(tags[1], "mediumGreen", "book")}
-      {returnTags(tags[2], "lightRed", "sword")}
+    <View style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall, large ? {} : {marginLeft: width >= 400 ? 60 : 30}]}>
+      {modal && modal}
+
+      {returnTags(tags[0])}
+      {returnTags(tags[1])}
+      {returnTags(tags[2])}
     </View>
   );
 }
