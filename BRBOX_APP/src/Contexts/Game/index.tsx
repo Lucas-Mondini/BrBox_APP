@@ -70,11 +70,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
-  const [imageName, setImageName] = useState("");
-  const [imageLink, setImageLink] = useState("");
   const [images, setImages] = useState([] as ImageType[]);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  const [imageName, setImageName] = useState("");
+  const [imageLink, setImageLink] = useState("");
   const [tagValueList, setTagValueList] = useState(0);
   const [businessModel, setBusinessModel] = useState<BusinessModel | null>(null);
   const [businessModelId, setBusinessModelId] = useState(0);
@@ -165,13 +165,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       content = businessModelList.map((businessModel) => (
         <BusinessModelCard
           hideBottom
-          key={businessModel.id}
           id={businessModel.id}
+          key={businessModel.id}
           name={businessModel.name}
-          description={businessModel.description}
-          setLoading={setLoading}
           onPress={() => {}}
           disabled={!isEdit}
+          description={businessModel.description}
+          setLoading={setLoading}
           deleteCustomFunction={isEdit ? () => removeObjectFromArray(businessModel.id, businessModelList, setBusinessModelList) : () => {}}
         />
       ));
@@ -201,8 +201,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setLinkList(response.linkList.externalLinks);
       setImages(response.imageList.images);
       setTagValueList(response.tagList.id);
-      setBusinessModelList(response.businessModelList.businessModels);
       setBusinessModelId(response.businessModelList.id);
+      setBusinessModelList(response.businessModelList.businessModels);
     } catch (error) {
       Alert.alert(getTerm(100071), getTerm(100072));
     }
@@ -236,8 +236,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setImages(response.imageList.images);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
-        setBusinessModelList(response.businessModelList.businessModels);
         setBusinessModelId(response.businessModelList.id);
+        setBusinessModelList(response.businessModelList.businessModels);
       }
     } catch (error) {
       Alert.alert(getTerm(100075), getTerm(100076));
@@ -262,8 +262,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setImages(response.imageList.images);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
-        setBusinessModelList(response.businessModelList.businessModels);
         setBusinessModelId(response.businessModelList.id);
+        setBusinessModelList(response.businessModelList.businessModels);
       }
     } catch (error) {
       Alert.alert(getTerm(100077), getTerm(100078));

@@ -249,7 +249,7 @@ export default class UserController implements IController {
         try {
         const user = await AppDataSource.getRepository(User).findOneOrFail({where: {email: email}, select: ["id", "username", "Password", "email", "createdDate"]});
         
-        var code = await AppDataSource.getRepository(Code).findOneBy({user: user});
+        var code = await AppDataSource.getRepository(Code).findOneBy({user: {id: user.id}});
         if(!code) {
             code = new Code();
             code.user = user;
@@ -287,7 +287,7 @@ export default class UserController implements IController {
 
             user.Password = hash;
             AppDataSource.getRepository(User).save(user);
-            const adm = await  AppDataSource.getRepository(Admin).findOneBy({user: user});
+            const adm = await  AppDataSource.getRepository(Admin).findOneBy({user: {id: user.id}});
 
             const jwt = await this.generateJwt(user)
 

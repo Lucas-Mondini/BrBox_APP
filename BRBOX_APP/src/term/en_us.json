@@ -128,5 +128,13 @@
   "100126": "Select a business model by clicking the field called \"Business model\"",
   "100127": "Positive evaluation description",
   "100128": "Neutral evaluation description",
-  "100129": "Negative evaluation description"
+  "100129": "Negative evaluation description",
+  "100130": "Forgot Password?",
+  "100131": "Enter password",
+  "100132": "Change password",
+  "100133": "Code",
+  "100134": "Unexpected error",
+  "100135": "Make sure you enter the correct code and the code wasn't already used",
+  "100136": "E-mail, code, password and password confirmation are required to change your password",
+  "100137": "Fill in the information to change your password"
 }

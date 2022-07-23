@@ -9,7 +9,7 @@ import {
 import styles from './styles';
 import config from "../../../brbox.config.json";
 
-import { Platform } from '../../utils/types';
+import { LinkType, Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import PlatformCard from '../../components/PlatformCard';
 import DefaultModal from '../DefaultModal';
@@ -17,11 +17,13 @@ import { useTheme } from '../../Contexts/Theme';
 
 interface PlatformsModalProps {
   visible: boolean;
+  usedPlatforms: LinkType[];
+
   setModal: () => void;
   setPlatform: (platform: Platform) => void;
 }
 
-export default function PlatformsModal({setModal, visible, setPlatform}: PlatformsModalProps) {
+export default function PlatformsModal({visible, usedPlatforms, setModal, setPlatform}: PlatformsModalProps) {
   const { darkMode } = useTheme();
 
   const color = darkMode ? config.dark : "#fff";
@@ -36,9 +38,19 @@ export default function PlatformsModal({setModal, visible, setPlatform}: Platfor
   async function getPlatforms()
   {
     try {
-      const getPlatformsList = await get("/platform", setLoading);
+      const notUsedPlatforms = Array();
 
-      setPlatforms(getPlatformsList);
+      const platformsList = await get("/platform", setLoading);
+
+      for (const usedPlatform of platformsList) {
+        const [included] = usedPlatforms.filter((item: LinkType) => item.platform === usedPlatform.id);
+
+        if (!included) {
+          notUsedPlatforms.push(usedPlatform);
+        }
+      }
+
+      setPlatforms(notUsedPlatforms);
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
