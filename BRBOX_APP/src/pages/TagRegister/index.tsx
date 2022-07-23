@@ -65,15 +65,11 @@ const TagRegister = () => {
       let response;
 
       if (
-        !tag.name || !tag.name.trim() 
+        !tag.name || !tag.name.trim() || !icon
         || !tag.description_negative || !tag.description_negative?.trim()
         || !tag.description_neutral || !tag.description_neutral?.trim()
         || !tag.description_positive || !tag.description_positive?.trim()
       ) {
-        return Alert.alert(getTerm(100095), getTerm(100096));
-      }
-
-      if (!icon) {
         return Alert.alert(getTerm(100095), getTerm(100096));
       }
 
@@ -100,7 +96,7 @@ const TagRegister = () => {
       setTag(response);
       setIcon(response.icon);
     } catch (error) {
-      return Alert.alert(getTerm(100073), getTerm(100074));
+      return Alert.alert(getTerm(!tag.id ? 100077 : 100075), getTerm(!tag.id ? 100078 : 100076));
     }
   }
 
