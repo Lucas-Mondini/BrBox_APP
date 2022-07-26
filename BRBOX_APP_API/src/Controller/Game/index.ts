@@ -4,6 +4,7 @@ import {Controller} from "../";
 import { AppDataSource } from "../../data-source";
 
 import Game from "../../Model/Game";
+import GameTime from "../../Model/Game/gameTime";
 import TagValue from "../../Model/Game/tag/tagValue";
 import Value from "../../Model/Game/tag/value";
 import BusinessModelListController from "./businessModel/businessModelList";
@@ -80,7 +81,9 @@ export default class GameController extends Controller {
             }
             
             const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0
-                      
+            
+            //Query magica, não toque nela, sujeito a mão cair
+            //horas gastas nessa query: 22h
             let games = await AppDataSource.query(` 
             select
                 game.id as gameId,
@@ -152,7 +155,7 @@ export default class GameController extends Controller {
                                     ammount,
                                     skip
                                 ]);
-                            
+                            //transforma o retorno da query em objeto para ser exibido na tela
                             games = games.map((i : any) => {
                                 const game =  {
                                     id: i.gameid,
@@ -174,8 +177,10 @@ export default class GameController extends Controller {
                                     })
                                 }
                                 return game;
+                                //limpa os repetidos
                             }).filter((value : any, index: any) => 
                             games.findIndex((v: any) => v.gameid === value.id ) == index
+                            //adiciona os valores principais encontrados nos top votados de maneira unica
                           ).map((game: any) => {
 
                             game.tags = game.tags.filter( (i:any) => i != undefined)
@@ -215,6 +220,28 @@ export default class GameController extends Controller {
 
                                 return game
                           });
+
+                          //busca o tempo de jogo do usuario em cada jogo retornado pela query anterior
+                          const gametime = await AppDataSource.query(`
+                            select * 
+                            from 
+                                game_time gt 
+                            where 
+                                "userId" = ${req.user.id} and "gameId" in (${games.map((i: any) => i.id).toString()})
+                          `);
+
+                          //adiciona o gametime no objeto a ser retornado
+                          games.map((i : any) => {
+                            for (const j of gametime) {
+                                if(j.gameId == i.id) {
+                                    i.gameTime = j.time
+                                    return i
+                                } else {
+                                    i.gameTime = 0
+                                }
+                            }
+                            return i
+                        });
 
                         return {status: 200, value: {
                             games
