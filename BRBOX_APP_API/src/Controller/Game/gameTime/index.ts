@@ -35,14 +35,27 @@ export default class GameTimeController extends Controller {
     Create = async (req: Request) => {
         try {
             const {gameId, time} = req.body;
-            const gametime = new GameTime();
+            
+            const game = await AppDataSource.getRepository(Game).findOneByOrFail({id: gameId});
+            const user = await AppDataSource.getRepository(User).findOneByOrFail({id: req.user.id});
+            
+            let gametime = await AppDataSource.getRepository(GameTime).findOne({where: {
+                game: {
+                    id: game.id
+                },
+                user: {
+                    id: user.id
+                },
+            }, relations: this.relations});
 
-            const game = AppDataSource.getRepository(Game).findOneByOrFail({id: gameId});
-            const user = AppDataSource.getRepository(User).findOneByOrFail({id: req.user.id});
-
-            gametime.game = (await game);
-            gametime.user = (await user);
+            if(!gametime) {
+                gametime = new GameTime()
+                gametime.game = game;
+                gametime.user = user;
+            }
             gametime.time = Number(time);
+
+            //TODO: Update tagValue Weights
 
             await AppDataSource.getRepository(GameTime).save(gametime);
 
@@ -69,6 +82,8 @@ export default class GameTimeController extends Controller {
             }
 
             gametime.time = time;
+
+            //TODO: Update tagValue Weights
 
             await AppDataSource.getRepository(GameTime).save(gametime);
             
