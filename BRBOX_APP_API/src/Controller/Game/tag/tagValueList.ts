@@ -6,6 +6,8 @@ import { AppDataSource } from "../../../data-source";
 import User from "../../../Model/User";
 import Tag from "../../../Model/Game/tag";
 import Value from "../../../Model/Game/tag/value";
+import GameTime from "../../../Model/Game/gameTime";
+import { weightCalculator } from "../../../Utils/Calculator";
 
 export default class TagValueListController extends Controller {
     constructor() {
@@ -59,13 +61,26 @@ export default class TagValueListController extends Controller {
             if(!tagValueList)
                 return {status: 400, value: {message: "error: tagValueList not found"}}
 
-            const _user =   AppDataSource.getRepository(User).findOneByOrFail({id: req.user.id})
-            const _tag =    AppDataSource.getRepository(Tag).findOneByOrFail({id: tag})
-            const _value =  AppDataSource.getRepository(Value).findOneByOrFail({id: value})
+            const _user =   AppDataSource.getRepository(User).findOneByOrFail({id: req.user.id});
+            const _tag =    AppDataSource.getRepository(Tag).findOneByOrFail({id: tag});
+            const _value =  AppDataSource.getRepository(Value).findOneByOrFail({id: value});
+
+            const _weight = weightCalculator(
+                (await AppDataSource.getRepository(GameTime).findOneByOrFail
+                    ({
+                        user: {
+                            id: req.user.id
+                        }, 
+                        game: {
+                            tagList: tagValueList
+                        }
+                    })
+                ).time)
             
             for (let tg of tagValueList.tagValues) {
                 if(tg.tag.id == tag && tg.user.id == req.user.id) {
                     tg.value = await _value;
+                    tg.weight = _weight
                     await AppDataSource.getRepository(TagValueList).save(tagValueList)
                     return {status: 200, value: {...req.body, tagValueId: tg.id}}
                 }
@@ -75,6 +90,7 @@ export default class TagValueListController extends Controller {
             tagValue.user = await _user;
             tagValue.tag = await _tag;
             tagValue.value = await _value;
+            tagValue.weight = _weight;
             
             
             
