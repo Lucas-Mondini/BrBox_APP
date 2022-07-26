@@ -2,10 +2,13 @@ import { Request } from "express";
 import {Controller} from "../..";
 
 import { AppDataSource } from "../../../data-source";
+import Game from "../../../Model/Game";
+import GameTime from "../../../Model/Game/gameTime";
 import Tag from "../../../Model/Game/tag";
 import TagValue from "../../../Model/Game/tag/tagValue";
 import Value from "../../../Model/Game/tag/value";
 import User from "../../../Model/User";
+import {weightCalculator} from "../../../Utils/Calculator"
 
 export default class TagValueController extends Controller {
     constructor() {
@@ -38,28 +41,35 @@ export default class TagValueController extends Controller {
     //     }
     // }
     //@ts-ignore
-    Update = async (req: Request) => {
-        try {
-            const {id, tag, value} = req.body;
-            
-            const _user =   await AppDataSource.getRepository(User).findOneByOrFail({id: Number(req.user.id)})
-            const tagValue = await AppDataSource.getRepository(TagValue).findOneByOrFail({id: Number(id), user: _user});
 
-            const _tag =    AppDataSource.getRepository(Tag).findOneBy({id: Number(tag)})
-            const _value =  AppDataSource.getRepository(Value).findOneBy({id: Number(value)})
+    //creio eu que não seja usada
+    // Update = async (req: Request) => {
+    //     try {
+    //         const {id, tag, value} = req.body;
+            
+    //         const _user =   await AppDataSource.getRepository(User).findOneByOrFail({id: Number(req.user.id)})
+    //         const tagValue = await AppDataSource.getRepository(TagValue).findOneByOrFail({id: Number(id), user: _user});
 
-            tagValue.tag    = await _tag  || tagValue.tag ;
-            tagValue.value  = await _value || tagValue.value;
+    //         const _tag =    AppDataSource.getRepository(Tag).findOneBy({id: Number(tag)})
+    //         const _value =  AppDataSource.getRepository(Value).findOneBy({id: Number(value)})
+
+    //         const game = AppDataSource.getRepository(Game).findOneByOrFail({tagList: {
+    //             tagValues: tagValue
+    //         }})
+
+    //         tagValue.tag    = await _tag  || tagValue.tag ;
+    //         tagValue.value  = await _value || tagValue.value;
+    //         tagValue.weight = weightCalculator((await AppDataSource.getRepository(GameTime).findOneByOrFail({id: req.user.id })).time)
 
             
-            await AppDataSource.getRepository(TagValue).save(tagValue);
+    //         await AppDataSource.getRepository(TagValue).save(tagValue);
             
-            return {status: 200, value: {
-                    ...tagValue
-            }};
-        }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-        }
-    }
+    //         return {status: 200, value: {
+    //                 ...tagValue
+    //         }};
+    //     }
+    //      catch (e : any) {
+    //         return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+    //     }
+    // }
 }
