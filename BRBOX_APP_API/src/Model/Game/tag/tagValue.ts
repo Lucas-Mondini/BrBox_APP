@@ -1,7 +1,6 @@
 import { Entity, JoinColumn, Column, PrimaryGeneratedColumn, ManyToOne, OneToOne, OneToMany, ManyToMany } from "typeorm";
 import Tag from ".";
 import User from "../../User";
-import TagValueList from "./tagValueList";
 import Value from "./value";
 
 @Entity()
@@ -20,4 +19,7 @@ export default class TagValue {
     @ManyToOne(() => Value)
     @JoinColumn({referencedColumnName: "id"})
     value: Value;
+
+    @Column({nullable: false, default: 1})
+    weight: number
 }
