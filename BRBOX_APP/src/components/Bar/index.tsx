@@ -18,12 +18,8 @@ export default function Bar({counts, colors}: BarProps)
         <View
           key={index}
           style={{
-            borderBottomLeftRadius: index === 0 ? 15: 0,
-            borderTopLeftRadius: index === 0 ? 15: 0,
-            borderBottomRightRadius: index < (counts.length - 1) ? 0 : 15,
-            borderTopRightRadius: index < (counts.length - 1) ? 0 : 15,
-            height: 15,
             flex: count,
+            height: "100%",
             backgroundColor: colors[index]
           }}
         />
