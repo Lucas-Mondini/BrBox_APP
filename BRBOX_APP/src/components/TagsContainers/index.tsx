@@ -12,10 +12,10 @@ import { Evaluation, Tag } from "../../utils/types";
 import TagEvaluationCard from "../TagEvaluationCard";
 import Loading from "../Loading";
 import Input from "../Input";
-import Icon from "react-native-vector-icons/FontAwesome5";
 import TagCard from "../Tag";
 import TagInfoModal from "../TagInfoModal";
 import ToggleContent from "../ToggleContent";
+import useDelay from "../../hooks/Delay";
 
 interface TagContainersProps {
   setEvaluationTags: (tags: Tag[]) => void
@@ -31,14 +31,15 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   const {getTerm} = useTerm();
   const navigation = useNavigation<any>();
 
-  const [search, setSearch] = useState("");
   const [tags, setTags] = useState([] as Tag[]);
+  const [modal, setModal] = useState<React.ReactElement | null>(null);
+  const [search, setSearch] = useState("");
+  const [tagName, setTagName] = useState("");
   const [firstLoad, setFirstLoad] = useState(true);
   const [loadingTags, setLoadingTags] = useState(true);
-  const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
-  const [modal, setModal] = useState<React.ReactElement | null>(null);
+  const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
 
   const { darkMode } = useTheme();
 
@@ -46,7 +47,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
 
   async function getTags(setTagsState: boolean = true) {
     try {
-      const response = await get(`/tag?game=${gameId}&name=${search}`, setLoadingTags);
+      const response = await get(`/tag?game=${gameId}&name=${tagName}`, setLoadingTags);
 
       if (setTagsState) setTags(response);
     } catch (err) {
@@ -102,9 +103,9 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
 
     for (let item1 of list) {
       const countTags = list.filter((item) => item.tag.id === item1.tag.id)
-      const countUpVotes = list.filter((item) => item.value.id === 1).length
-      const countNeutralVotes = list.filter((item) => item.value.id === 2).length
-      const countDownVotes = list.filter((item) => item.value.id === 3).length
+      const countUpVotes = list.filter((item) => item.value.id === 1 && item.tag.id === item1.tag.id).length
+      const countNeutralVotes = list.filter((item) => item.value.id === 2 && item.tag.id === item1.tag.id).length
+      const countDownVotes = list.filter((item) => item.value.id === 3 && item.tag.id === item1.tag.id).length
 
       finalValues.push({
         id: countTags[0].tag.id,
@@ -219,9 +220,11 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   }
 
   useEffect(() => {
-    setTimeout(() =>{
       getTags();
-    }, 500)
+  }, [tagName]);
+
+  useEffect(() => {
+    useDelay(search, setTagName, 1000);
   }, [search]);
 
   useEffect(() => {

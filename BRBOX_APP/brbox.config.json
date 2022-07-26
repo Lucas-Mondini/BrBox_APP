@@ -21,8 +21,8 @@
   "placeholdersColor":"#7f7f7f",
   "subTitleMainColor":"#BFBFBF",
 
-  //"apiUrl":"http://10.0.2.2:8080/", // Servidor
-  "apiUrl":"https://brbox-app.herokuapp.com/", // Teste no servidor
+  "apiUrl":"http://10.0.2.2:8080/", // Servidor
+  //"apiUrl":"https://brbox-app.herokuapp.com/", // Teste no servidor
 
   "isDarkModeDefault" : "true",
 

@@ -4,7 +4,7 @@ import api from '../services/api';
 import { useAuth } from './Auth';
 
 type RequestData = {
-  get: (route: string, setLoading: Function) => any;
+  get: (route: string, setLoading?: Function) => any;
   put: (route: string, setLoading: Function, data: any, allowNoUser?: boolean) => any;
   post: (route: string, setLoading: Function, data: any, allowNoUser?: boolean) => any;
   destroy: (route: string, callback: Function, setLoading?: Function) => any;
@@ -20,13 +20,13 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
 {
   const {user, temporaryToken} = useAuth();
 
-  async function get(route: string, setLoading: Function)
+  async function get(route: string, setLoading?: Function)
   {
     try {
-      setLoading(true);
+      if (setLoading) setLoading(true);
 
       if (!user) {
-        setLoading(false);
+        if (setLoading) setLoading(false);
         throw new Error("User not found");
       }
 
@@ -35,15 +35,14 @@ export const RequestProvider: React.FC<RequestProviderProps> = ({children}) =>
       });
 
       if (!result || !result.data) {
-        setLoading(false);
+        if (setLoading) setLoading(false);
         throw new Error("No data");
       }
 
-      setLoading(false);
+      if (setLoading) setLoading(false);
       return result.data;
     } catch (error: any) {
-      setLoading(false);
-
+      if (setLoading) setLoading(false);
       throw new Error(JSON.stringify({status: error.response.status, error: error.response.message}));
     }
   }

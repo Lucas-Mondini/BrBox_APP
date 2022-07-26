@@ -193,8 +193,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
   async function loadGame(id: number)
   {
+    setLoading(true);
+
     try {
-      const response = await get(`/game/${id}`, setLoading);
+      const response = await get(`/game/${id}`);
 
       setId(response.id);
       setName(response.name);
@@ -206,6 +208,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     } catch (error) {
       Alert.alert(getTerm(100071), getTerm(100072));
     }
+
+    setLoading(false);
   }
 
   async function deleteGame(callback?: () => void)
