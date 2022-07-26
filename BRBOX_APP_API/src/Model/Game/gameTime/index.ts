@@ -14,5 +14,5 @@ export default class GameTime {
     game: Game
 
     @Column({nullable: false})
-    time: Number
+    time: number
 }
