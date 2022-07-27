@@ -97,32 +97,33 @@ export default class GameTimeController extends Controller {
         }
     }
 
-Delete = async (req: Request) => {
-    try {
-        const id = req.params.id
-        var gametime;
+    Delete = async (req: Request) => {
+        try {
+            const id = req.params.id
+            var gametime;
 
-        if(req.user.admin) {
-            gametime = await AppDataSource.getRepository(GameTime).findOneByOrFail({id: Number(id)});
-        } else {
-            gametime = await AppDataSource.getRepository(GameTime).findOneByOrFail({id: Number(id), user: {id: req.user.id}});
-        }
-        
-        const dead = await AppDataSource.getRepository(GameTime).delete(Object(gametime));
+            if(req.user.admin) {
+                gametime = await AppDataSource.getRepository(GameTime).findOneOrFail({where:{id: Number(id)}, relations: this.relations});
+            } else {
+                gametime = await AppDataSource.getRepository(GameTime).findOneOrFail({where:{id: Number(id), user: {id: req.user.id}}, relations: this.relations});
+            }
+            
+            const dead = await AppDataSource.getRepository(GameTime).delete(Object(gametime));
+            await updateTagValuesWeights(gametime.user.id, gametime.game.id);
 
 
-        if(dead.affected)
+            if(dead.affected)
+                return {
+                    status: 200,
+                    value: {message: "deleted " + dead.affected + " value"}
+                }
             return {
-                status: 200,
-                value: {message: "deleted " + dead.affected + " value"}
-            }
-        return {
-            status: 501,
-            value: {message: "unhandled error"}
-            }
+                status: 501,
+                value: {message: "unhandled error"}
+                }
+        }
+            catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
     }
-        catch (e : any) {
-        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-    }
-}
 }
