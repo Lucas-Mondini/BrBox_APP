@@ -19,9 +19,9 @@ export default class BusinessModelListController extends Controller {
         if (businessModel) {
             const businessModelArray = new Array<BusinessModel>();
             for (let element of businessModel) {
-                    const businessModelObj = AppDataSource.getRepository(BusinessModel).findOneByOrFail({id: element});
+                    const businessModelObj = await AppDataSource.getRepository(BusinessModel).findOneByOrFail({id: element});
                     
-                    businessModelArray.push(await businessModelObj);
+                    businessModelArray.push(businessModelObj);
             };
             
             businessModelList.businessModels = businessModelArray;
@@ -48,7 +48,7 @@ export default class BusinessModelListController extends Controller {
         
         const businessModelArray = new Array<BusinessModel>();
         for (let element of businessModel) {
-                const businessModelObj = AppDataSource.getRepository(BusinessModel).findOneByOrFail({id: element});
+                const businessModelObj = await AppDataSource.getRepository(BusinessModel).findOneByOrFail({id: element});
                 
                 businessModelArray.push(await businessModelObj);
         };
@@ -67,9 +67,9 @@ export default class BusinessModelListController extends Controller {
         if(!businessModelList)
         throw "businessModelList not found"
 
-        AppDataSource.getRepository(BusinessModelList).remove(businessModelList);
+        await AppDataSource.getRepository(BusinessModelList).remove(businessModelList);
 
-        return AppDataSource.getRepository(BusinessModelList).find({where: {id: Number(id)}, relations: ["businessModels"]});
+        return await AppDataSource.getRepository(BusinessModelList).find({where: {id: Number(id)}, relations: ["businessModels"]});
     }
 
     AddBusinessModels = async(req: Request) => {

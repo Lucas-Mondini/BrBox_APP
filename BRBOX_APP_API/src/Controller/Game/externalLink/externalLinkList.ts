@@ -57,7 +57,7 @@ export default class ExternalLinkListController extends Controller {
             return externalLinkList;
         }
         
-        AppDataSource.getRepository(ExternalLink).remove(externalLinkList.externalLinks);
+        await AppDataSource.getRepository(ExternalLink).remove(externalLinkList.externalLinks);
         
         const Platforms = await AppDataSource.getRepository(Platform).find({});
         
@@ -94,9 +94,9 @@ export default class ExternalLinkListController extends Controller {
         if(!externalLinkList)
         throw "externalLinkList not found"
         
-        AppDataSource.getRepository(ExternalLink).remove(externalLinkList.externalLinks);
-        AppDataSource.getRepository(ExternalLinkList).remove(externalLinkList);
-        return AppDataSource.getRepository(ExternalLinkList).find({where: {id: Number(id)}, relations: ["externalLinks"]});
+        await AppDataSource.getRepository(ExternalLink).remove(externalLinkList.externalLinks);
+        await AppDataSource.getRepository(ExternalLinkList).remove(externalLinkList);
+        return await AppDataSource.getRepository(ExternalLinkList).find({where: {id: Number(id)}, relations: ["externalLinks"]});
         
     }
     
@@ -144,7 +144,7 @@ export default class ExternalLinkListController extends Controller {
         });
         
         await AppDataSource.getRepository(ExternalLinkList).save(externalLinkList);
-        AppDataSource.getRepository(ExternalLink).remove(externalLink);
+        await AppDataSource.getRepository(ExternalLink).remove(externalLink);
         return externalLinkList;
     }
 }

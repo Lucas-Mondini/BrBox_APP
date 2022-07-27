@@ -32,7 +32,7 @@ export default class TagValueListController extends Controller {
     //@ts-ignore
     Create = async (req:Request) => {
         const tagValueList = new TagValueList();
-        AppDataSource.getRepository(TagValueList).save(tagValueList);
+        await AppDataSource.getRepository(TagValueList).save(tagValueList);
         
         return tagValueList;
     }
@@ -45,10 +45,10 @@ export default class TagValueListController extends Controller {
         if(!tagValueList)
         throw "tagValueList not found"
         
-        AppDataSource.getRepository(TagValue).remove(tagValueList.tagValues);
-        AppDataSource.getRepository(TagValueList).remove(tagValueList);
+        await AppDataSource.getRepository(TagValue).remove(tagValueList.tagValues);
+        await AppDataSource.getRepository(TagValueList).remove(tagValueList);
         
-        return AppDataSource.getRepository(TagValueList).find({where: {id: Number(id)}, relations: ["tagValues"]});
+        return await AppDataSource.getRepository(TagValueList).find({where: {id: Number(id)}, relations: ["tagValues"]});
     }
     
     AddTagValue =async (req: Request) => {
@@ -117,7 +117,7 @@ export default class TagValueListController extends Controller {
             tagValueList.tagValues = tagValueList.tagValues.filter((tag) => {
                 return tag.id != tagValueId;
             })
-            AppDataSource.getRepository(TagValue).delete(tagValue);
+            await AppDataSource.getRepository(TagValue).delete(tagValue);
             return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
         }        
          catch (e : any) {

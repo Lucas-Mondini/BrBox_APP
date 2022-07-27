@@ -145,14 +145,14 @@ export default class UserController implements IController {
             
             
             hash = await bcrypt.hash(new_password || password, 10);
-            const adm = AppDataSource.getRepository(Admin).findOneBy({user: userRef});
+            const adm = await AppDataSource.getRepository(Admin).findOneBy({user: userRef});
             
             if(hash) {
                 if(userRef) {
                     userRef.username    = username  || userRef.username;
                     userRef.Password    = hash      || userRef.Password;
                     userRef.email       = email     || userRef.email;
-                    AppDataSource.getRepository(User).save(userRef);
+                    await AppDataSource.getRepository(User).save(userRef);
 
                     const jwt = await this.generateJwt(userRef)
                     
@@ -160,7 +160,7 @@ export default class UserController implements IController {
                             id: userRef.id,
                             username: username      || userRef.username,
                             email: email            || userRef.email,
-                            admin: await adm? true  : false,
+                            admin: adm? true  : false,
                             auth_token: jwt.token
                     }};
                 }
@@ -286,12 +286,12 @@ export default class UserController implements IController {
             }
 
             user.Password = hash;
-            AppDataSource.getRepository(User).save(user);
+            await AppDataSource.getRepository(User).save(user);
             const adm = await  AppDataSource.getRepository(Admin).findOneBy({user: {id: user.id}});
 
             const jwt = await this.generateJwt(user)
 
-            AppDataSource.getRepository(Code).delete(_code);
+            await AppDataSource.getRepository(Code).delete(_code);
             return {status: 200, value: {
                     id:         user.id,
                     username:   user.username,

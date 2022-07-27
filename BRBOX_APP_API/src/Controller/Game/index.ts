@@ -280,16 +280,16 @@ export default class GameController extends Controller {
                         return { status: 404, value: {message: "game not found" }};
                         
                         
-                        const externalLinkList = new ExternalLinkListController().Update(req, game.linkList.id);
-                        const imageList = new ImageListController().Update(req, game.imageList.id);
-                        const businessModelList = new BusinessModelListController().Update(req, game.businessModelList.id);
+                        const externalLinkList = await new ExternalLinkListController().Update(req, game.linkList.id);
+                        const imageList = await new ImageListController().Update(req, game.imageList.id);
+                        const businessModelList = await new BusinessModelListController().Update(req, game.businessModelList.id);
                         
                         game.name = new_name || game.name;
-                        game.linkList = await externalLinkList;
-                        game.imageList = await imageList;
-                        game.businessModelList = await businessModelList;
+                        game.linkList = externalLinkList;
+                        game.imageList = imageList;
+                        game.businessModelList = businessModelList;
                         
-                        AppDataSource.getRepository(Game).save(game);
+                        await AppDataSource.getRepository(Game).save(game);
                         
                         return {status: 200, value: {
                             ...this.linkFormatter(game)

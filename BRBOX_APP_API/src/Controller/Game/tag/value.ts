@@ -16,45 +16,4 @@ export default class ValueController extends Controller {
             message: "error, Method not implemented."
         } }
     }
-
-
-    //NOT IMPLEMENTED, JUST WORKS IN THE DEFAULT INITIALIZATION
-/*
-    Create = async (req: Request) => {
-        try {
-            const {name} = req.body;
-            
-            const value = await new Value();
-            value.name        = name;
-            await AppDataSource.getRepository(Value).save(value);
-            
-            return {status: 200, value: {
-                    ...value
-            }};
-        }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-        }
-    }
-    Update = async (req: Request) => {
-        try {
-            const {id, new_name} = req.body
-            const value = await AppDataSource.getRepository(Value).findOneBy({id: Number(id)});
-
-            if(!value)
-                return { status: 404, value: {message: "value not found" }};
-
-            value.name = new_name || value.name;
-            
-            AppDataSource.getRepository(Value).save(value);
-            
-            return {status: 200, value: {
-                    ...value
-            }};
-        }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-        }
-    }
-    */
 }

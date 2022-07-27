@@ -44,7 +44,7 @@ export default class ImageListController extends Controller {
             return imageList;
         }
 
-        AppDataSource.getRepository(Image).remove(imageList.images);
+        await AppDataSource.getRepository(Image).remove(imageList.images);
         
         const imagesArray = new Array<Image>();
         for (let element of images) {
@@ -70,10 +70,10 @@ export default class ImageListController extends Controller {
         if(!imageList)
         throw "imageList not found"
 
-        AppDataSource.getRepository(Image).remove(imageList.images);
-        AppDataSource.getRepository(ImageList).remove(imageList);
+        await AppDataSource.getRepository(Image).remove(imageList.images);
+        await AppDataSource.getRepository(ImageList).remove(imageList);
 
-        return AppDataSource.getRepository(ImageList).find({where: {id: Number(id)}, relations: ["images"]});
+        return await AppDataSource.getRepository(ImageList).find({where: {id: Number(id)}, relations: ["images"]});
     }
 
     AddImages = async(req: Request) => {
@@ -108,7 +108,7 @@ export default class ImageListController extends Controller {
         });
 
         await AppDataSource.getRepository(ImageList).save(imageList);
-        AppDataSource.getRepository(Image).remove(image);
+        await AppDataSource.getRepository(Image).remove(image);
         return imageList;
     }
 }
