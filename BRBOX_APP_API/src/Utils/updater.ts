@@ -1,20 +1,30 @@
 import { AppDataSource } from "../data-source"
 import Game from "../Model/Game"
 import GameTime from "../Model/Game/gameTime";
-import User from "../Model/User";
+import TagValueList from "../Model/Game/tag/tagValueList";
+import { weightCalculator } from "./Calculator";
 
 const updateTagValuesWeights = async (userId: number, gameId: number) => {
-    const tagValues = (await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: ["tagList", "tagList.tagValues"]})).tagList;
-    const Weights = await AppDataSource.getRepository(GameTime).findOneOrFail(
-        {
-            where: 
-            {
-                user: 
-                {
-                    id: userId
-                }
-            }
-        })
+    const tagList = (await AppDataSource.getRepository(Game).findOneOrFail({where: {
+        id: gameId
+    }, relations: ["tagList", "tagList.tagValues", "tagList.tagValues.user"]})).tagList;
+    
+
+    let gametime = (await AppDataSource.getRepository(GameTime).findOneOrFail({where: {
+        game: {
+            id: gameId
+        },
+        user: {
+            id: userId
+        },
+    }//, relations: ["game", "user"]
+    }))//.time;
+    tagList.tagValues.map(i => {
+        if(i.user.id == userId)
+            i.weight = weightCalculator(gametime.time)
+        return i;
+    })
+    await AppDataSource.getRepository(TagValueList).save(tagList);
 }
 
 export {
