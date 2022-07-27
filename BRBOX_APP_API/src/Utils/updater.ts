@@ -10,7 +10,7 @@ const updateTagValuesWeights = async (userId: number, gameId: number) => {
     }, relations: ["tagList", "tagList.tagValues", "tagList.tagValues.user"]})).tagList;
     
 
-    let gametime = (await AppDataSource.getRepository(GameTime).findOneOrFail({where: {
+    let gametime = (await AppDataSource.getRepository(GameTime).findOne({where: {
         game: {
             id: gameId
         },
@@ -21,7 +21,7 @@ const updateTagValuesWeights = async (userId: number, gameId: number) => {
     }))//.time;
     tagList.tagValues.map(i => {
         if(i.user.id == userId)
-            i.weight = weightCalculator(gametime.time)
+            i.weight = weightCalculator(gametime? gametime.time : 1)
         return i;
     })
     await AppDataSource.getRepository(TagValueList).save(tagList);
