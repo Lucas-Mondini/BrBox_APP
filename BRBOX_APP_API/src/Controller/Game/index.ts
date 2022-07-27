@@ -108,10 +108,10 @@ export default class GameController extends Controller {
                                 tag.icon,
                                 value."name" as value_name,
                                 value.id as value_id,
-                                count(tag_value."valueId") as qty_tot,
-                                count(CASE when value.id = 1 then 1 end) as qty_up,
-                                count(CASE when value.id = 2 then 1 end) as qty_neut,
-                                count(CASE when value.id = 3 then 1 end) as qty_down
+                                coalesce(sum(tag_value."valueId"), 0) as qty_tot,
+                                coalesce(sum(CASE when value.id = 1 then 1 * tag_value.weight end), 0) as qty_up,
+								coalesce(sum(CASE when value.id = 2 then 1 * tag_value.weight end), 0) as qty_neut,
+								coalesce(sum(CASE when value.id = 3 then 1 * tag_value.weight end), 0) as qty_down
                             from
                                 tag_value_list
                             inner join 
@@ -168,7 +168,7 @@ export default class GameController extends Controller {
                                                             tag: j.tagname,
                                                             id: j.tagid,
                                                             icon: j.tagicon,
-                                                            total: j.qty_total,
+                                                            total: Number(j.qty_up) + Number(j.qty_neutral) + Number(j.qty_down),
                                                             upVotes: j.qty_up,
                                                             neutralVotes: j.qty_neutral,
                                                             downVotes: j.qty_down
