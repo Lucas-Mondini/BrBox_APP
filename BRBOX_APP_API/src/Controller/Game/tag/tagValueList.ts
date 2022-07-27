@@ -61,12 +61,12 @@ export default class TagValueListController extends Controller {
             if(!tagValueList)
                 return {status: 400, value: {message: "error: tagValueList not found"}}
 
-            const _user =   AppDataSource.getRepository(User).findOneByOrFail({id: req.user.id});
-            const _tag =    AppDataSource.getRepository(Tag).findOneByOrFail({id: tag});
-            const _value =  AppDataSource.getRepository(Value).findOneByOrFail({id: value});
+            const _user =   await AppDataSource.getRepository(User).findOneByOrFail({id: req.user.id});
+            const _tag =    await AppDataSource.getRepository(Tag).findOneByOrFail({id: tag});
+            const _value =  await AppDataSource.getRepository(Value).findOneByOrFail({id: value});
 
             const _weight = weightCalculator(
-                (await AppDataSource.getRepository(GameTime).findOneByOrFail
+                (await AppDataSource.getRepository(GameTime).findOneBy
                     ({
                         user: {
                             id: req.user.id
@@ -75,7 +75,7 @@ export default class TagValueListController extends Controller {
                             tagList: tagValueList
                         }
                     })
-                ).time)
+                )?.time)
             
             for (let tg of tagValueList.tagValues) {
                 if(tg.tag.id == tag && tg.user.id == req.user.id) {
@@ -87,9 +87,9 @@ export default class TagValueListController extends Controller {
             }
             
 
-            tagValue.user = await _user;
-            tagValue.tag = await _tag;
-            tagValue.value = await _value;
+            tagValue.user = _user;
+            tagValue.tag = _tag;
+            tagValue.value = _value;
             tagValue.weight = _weight;
             
             
