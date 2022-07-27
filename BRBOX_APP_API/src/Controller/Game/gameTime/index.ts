@@ -4,6 +4,7 @@ import GameTime from "../../../Model/Game/gameTime";
 import { AppDataSource } from "../../../data-source";
 import Game from "../../../Model/Game";
 import User from "../../../Model/User";
+import { updateTagValuesWeights } from "../../../Utils/Updater";
 
 export default class GameTimeController extends Controller {
     constructor() {
@@ -55,9 +56,9 @@ export default class GameTimeController extends Controller {
             }
             gametime.time = Number(time);
 
-            //TODO: Update tagValue Weights
-
             await AppDataSource.getRepository(GameTime).save(gametime);
+            await updateTagValuesWeights(req.user.id, gameId);
+
 
             
             return {status: 200, value: {
@@ -76,16 +77,16 @@ export default class GameTimeController extends Controller {
             
             var gametime;
             if(req.user.admin) {
-                gametime = await AppDataSource.getRepository(GameTime).findOneByOrFail({id: id});
+                gametime = await AppDataSource.getRepository(GameTime).findOneOrFail({where:{id: id}, relations: this.relations});
             } else {
-                gametime = await AppDataSource.getRepository(GameTime).findOneByOrFail({id: id, user: {id: req.user.id}});
+                gametime = await AppDataSource.getRepository(GameTime).findOneOrFail({where:{id: id, user: {id: req.user.id}}, relations: this.relations});
             }
 
             gametime.time = time;
 
-            //TODO: Update tagValue Weights
-
             await AppDataSource.getRepository(GameTime).save(gametime);
+
+            await updateTagValuesWeights(gametime.user.id, gametime.game.id);
             
             return {status: 200, value: {
                     ...gametime
