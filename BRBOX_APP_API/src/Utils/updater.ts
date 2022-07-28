@@ -17,8 +17,8 @@ const updateTagValuesWeights = async (userId: number, gameId: number) => {
         user: {
             id: userId
         },
-    }//, relations: ["game", "user"]
-    }))//.time;
+    }
+    }))
     tagList.tagValues.map(i => {
         if(i.user.id == userId)
             i.weight = weightCalculator(gametime? gametime.time : 1)
