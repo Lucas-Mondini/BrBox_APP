@@ -2,7 +2,7 @@ import { AppDataSource } from "../data-source"
 import Game from "../Model/Game"
 import GameTime from "../Model/Game/gameTime";
 import TagValueList from "../Model/Game/tag/tagValueList";
-import { weightCalculator } from "./Calculator";
+import { weightCalculator } from "./calculator";
 
 const updateTagValuesWeights = async (userId: number, gameId: number) => {
     const tagList = (await AppDataSource.getRepository(Game).findOneOrFail({where: {

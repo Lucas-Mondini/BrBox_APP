@@ -7,7 +7,7 @@ import User from "../../../Model/User";
 import Tag from "../../../Model/Game/tag";
 import Value from "../../../Model/Game/tag/value";
 import GameTime from "../../../Model/Game/gameTime";
-import { weightCalculator } from "../../../Utils/Calculator";
+import { weightCalculator } from "../../../Utils/calculator";
 
 export default class TagValueListController extends Controller {
     constructor() {

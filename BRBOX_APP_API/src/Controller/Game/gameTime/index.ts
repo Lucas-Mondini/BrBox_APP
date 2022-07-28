@@ -4,7 +4,7 @@ import GameTime from "../../../Model/Game/gameTime";
 import { AppDataSource } from "../../../data-source";
 import Game from "../../../Model/Game";
 import User from "../../../Model/User";
-import { updateTagValuesWeights } from "../../../Utils/Updater";
+import { updateTagValuesWeights } from "../../../Utils/updater";
 
 export default class GameTimeController extends Controller {
     constructor() {
