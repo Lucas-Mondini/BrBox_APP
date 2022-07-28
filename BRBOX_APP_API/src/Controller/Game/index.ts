@@ -261,8 +261,22 @@ export default class GameController extends Controller {
                         if(!game)
                         return { status: 404, game: {message: "game not found" }};
                         
+                        const gameTime = await (await AppDataSource.getRepository(GameTime).findOne({where: {
+                            game: {
+                                id: game.id
+                            },
+                            user: {
+                                id: req.user.id
+                            },
+                        }}))
+
+                        const returnObj = {
+                            ...this.linkFormatter(game),
+                            gameTime: gameTime? gameTime.time : null
+                        }
+                        
                         return {status: 200, value: {
-                            ...this.linkFormatter(game)
+                            ...returnObj
                         }};
                     }  catch (e : any) {
                         return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
