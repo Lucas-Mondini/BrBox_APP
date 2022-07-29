@@ -194,29 +194,69 @@ export default class GameController extends Controller {
                                 const sortedNeutral = [...game.tags.sort((a: any, b: any) => b.neutralVotes - a.neutralVotes)]
                                 const sortedDown    = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
 
-                                game.tags = []
-                                if(sortedUp[0])
+                                game.tags = [];
+                                if(sortedUp[0] && Number(sortedUp[0].upVotes) > 0) {
                                     game.tags.push({
                                         value: "up",
                                         ...sortedUp[0]
                                     })
-                                if( sortedNeutral[0] &&
-                                    sortedNeutral[0] != sortedUp[0])
-                                    game.tags.push({
-                                        value: "neutral",
-                                        ...sortedNeutral[0]
-                                    })
-
-
-                                if( sortedDown[0] && 
-                                    sortedDown[0] != sortedUp[0] && 
-                                    sortedNeutral[0] && 
-                                    sortedDown[0] != sortedNeutral[0])
-                                    game.tags.push({
-                                        value: "down",
-                                        ...sortedDown[0]
-                                    })
                                 }
+                                if(sortedNeutral) {
+                                    for (const sort of sortedNeutral) {
+                                        let breakValue = false
+                                        if (game.tags.length > 0) {
+                                            for (const tagsInGames of game.tags) {
+                                                if(sort.id != tagsInGames.id && Number(sort.neutralVotes) > 0) {
+                                                    game.tags.push({
+                                                        value: "neutral",
+                                                        ...sort
+                                                    })
+                                                    breakValue = true;
+                                                    break;
+                                                }
+                                            }
+                                        } else {
+                                            if(sort && Number(sort.neutralVotes) > 0) {
+                                                game.tags.push({
+                                                    value: "neutral",
+                                                    ...sort
+                                                })
+                                            }
+                                            breakValue = true;
+                                        }
+                                        if(breakValue)
+                                            break;
+                                    }
+                                }
+
+                                if(sortedDown) {
+                                    for (const sort of sortedDown) {
+                                        let breakValue = false
+                                        if (game.tags.length > 0) {
+                                            for (const tagsInGames of game.tags) {
+                                                if(sort.id != tagsInGames.id && Number(sort.downVotes) > 0) {
+                                                    game.tags.push({
+                                                        value: "down",
+                                                        ...sort
+                                                    })
+                                                    breakValue = true;
+                                                    break;
+                                                }
+                                            }
+                                        } else {
+                                            if(sort && Number(sort.downVotes) > 0) {
+                                                game.tags.push({
+                                                    value: "down",
+                                                    ...sort
+                                                })
+                                            }
+                                            breakValue = true;
+                                        }
+                                        if(breakValue)
+                                            break;
+                                    }
+                                }
+                            }
 
                                 return game
                           });
