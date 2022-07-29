@@ -21,8 +21,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 50,
-    paddingHorizontal: 5
+    borderRadius: 50
   },
   tagSmall: {
     marginRight: 5,
