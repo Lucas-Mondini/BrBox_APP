@@ -9,7 +9,7 @@ import { useTheme } from '../../Contexts/Theme';
 
 type ModalProps = {
   visible: boolean;
-  loading: boolean;
+  loading?: boolean;
   setModal: () => void;
   children: React.ReactElement | React.ReactElement[];
   animationType?: "slide" | "none" | "fade";

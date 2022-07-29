@@ -20,6 +20,7 @@ type GameData = {
   images: ImageType[];
   loading: boolean;
   linkList: LinkType[];
+  gameTime: Number | null;
   platform: Platform | null;
   imageName: string;
   imageLink: string;
@@ -33,6 +34,7 @@ type GameData = {
   setLink: (value: string) => void;
   setImages: (value: ImageType[]) => void;
   setLoading: (value: boolean) => void;
+  setGameTime: (value: Number| string | null) => void;
   setPlatform: (value: Platform | null) => void;
   setLinkList: (value: LinkType[]) => void;
   setImageName: (value: string) => void;
@@ -71,6 +73,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [images, setImages] = useState([] as ImageType[]);
+  const [gameTime, setGameTime] = useState<Number | null>(null);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [imageName, setImageName] = useState("");
@@ -200,8 +203,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
       setId(response.id);
       setName(response.name);
-      setLinkList(response.linkList.externalLinks);
       setImages(response.imageList.images);
+      setGameTime(response.gameTime);
+      setLinkList(response.linkList.externalLinks);
       setTagValueList(response.tagList.id);
       setBusinessModelId(response.businessModelList.id);
       setBusinessModelList(response.businessModelList.businessModels);
@@ -238,6 +242,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
+        setGameTime(response.gameTime);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
         setBusinessModelId(response.businessModelList.id);
@@ -264,6 +269,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
+        setGameTime(response.gameTime);
         setLinkList(response.linkList.externalLinks);
         setTagValueList(response.tagList.id);
         setBusinessModelId(response.businessModelList.id);
@@ -309,9 +315,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform, tagValueList, businessModel, businessModelList, businessModelId,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList,
-      addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, createGame, updateGame, deleteGame, clearGameContext, addBusinessModel
+      id, name, link, imageName, imageLink, loading, images, linkList, platform,
+      tagValueList,businessModel, businessModelList, businessModelId, gameTime,
+      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime,
+      setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList,
+      addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame,
+      createGame, updateGame, deleteGame, clearGameContext, addBusinessModel
     }}>
       {children}
     </GameContext.Provider>

@@ -8,11 +8,12 @@ import TagInfoModal from "../TagInfoModal";
 
 interface TopTagsProps {
   tags?: TagValue[];
+  home?: boolean;
   large?: boolean;
   evaluations?: TagType[];
 }
 
-export default function TopTags({tags, large, evaluations}: TopTagsProps)
+export default function TopTags({tags, home, large, evaluations}: TopTagsProps)
 {
   const {width} = Dimensions.get('window');
 
@@ -33,6 +34,10 @@ export default function TopTags({tags, large, evaluations}: TopTagsProps)
     return (
       <Tag
         tag={tag}
+        home={home}
+        showTotalVotes
+        topTags
+        noEvaluations
         specificStyle={style[tag.value]}
         large={large}
         callback={!large ? () => {} : () => {

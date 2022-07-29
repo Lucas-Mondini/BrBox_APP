@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     marginBottom: 10,
     width: "100%",
-    marginLeft: 20
+    textAlign: "center"
   },
   tagsListTitles: {
     fontFamily: config.fontFamilyBold,

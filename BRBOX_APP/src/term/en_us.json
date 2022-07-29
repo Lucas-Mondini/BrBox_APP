@@ -136,5 +136,8 @@
   "100134": "Unexpected error",
   "100135": "Make sure you enter the correct code and the code wasn't already used",
   "100136": "E-mail, code, password and password confirmation are required to change your password",
-  "100137": "Fill in the information to change your password"
+  "100137": "Fill in the information to change your password",
+  "100138": "Add your game time",
+  "100139": "Game time",
+  "100140": "You have %1 of game time"
 }

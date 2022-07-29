@@ -60,72 +60,15 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
       const response = await get(`/tagValue/${id}`, setEvaluatedTagsLoading);
 
       if (firstLoad) {
-        setSelectedTags(filterUsefulInformation(response.tagValueFromUser));
+        setSelectedTags(response.tagValueFromUser);
         setFirstLoad(false);
       }
 
-      setEvaluatedTags(groupEvaluatedTags(response.tagValue.tagValues));
-      if (setEvaluationTags) setEvaluationTags(groupEvaluatedTags(response.tagValue.tagValues));
+      setEvaluatedTags(response.tagValue);
+      if (setEvaluationTags) setEvaluationTags(response.tagValue);
     } catch (err) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
-  }
-
-  /**
-   * Receive a list of evaluated tags and returns a list of tags only with the useful information
-   * @param list
-   * @return Tag[]
-   */
-  function filterUsefulInformation(list: Evaluation[])
-  {
-    return list.map((item) => {
-      return {
-        id: item.tag.id,
-        icon: item.tag.icon,
-        evalId: item.id,
-        name: item.tag.name,
-        description_positive: item.tag.description_positive,
-        description_neutral: item.tag.description_neutral,
-        description_negative: item.tag.description_negative,
-        value: item.value.id
-      }
-    });
-  }
-
-  /**
-   * Receive a list of evaluated tags and returns a list of tags grouped by tag
-   * @param list
-   * @return Tag[]
-   */
-  function groupEvaluatedTags(list: Evaluation[]): Tag[]
-  {
-    const finalValues: Tag[] = [];
-
-    for (let item1 of list) {
-      const countTags = list.filter((item) => item.tag.id === item1.tag.id)
-      const countUpVotes = list.filter((item) => item.value.id === 1 && item.tag.id === item1.tag.id).length
-      const countNeutralVotes = list.filter((item) => item.value.id === 2 && item.tag.id === item1.tag.id).length
-      const countDownVotes = list.filter((item) => item.value.id === 3 && item.tag.id === item1.tag.id).length
-
-      finalValues.push({
-        id: countTags[0].tag.id,
-        icon: countTags[0].tag.icon,
-        count: countTags.length,
-        upVotes: countUpVotes,
-        neutralVotes: countNeutralVotes,
-        downVotes: countDownVotes,
-        evalId: countTags[0].id,
-        name: countTags[0].tag.name,
-        value: countTags[0].value.id,
-        description_positive: countTags[0].tag.description_positive,
-        description_neutral: countTags[0].tag.description_neutral,
-        description_negative: countTags[0].tag.description_negative
-      });
-    }
-
-    return [
-        ...new Map(finalValues.map((item) => [item["id"], item])).values(),
-    ];
   }
 
   /**
@@ -150,6 +93,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
       <View key={tag.id}>
         <TagCard
           showName
+          noEvaluations
           extraStyles={{margin: 3}}
           callback={() => handleLists(
             tag.id, tags, selectedTags, setTags, setSelectedTags
@@ -242,7 +186,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
           <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
             {loadingEvaluatedTags
             ? <Loading styles={{borderRadius: 8}} />
-            : <View style={styles.tagsContainer}>
+            : <View style={[styles.tagsContainer, {justifyContent: "center"}]}>
                 <Text>{renderEvaluatedTags()}</Text>
               </View>}
           </View>
