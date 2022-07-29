@@ -21,23 +21,25 @@ import TopTags from '../../components/TopTags';
 import { useTerm } from '../../Contexts/TermProvider';
 import { getWords } from '../../utils/functions';
 import ToggleContent from '../../components/ToggleContent';
+import GameTimeModal from '../../components/GameTimeModal';
+import GameTimeCard from '../../components/GameTimeCard';
 
 const GameInfo = () => {
+  const route = useRoute();
+  const isFocused = useIsFocused();
+
+  const { getTerm } = useTerm();
+  const { darkMode } = useTheme();
   const {
     name, loading, id,
     loadGame, renderLinks, renderImages, renderBusinessModel
   } = useGame();
 
-  const route = useRoute();
-  const {getTerm} = useTerm();
-  const isFocused = useIsFocused();
+  const [modal, setModal] = useState(false);
   const [tagsContainer, setTagsContainer] = useState<React.ReactElement>();
   const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
 
   const params = route.params as Params;
-
-  const { darkMode } = useTheme();
-
   const color = darkMode ? "#fff" : config.dark;
 
   useEffect(() => {
@@ -58,6 +60,11 @@ const GameInfo = () => {
       showTitle
       headerTitle={getWords(name, 2) || ""}
     >
+      <GameTimeModal
+        visible={modal}
+        setModal={() => setModal(!modal)}
+      />
+
       <ScrollView
         style={[styles.container]}
         refreshControl={
@@ -74,6 +81,8 @@ const GameInfo = () => {
         {renderImages()}
 
         {renderLinks()}
+
+        <GameTimeCard onPress={() => setModal(!modal)}/>
 
         <ToggleContent
           title={100121}

@@ -6,9 +6,7 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   imgLarge: {
-    marginRight: 15,
-    width: 17.5,
-    height: 18,
+    marginRight: 15
   },
   tagsContainerSmall: {
     flexDirection: "row",
@@ -24,11 +22,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
+    paddingHorizontal: 5
   },
   tagSmall: {
     marginRight: 5,
     padding: 5,
-    minWidth: 55
+    width: "33%"
   },
   tagLarge: {
     marginHorizontal: 10,
@@ -36,6 +35,7 @@ const styles = StyleSheet.create({
     width: "28%"
   },
   tagText: {
+    alignItems: "center",
     fontFamily: config.fontFamilyBold,
     color: "#000"
   },

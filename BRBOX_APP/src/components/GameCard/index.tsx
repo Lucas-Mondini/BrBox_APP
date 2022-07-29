@@ -51,6 +51,7 @@ export default function GameCard({id, title, tags, imgUri, extraCallbackOnNaviga
 
             <TopTags
               tags={tags}
+              home
             />
           </View>
         </View>
