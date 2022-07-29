@@ -31,6 +31,9 @@ import BusinessModel from './Model/Game/businessModel';
 import BusinessModelList from './Model/Game/businessModel/businessModelList';
 import Code from './Model/User/code';
 import GameTime from './Model/Game/gameTime';
+import ContentRecommendation from './Model/Game/recommendation/content';
+import CustomRecommendation from './Model/Game/recommendation/custom';
+import SimilaritiesRecommendation from './Model/Game/recommendation/similarities';
 
 const host = process.env.DATABASE_HOST;
 const port = Number(process.env.DATABASE_PORT);
@@ -63,7 +66,10 @@ export const AppDataSource = new DataSource({
         BusinessModel,
         BusinessModelList,
         Code,
-        GameTime
+        GameTime,
+        ContentRecommendation,
+        CustomRecommendation,
+        SimilaritiesRecommendation
     ],
     subscribers: [],
     migrations: [],
