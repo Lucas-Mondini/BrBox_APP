@@ -1,5 +1,5 @@
-userId,game,tagId, tag,score,vote_count,overview
-1,'A',1,'Grid',1,1000,'Connected to the main game thematically and in content'
+userId, game,   tagId, tag,         score,   vote_count, overview
+1,      'A',    1,      'Grid',         1,      1000,'Connected to the main game thematically and in content'
 1,'A',2,'Exploration',1,5000, 'player assumes the role of a protagonist in an interactive story driven by exploration'
 1,'A',3,'Campaign',0,0, 'a campaign is a continuing storyline or set of adventures typically involving the same characters'
 1,'A',4,'Monetization',0,0, 'game monetization is the type of process that a video game publisher can use to generate revenue from a video game product'
