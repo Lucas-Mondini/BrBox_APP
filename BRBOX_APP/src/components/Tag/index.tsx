@@ -27,7 +27,7 @@ export default function Tag({tag, specificStyle, large, home, topTags, showName,
 
   function formatVotes(vote: number): string
   {
-    return String(vote > 1000 ? vote/1000 + "K" : vote);
+    return String(vote >= 1000 ? (vote >= 1000000 ? vote/1000000 + "M" : vote/1000 + "K") : vote);
   }
 
   if (!tag) return null;
@@ -38,8 +38,7 @@ export default function Tag({tag, specificStyle, large, home, topTags, showName,
     >
       <View style={[{height: large ? 25 : 20, flexDirection: "row"}, !noEvaluations ? {width: large ? 110 : home ? 40 : 100} : {paddingHorizontal: 5, backgroundColor: bg}]}>
         <View style={[{
-          zIndex: 1000,
-          borderRadius: 50
+          zIndex: 1000
         }, !noEvaluations && {position: "absolute"}]}>
           <Text style={[{
             textAlign: "center"

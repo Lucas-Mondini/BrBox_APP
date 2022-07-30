@@ -32,27 +32,29 @@ export default function TopTags({tags, home, large, evaluations}: TopTagsProps)
     }
 
     return (
-      <Tag
-        tag={tag}
-        home={home}
-        showTotalVotes
-        topTags
-        noEvaluations
-        specificStyle={style[tag.value]}
-        large={large}
-        callback={!large ? () => {} : () => {
-          if (!evaluations) return null;
+      <View style={{marginHorizontal: 5}}>
+        <Tag
+          tag={tag}
+          home={home}
+          showTotalVotes
+          topTags
+          noEvaluations
+          specificStyle={style[tag.value]}
+          large={large}
+          callback={!large ? () => {} : () => {
+            if (!evaluations) return null;
 
-          const tagInfoObj: any = evaluations.filter(e => e.name === tag.tag)[0];
+            const tagInfoObj: any = evaluations.filter(e => e.name === tag.tag)[0];
 
-          setModal(
-            <TagInfoModal
-              setModal={() => setModal(null)}
-              tagInfo={tagInfoObj}
-            />
-          );
-        }}
-      />
+            setModal(
+              <TagInfoModal
+                setModal={() => setModal(null)}
+                tagInfo={tagInfoObj}
+              />
+            );
+          }}
+        />
+      </View>
     );
   }
 
