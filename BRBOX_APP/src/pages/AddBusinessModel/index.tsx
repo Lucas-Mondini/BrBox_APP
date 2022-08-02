@@ -18,6 +18,7 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, BusinessModel } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
+import deedLinking from '../../utils/deepLinking';
 
 const AddBusinessModel = () => {
   const navigation = useNavigation<any>();
@@ -82,6 +83,10 @@ const AddBusinessModel = () => {
   useEffect(() => {
     if (isFocused) loadTag();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView loading={loading}>

@@ -22,6 +22,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Params } from '../../utils/types';
 import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
+import deedLinking from '../../utils/deepLinking';
 
 const Profile = () => {
   const navigation = useNavigation<any>();
@@ -157,6 +158,10 @@ const Profile = () => {
 
     if (isFocused) loadUser();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView loading={loading}>

@@ -83,12 +83,6 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
 
           {user?.admin && <>
             <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-              callNavigationFunction("TagRegister");
-            }}>
-              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100005).toUpperCase()}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
               callNavigationFunction("TagList");
             }}>
               <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100030).toUpperCase()}</Text>
@@ -98,18 +92,6 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
               callNavigationFunction("UserList");
             }}>
               <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100031).toUpperCase()}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-              callNavigationFunction("", () => navigation.navigate("Profile", {new:true}));
-            }}>
-              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100042).toUpperCase()}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-              callNavigationFunction("", () => navigation.navigate("AddGame", {new:true}));
-            }}>
-              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100047).toUpperCase()}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {

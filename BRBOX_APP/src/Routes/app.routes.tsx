@@ -13,7 +13,6 @@ import Platforms from '../pages/Platforms';
 import BusinessModelList from '../pages/BusinessModelList';
 import AddBusinessModel from '../pages/AddBusinessModel';
 import { useAuth } from '../Contexts/Auth';
-import { GameProvider } from '../Contexts/Game';
 
 const App = createStackNavigator();
 
@@ -21,7 +20,6 @@ const AppRoutes: React.FC = () => {
   const {user} = useAuth();
 
   return (
-    
       <App.Navigator
         screenOptions={{headerShown: false}}
       >

@@ -13,6 +13,7 @@ import styles from './styles';
 
 import { Game } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
+import deedLinking from '../../utils/deepLinking';
 
 const UserList = () => {
   const navigation = useNavigation<any>();
@@ -67,6 +68,10 @@ const UserList = () => {
   useEffect(()=>{
     if (isFocused) getUsers();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView

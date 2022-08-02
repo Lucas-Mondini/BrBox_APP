@@ -41,7 +41,7 @@ export default function Tag({tag, specificStyle, large, home, topTags, showName,
           zIndex: 1000
         }, !noEvaluations && {position: "absolute"}]}>
           <Text style={[{
-            textAlign: "center"
+            textAlign: "center", lineHeight: large ? 25 : 20
           }, !noEvaluations && {width: large ? 110 : home ? 40 : 100}]}>
             <Icon
               name={getIcon(tag.icon)}

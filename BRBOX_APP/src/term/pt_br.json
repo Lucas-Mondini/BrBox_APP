@@ -5,7 +5,7 @@
   "100003": "Recomendado",
   "100004": "Compartilhar",
   "100005": "Adicionar Tag",
-  "100006": "Ajuda",
+  "100006": "Sugestões",
   "100007": "Home",
   "100008": "Game Score",
   "100009": "LOGIN",
@@ -139,5 +139,6 @@
   "100137": "Preencha as informações para alterar sua senha",
   "100138": "Adicionar tempo de jogo",
   "100139": "Tempo de jogo",
-  "100140": "Voce possui %1 horas de jogo"
+  "100140": "Voce possui %1 horas de jogo",
+  "100141": "Venha conferir as avaliações do jogo %1 no BrBox - Game Score"
 }

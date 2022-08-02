@@ -5,7 +5,7 @@
   "100003": "Recommended",
   "100004": "Share",
   "100005": "Add Tag",
-  "100006": "Help",
+  "100006": "Suggestion",
   "100007": "Home",
   "100008": "Game Score",
   "100009": "LOGIN",
@@ -139,5 +139,6 @@
   "100137": "Fill in the information to change your password",
   "100138": "Add your game time",
   "100139": "Game time",
-  "100140": "You have %1 of game time"
+  "100140": "You have %1 of game time",
+  "100141": "Come check %1 evaluations on BrBox - Game Score app"
 }

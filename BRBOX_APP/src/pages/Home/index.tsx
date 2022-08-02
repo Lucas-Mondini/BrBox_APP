@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import {
   RefreshControl,
   View
@@ -19,10 +19,12 @@ import Loading from '../../components/Loading';
 
 import styles from './styles';
 import useDelay from '../../hooks/Delay';
+import deedLinking from '../../utils/deepLinking';
 
 const Home = () => {
   const route = useRoute();
   const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
 
   const params = route.params as Params;
 
@@ -40,9 +42,9 @@ const Home = () => {
 
   const [hideButton, setHideButton] = useState(params ? params.search : false);
 
-  const {get} = useRequest();
-  const {getTerm} = useTerm();
-  const {signOut, user} = useAuth();
+  const { get } = useRequest();
+  const { getTerm } = useTerm();
+  const { signOut, user } = useAuth();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
@@ -145,6 +147,10 @@ const Home = () => {
 
     useDelay(gameName, setGameSearch);
   }, [gameName]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView
