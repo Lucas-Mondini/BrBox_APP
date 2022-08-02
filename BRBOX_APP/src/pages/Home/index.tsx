@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import {
   RefreshControl,
   View
@@ -23,6 +23,7 @@ import useDelay from '../../hooks/Delay';
 const Home = () => {
   const route = useRoute();
   const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
 
   const params = route.params as Params;
 
@@ -42,7 +43,7 @@ const Home = () => {
 
   const {get} = useRequest();
   const {getTerm} = useTerm();
-  const {signOut, user} = useAuth();
+  const {signOut, user, link, setLink} = useAuth();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
@@ -145,6 +146,28 @@ const Home = () => {
 
     useDelay(gameName, setGameSearch);
   }, [gameName]);
+
+  function navigate(url: string)
+  {
+    const route = url.replace(/.*?:\/\//g, '') || "";
+    //@ts-ignore
+    const id = route.match(/\/([^\/]+)\/?$/)[1];
+
+    const routeName = route.split('/')[0];
+
+    if (routeName === 'gameinfo') {
+      navigation.navigate('GameInfo', { id });
+    };
+  }
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (link) {
+        navigate(link);
+        setLink(null)
+      }
+    }, 2500);
+  }, []);
 
   return (
     <MainView

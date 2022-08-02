@@ -21,7 +21,7 @@ class MailTemplateConfigurator
   
   async renderTemplate(): Promise<string>
   {
-    return await ejs.renderFile(`${__dirname}/mails/${this.template}.ejs`, this.data);
+    return await ejs.renderFile(`${__dirname}../../../../mails/${this.template}.ejs`, this.data);
   }
 }
 
