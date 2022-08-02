@@ -34,6 +34,7 @@ import GameTime from './Model/Game/gameTime';
 import ContentRecommendation from './Model/Game/recommendation/content';
 import CustomRecommendation from './Model/Game/recommendation/custom';
 import SimilaritiesRecommendation from './Model/Game/recommendation/similarities';
+import Score from './Model/Game/Score';
 
 const host = process.env.DATABASE_HOST;
 const port = Number(process.env.DATABASE_PORT);
@@ -69,7 +70,8 @@ export const AppDataSource = new DataSource({
         GameTime,
         ContentRecommendation,
         CustomRecommendation,
-        SimilaritiesRecommendation
+        SimilaritiesRecommendation,
+        Score
     ],
     subscribers: [],
     migrations: [],
