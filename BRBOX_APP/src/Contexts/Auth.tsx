@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
-import { Linking } from 'react-native';
 import api from '../services/api';
 import { User } from '../utils/types';
 
@@ -11,8 +10,6 @@ type AuthData = {
   temporaryToken: string;
   loading: boolean;
   firstLoad: boolean;
-  link: string | null;
-  setLink: (value: string | null) => void;
   setLoading: (value: boolean) => void;
   signIn: (email: string, pass: string, errorCallback?: Function) => void;
   register: (name: string, email: string, pass: string, confPass: string, errorCallback?: Function) => void;
@@ -32,7 +29,6 @@ const AuthContext = createContext({} as AuthData);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
 {
-  const [link, setLink] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [firstLoad, setFirstLoad] = useState(true);
   const [user, setUser] = useState<User | null>(null);
@@ -116,16 +112,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
     return;
   }
 
-  async function getInitialLink() {
-    setLink(await Linking.getInitialURL());
-  }
-
   useEffect(() => {
     checkLogin();
-  }, []);
-
-  useEffect(() => {
-    getInitialLink();
   }, []);
 
   return (
@@ -135,8 +123,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({children}) =>
       temporaryToken,
       loading,
       firstLoad,
-      link,
-      setLink,
       setLoading,
       signIn,
       signOut,

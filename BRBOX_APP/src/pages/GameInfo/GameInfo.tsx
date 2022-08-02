@@ -1,8 +1,10 @@
-import { useIsFocused, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   RefreshControl,
   ScrollView,
+  Share,
   Text,
   View,
 } from 'react-native';
@@ -23,10 +25,12 @@ import { getWords } from '../../utils/functions';
 import ToggleContent from '../../components/ToggleContent';
 import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
+import deedLinking from '../../utils/deepLinking';
 
 const GameInfo = () => {
   const route = useRoute();
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
@@ -42,6 +46,19 @@ const GameInfo = () => {
   const params = route.params as Params;
   const color = darkMode ? "#fff" : config.dark;
 
+  async function shareApp()
+  {
+    try {
+      const message = getTerm(100141).replace("%1", name);
+
+      await Share.share({
+        message: message+"\n\n\n"+config.apiUrl+"gameUtils/gameInfoOpenApp?gameId="+id,
+      });
+    } catch (error) {
+      Alert.alert(getTerm(100108), getTerm(100109))
+    }
+  }
+
   useEffect(() => {
     if (isFocused && params.id) {
       loadGame(params.id);
@@ -54,11 +71,17 @@ const GameInfo = () => {
     }
   }, [isFocused, loading]);
 
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
+
   return (
     <MainView
       loading={loading}
       showTitle
       headerTitle={getWords(name, 2) || ""}
+      headerAddButtonIcon="share-2"
+      headerAddButtonAction={shareApp}
     >
       <GameTimeModal
         visible={modal}

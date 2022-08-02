@@ -19,6 +19,7 @@ import Loading from '../../components/Loading';
 
 import styles from './styles';
 import useDelay from '../../hooks/Delay';
+import deedLinking from '../../utils/deepLinking';
 
 const Home = () => {
   const route = useRoute();
@@ -41,9 +42,9 @@ const Home = () => {
 
   const [hideButton, setHideButton] = useState(params ? params.search : false);
 
-  const {get} = useRequest();
-  const {getTerm} = useTerm();
-  const {signOut, user, link, setLink} = useAuth();
+  const { get } = useRequest();
+  const { getTerm } = useTerm();
+  const { signOut, user } = useAuth();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
@@ -147,26 +148,8 @@ const Home = () => {
     useDelay(gameName, setGameSearch);
   }, [gameName]);
 
-  function navigate(url: string)
-  {
-    const route = url.replace(/.*?:\/\//g, '') || "";
-    //@ts-ignore
-    const id = route.match(/\/([^\/]+)\/?$/)[1];
-
-    const routeName = route.split('/')[0];
-
-    if (routeName === 'gameinfo') {
-      navigation.navigate('GameInfo', { id });
-    };
-  }
-
   useEffect(() => {
-    setTimeout(() => {
-      if (link) {
-        navigate(link);
-        setLink(null)
-      }
-    }, 2500);
+    deedLinking(navigation);
   }, []);
 
   return (

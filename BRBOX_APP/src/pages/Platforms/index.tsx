@@ -14,6 +14,7 @@ import styles from './styles';
 import { Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import PlatformCard from '../../components/PlatformCard';
+import deedLinking from '../../utils/deepLinking';
 
 const Platforms = () => {
   const navigation = useNavigation<any>();
@@ -66,6 +67,10 @@ const Platforms = () => {
   useEffect(()=>{
     if (isFocused) getPlatforms();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView

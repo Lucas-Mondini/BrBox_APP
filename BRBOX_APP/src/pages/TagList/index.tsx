@@ -14,6 +14,7 @@ import styles from './styles';
 
 import { Tag } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
+import deedLinking from '../../utils/deepLinking';
 
 const TagList = () => {
   const navigation = useNavigation<any>();
@@ -68,6 +69,10 @@ const TagList = () => {
   useEffect(()=>{
     if (isFocused) getTags();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView

@@ -18,6 +18,7 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, Platform } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
+import deedLinking from '../../utils/deepLinking';
 
 const AddPlatform = () => {
   const navigation = useNavigation<any>();
@@ -81,6 +82,10 @@ const AddPlatform = () => {
   useEffect(() => {
     if (isFocused) loadTag();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView loading={loading}>

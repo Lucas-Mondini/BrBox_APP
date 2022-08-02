@@ -24,6 +24,7 @@ import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
 import BusinessModelModal from '../../components/BusinessModelModal';
 import ToggleContent from '../../components/ToggleContent';
+import deedLinking from '../../utils/deepLinking';
 
 const AddGame = () => {
   const {
@@ -86,6 +87,10 @@ const AddGame = () => {
 
     setModal(modalEl);
   }
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView loading={loading}>

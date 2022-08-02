@@ -15,6 +15,7 @@ import { BusinessModel } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import { useTerm } from '../../Contexts/TermProvider';
 import BusinessModelCard from '../../components/BusinessModelCard';
+import deedLinking from '../../utils/deepLinking';
 
 const BusinessModelList = () => {
   const navigation = useNavigation<any>();
@@ -69,6 +70,10 @@ const BusinessModelList = () => {
   useEffect(()=>{
     if (isFocused) getBusinessModels();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView

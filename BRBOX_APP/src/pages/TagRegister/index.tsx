@@ -21,6 +21,7 @@ import { useTheme } from '../../Contexts/Theme';
 import IconsModal from '../../components/IconsModal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getIcon } from '../../utils/functions';
+import deedLinking from '../../utils/deepLinking';
 
 const TagRegister = () => {
   const navigation = useNavigation<any>();
@@ -103,6 +104,10 @@ const TagRegister = () => {
   useEffect(() => {
     if (isFocused) loadTag();
   }, [isFocused]);
+
+  useEffect(() => {
+    deedLinking(navigation);
+  }, []);
 
   return (
     <MainView loading={loading}>
