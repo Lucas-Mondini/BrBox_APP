@@ -13,6 +13,7 @@ import platformRouter from './Game/Platform';
 import businessModelRouter from './Game/businessModel';
 import gameTimeRouter from './Game/gameTime';
 import GameUtilsRouter from './Game/GameUtils';
+import suggestionRouter from './Sugestion';
 
 const mainRouter = Router();
 
@@ -30,6 +31,7 @@ mainRouter.use('/tagValue', Auth.user,  tagValueListRouter);
 mainRouter.use('/gameTime', Auth.user, gameTimeRouter)
 
 mainRouter.use('/businessModel', Auth.user, businessModelRouter)
+mainRouter.use('/suggestion', Auth.user, suggestionRouter)
 
 mainRouter.use('/gameUtils', GameUtilsRouter);
 

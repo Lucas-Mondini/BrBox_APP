@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <title>Document</title>
+
+  <style>
+    body {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    div:not(#svg) {
+      margin-top: 150px;
+      border: 1px solid #686868;
+      border-radius: 20px;
+      padding: 35px;
+      box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    div#svg {
+      text-align: center;
+    }
+
+    h2 {
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    p {
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    h3 {
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <div>
+    <h1>Sugestão de <%= name %>!</h1>
+
+    <p><%= text %></p>
+  </div>
+</body>
+
+</html>

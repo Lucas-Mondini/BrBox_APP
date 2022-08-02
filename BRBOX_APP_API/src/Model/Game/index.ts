@@ -12,6 +12,9 @@ export default class Game {
     @Column()
     name: string;
 
+    @Column({nullable: false, default: false})
+    DLC: boolean;
+
     @OneToOne(() => ExtternalLinkList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
     linkList: ExtternalLinkList;

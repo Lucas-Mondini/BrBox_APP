@@ -6,6 +6,7 @@ import ejs from 'ejs';
 interface Data {
   name?: string;
   code?: string;
+  text?: string;
 }
 
 class MailTemplateConfigurator
