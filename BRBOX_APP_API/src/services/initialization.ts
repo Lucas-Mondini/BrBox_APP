@@ -8,6 +8,7 @@ import Value from "../Model/Game/tag/value";
 import SteamLoader from "./loadGames/steam";
 import Platform from "../Model/Game/platform";
 import Game from "../Model/Game";
+import Score from "../Model/Game/Score";
 
 async function initializeUser() {
     console.log("trying to find users");
@@ -84,10 +85,31 @@ async function initializePlatform() {
     
 }
 
+const initializeScores = async () => {
+    const games = await AppDataSource.getRepository(Game).find();
+    let scores = await AppDataSource.getRepository(Score).find({relations: ["game"]});
+
+    games.map(async i => {
+        if(scores) {
+            for (const j of scores) {
+                if(j.game.id == i.id)
+                    return i;
+            }
+        }
+        const score = new Score();
+        score.game = i;
+        await AppDataSource.getRepository(Score).save(score);
+    })
+    scores = await AppDataSource.getRepository(Score).find({relations: ["game"]});
+    Score.UpdateAll();
+
+}
+
 export default async function () {
     await initializeUser();
     await initalizeAvaliationValues();
     await initializePlatform();
     await new SteamLoader().Run();
+    await initializeScores();
     
 }
