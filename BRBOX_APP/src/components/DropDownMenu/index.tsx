@@ -65,17 +65,17 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100118).toUpperCase()}</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-            callNavigationFunction("YourRatings");
+          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+            callNavigationFunction("Home");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100002).toUpperCase()}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-            callNavigationFunction("Recommended");
+            callNavigationFunction("Home");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100003).toUpperCase()}</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={shareApp}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100004).toUpperCase()}</Text>
@@ -114,7 +114,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-            callNavigationFunction("Help");
+            callNavigationFunction("Suggestion");
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100006).toUpperCase()}</Text>
           </TouchableOpacity>

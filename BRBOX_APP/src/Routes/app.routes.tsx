@@ -13,6 +13,7 @@ import Platforms from '../pages/Platforms';
 import BusinessModelList from '../pages/BusinessModelList';
 import AddBusinessModel from '../pages/AddBusinessModel';
 import { useAuth } from '../Contexts/Auth';
+import Suggestion from '../pages/Suggestion';
 
 const App = createStackNavigator();
 
@@ -42,6 +43,10 @@ const AppRoutes: React.FC = () => {
         <App.Screen
           name="Profile"
           component={Profile}
+        />
+        <App.Screen
+          name="Suggestion"
+          component={Suggestion}
         />
 
         {user?.admin && <>
