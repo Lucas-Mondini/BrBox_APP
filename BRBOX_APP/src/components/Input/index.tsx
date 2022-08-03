@@ -7,8 +7,10 @@ import config from "../../../brbox.config.json";
 import { useTheme } from "../../Contexts/Theme";
 
 interface InputProps extends TextInputProps {
-  placeholderText?: number;
+  placeholderText?: number | string;
   extraStyles?: object;
+  value?: string;
+  onChangeText?: string;
 }
 
 export default function Input(props: InputProps)
