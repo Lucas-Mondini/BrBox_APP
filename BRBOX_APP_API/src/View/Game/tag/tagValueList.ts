@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import TagValueListController from "../../../Controller/Game/tag/tagValueList";
+import TagValueListControllerNewFormat from "../../../Controller/Game/tag/tagValueListNewFormat";
 
 export default class TagValueListView {
 
@@ -10,6 +11,11 @@ export default class TagValueListView {
     
     Get = async(req: Request, res: Response) => {
         const object = await new TagValueListController().Get(req);
+        return res.status(object.status).json(object.value);
+    }
+
+    GetNewFormat = async(req: Request, res: Response) => {
+        const object = await new TagValueListControllerNewFormat().Get(req);
         return res.status(object.status).json(object.value);
     }
     
