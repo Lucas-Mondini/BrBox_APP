@@ -14,6 +14,8 @@ import businessModelRouter from './Game/businessModel';
 import gameTimeRouter from './Game/gameTime';
 import GameUtilsRouter from './Game/GameUtils';
 import suggestionRouter from './Sugestion';
+import gameGenreRouter from './Game/classification/genre';
+import gameModeRouter from './Game/classification/mode';
 
 const mainRouter = Router();
 
@@ -34,5 +36,8 @@ mainRouter.use('/businessModel', Auth.user, businessModelRouter)
 mainRouter.use('/suggestion', Auth.user, suggestionRouter)
 
 mainRouter.use('/gameUtils', GameUtilsRouter);
+
+mainRouter.use('/genre', Auth.user, gameGenreRouter);
+mainRouter.use('/mode', Auth.user, gameModeRouter);
 
 export default mainRouter;
