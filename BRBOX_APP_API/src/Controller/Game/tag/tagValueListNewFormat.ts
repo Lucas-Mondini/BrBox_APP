@@ -48,6 +48,32 @@ import { weightCalculator } from "../../../Utils/calculator";
      ...new Map(finalValues.map((item) => [item["id"], item])).values(),
    ];
  }
+ function groupTagsOnReturnObjectFormat(list: any[]): any[]
+ {
+   const finalValues: any[] = [];
+
+   for (let item1 of list) {
+     finalValues.push({
+       id: item1.id,
+       icon: item1.icon,
+       count: 0,
+       upVotes: 0,
+       neutralVotes: 0,
+       downVotes: 0,
+       evalId: null,
+       name: item1.name,
+       value: 0,
+       description_positive: item1.description_positive,
+       description_neutral: item1.description_neutral,
+       description_negative: item1.description_negative,
+       userVote: false
+     });
+   }
+
+   return [
+     ...new Map(finalValues.map((item) => [item["id"], item])).values(),
+   ];
+ }
 export default class TagValueListControllerNewFormat extends Controller {
     constructor() {
         super(TagValueList, ["tagValues", "tagValues.tag", "tagValues.user", "tagValues.value"])
@@ -58,6 +84,7 @@ export default class TagValueListControllerNewFormat extends Controller {
         try {
             const id = req.params.id
             const tagValue = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+            let tags = await AppDataSource.getRepository(Tag).find();
 
             const tagValues = tagValue.tagValues.map((i: any) => 
             {
@@ -70,7 +97,16 @@ export default class TagValueListControllerNewFormat extends Controller {
                     i.userVote = false;
                 return i;
             })
-            const retObj = groupEvaluatedTags(tagValues);
+            let retObj = groupEvaluatedTags(tagValues);
+            tags = groupTagsOnReturnObjectFormat(tags.filter(i => {
+                for (const j of retObj) {
+                    if(j.id == i.id)
+                        return false;
+                }
+                return true;
+            } ))
+            retObj.push(...tags);
+
             
             return {status: 200, value: {tagValue: retObj}};
         }
