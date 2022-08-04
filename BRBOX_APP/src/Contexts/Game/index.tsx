@@ -20,7 +20,7 @@ type GameData = {
   images: ImageType[];
   loading: boolean;
   linkList: LinkType[];
-  gameTime: Number | null;
+  gameTime: Number | string | null;
   platform: Platform | null;
   imageName: string;
   imageLink: string;
@@ -73,7 +73,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [images, setImages] = useState([] as ImageType[]);
-  const [gameTime, setGameTime] = useState<Number | null>(null);
+  const [gameTime, setGameTime] = useState<Number | string | null>(null);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [imageName, setImageName] = useState("");

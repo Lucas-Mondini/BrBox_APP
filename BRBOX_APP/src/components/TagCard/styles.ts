@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     top: 5,
   },
   deleteButton: {
-    backgroundColor: config.redBar
+    backgroundColor: config.red
   }
 });
 

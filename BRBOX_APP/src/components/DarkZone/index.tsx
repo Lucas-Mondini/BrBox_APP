@@ -45,7 +45,7 @@ export default function DarkZone({title, message, itemName, buttonText, callback
         onPress={callback}
         extraStyle={{width: '70%', marginTop: 15}}
         extraTextStyle={{color: "#fff"}}
-        buttonColor={config.redBar}
+        buttonColor={config.red}
       />
     </View>
   );

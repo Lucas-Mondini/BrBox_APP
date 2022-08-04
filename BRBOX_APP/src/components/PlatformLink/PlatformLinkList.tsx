@@ -31,13 +31,13 @@ export default function PlatformLinkList({linkList, allowRemove, setLinkList}: P
     ));
   }
 
-    return (
-      <View style={styles.linkContainer}>
-        <Text style={styles.platformsTitle}>{getTerm(allowRemove ? 100105 : 100104)}:</Text>
+  return (
+    <View style={styles.linkContainer}>
+      {allowRemove && <Text style={styles.platformsTitle}>{getTerm(100105)}:</Text>}
 
-        <Text>
-          {mapLinks()}
-        </Text>
-      </View>
-    );
+      <Text>
+        {mapLinks()}
+      </Text>
+    </View>
+  );
 }

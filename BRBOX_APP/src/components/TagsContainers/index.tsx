@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 import styles from "./styles";
 
 import config from "../../../brbox.config.json";
@@ -16,6 +16,7 @@ import TagCard from "../Tag";
 import TagInfoModal from "../TagInfoModal";
 import ToggleContent from "../ToggleContent";
 import useDelay from "../../hooks/Delay";
+import TagLarge from "../TagLarge";
 
 interface TagContainersProps {
   setEvaluationTags: (tags: Tag[]) => void
@@ -57,12 +58,12 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
 
   async function getEvaluatedTags(id: number) {
     try {
-      const response = await get(`/tagValue/${id}`, setEvaluatedTagsLoading);
+      const response = await get(`/tagValueFormat/${id}`, setEvaluatedTagsLoading);
 
-      if (firstLoad) {
+      /* if (firstLoad) {
         setSelectedTags(response.tagValueFromUser);
         setFirstLoad(false);
-      }
+      } */
 
       setEvaluatedTags(response.tagValue);
       if (setEvaluationTags) setEvaluationTags(response.tagValue);
@@ -112,23 +113,20 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
     }
 
     return evaluatedTags.map((tag: any) => (
-      <View key={tag.id}>
-        <TagCard
-          showName
-          showTotalVotes
-          extraStyles={{margin: 3}}
-          callback={() => {
-            setModal(
-              <TagInfoModal
-                setModal={() => setModal(null)}
-                tagInfo={tag}
-              />
-            );
-          }}
-          tag={tag}
-          specificStyle="greenBar"
-        />
-      </View>
+      <TagLarge
+        extraStyles={{margin: 3}}
+        callback={() => {
+          setModal(
+            <TagInfoModal
+              setModal={() => setModal(null)}
+              tagInfo={tag}
+            />
+          );
+        }}
+        tag={tag}
+        userVote={tag.userVote}
+        userVoteValue={tag.userVoteValue}
+      />
     ));
   }
 
@@ -183,11 +181,11 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
       <ToggleContent
         title={100088}
         content={
-          <View style={[styles.tagsListView, {marginBottom: 20, borderColor: color}]}>
+          <View style={[{marginBottom: 20, borderColor: color}]}>
             {loadingEvaluatedTags
             ? <Loading styles={{borderRadius: 8}} />
-            : <View style={[styles.tagsContainer, {justifyContent: "center"}]}>
-                <Text>{renderEvaluatedTags()}</Text>
+            : <View>
+                {renderEvaluatedTags()}
               </View>}
           </View>
         }

@@ -31,8 +31,8 @@ export default function GameTimeCard({onPress}: GameTimeCardProps) {
     >
       <View style={[styles.card,]}>
         <View style={[styles.gameTimeContainer]}>
-          <Icon name="clock-digital" color={color} size={35}/>
           <Text style={[styles.text, {color, textDecorationLine: !gameTime ? "underline" : "none"}]}>{getTerm(!gameTime ? 100138 : 100140).replace("%1", String(gameTime))}</Text>
+          <Icon name="progress-clock" color={color} size={35} />
         </View>
       </View>
     </TouchableOpacity>

@@ -21,7 +21,6 @@ import { useTheme } from '../../Contexts/Theme';
 import TagsContainers from '../../components/TagsContainers';
 import TopTags from '../../components/TopTags';
 import { useTerm } from '../../Contexts/TermProvider';
-import { getWords } from '../../utils/functions';
 import ToggleContent from '../../components/ToggleContent';
 import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
@@ -44,7 +43,6 @@ const GameInfo = () => {
   const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
 
   const params = route.params as Params;
-  const color = darkMode ? "#fff" : config.dark;
 
   async function shareApp()
   {
@@ -79,7 +77,7 @@ const GameInfo = () => {
     <MainView
       loading={loading}
       showTitle
-      headerTitle={getWords(name, 2) || ""}
+      headerTitle={name || ""}
       headerAddButtonIcon="share-2"
       headerAddButtonAction={shareApp}
     >
@@ -94,13 +92,6 @@ const GameInfo = () => {
           <RefreshControl refreshing={loading} onRefresh={() => loadGame(id)}/>
         }
       >
-        <Text
-          style={[styles.title, {color}]}
-        >
-          {name}
-        </Text>
-
-
         {renderImages()}
 
         {renderLinks()}
@@ -112,22 +103,6 @@ const GameInfo = () => {
           content={renderBusinessModel()}
           colapseOnStart
         />
-
-        {params.tags?.length != 0 &&
-          <View style={[styles.topTagsContainer, {backgroundColor: darkMode ? config.darkGray : config.light}]}>
-            <Text
-              style={[styles.topTagsTitle, {color: darkMode ? config.subTitleMainColor : config.dark}]}
-            >
-              {getTerm(100103)}
-            </Text>
-
-            <TopTags
-              tags={params.tags}
-              large
-              evaluations={evaluationTags}
-            />
-          </View>
-        }
 
         {tagsContainer && tagsContainer}
       </ScrollView>

@@ -8,14 +8,14 @@ const styles = StyleSheet.create({
   },
   gameTimeContainer: {
     flexDirection: "row",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center"
   },
   text: {
     fontFamily: config.fontFamilyBold,
     fontSize: 18,
     textAlign: "center",
-    marginLeft: 5,
+    marginRight: 5,
     marginVertical: 30
   },
   input: {

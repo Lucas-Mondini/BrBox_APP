@@ -24,12 +24,12 @@ export default function TagCard({id, icon, title, description, setLoading, onDel
 {
   const { darkMode } = useTheme();
   const navigation = useNavigation<any>();
-  const {destroy} = useRequest();
-  const {getTerm} = useTerm();
+  const { destroy } = useRequest();
+  const { getTerm } = useTerm();
 
   const color = darkMode ? "#fff" : config.dark;
 
-  const {width} = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
 
   function navigateToTagInfo() {
     return navigation.navigate("TagRegister", {id});

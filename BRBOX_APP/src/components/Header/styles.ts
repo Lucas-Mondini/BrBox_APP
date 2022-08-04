@@ -4,9 +4,17 @@ import config from "../../../brbox.config.json";
 
 const styles = StyleSheet.create({
   title: {
+    height: 70,
+    paddingTop: 8,
+    width: "70%",
     textAlign: "center",
     fontFamily: config.fontFamilyBold,
     paddingBottom: 5
+  },
+  headerTextView: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center"
   },
   headerContainer: {
     height: 70,

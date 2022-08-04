@@ -26,6 +26,9 @@ const styles = StyleSheet.create({
     marginRight: 2,
     padding: 5
   },
+  evaluatedTagsContainer: {
+    maxHeight: 10
+  },
   toggle: {
     flexDirection: "row",
     alignItems: "center",

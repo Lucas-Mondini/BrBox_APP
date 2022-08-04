@@ -12,8 +12,6 @@
   "mediumGreen":"#85F482",
   "darkGreen": "#1E5128",
   "greenBar":"#4E9F3D",
-  "salmonBar":"#F3BFBF",
-  "redBar":"#FF3636",
   "red":"#FF3636",
   "lightRed":"#FE8787",
   "yellow":"#FECE87",
@@ -21,8 +19,8 @@
   "placeholdersColor":"#7f7f7f",
   "subTitleMainColor":"#BFBFBF",
 
-  //"apiUrl":"http://10.0.2.2:8080/", // Servidor
-  "apiUrl":"https://brbox-app.herokuapp.com/", // Teste no servidor
+  "apiUrl":"http://10.0.2.2:8080/", // Servidor
+  //"apiUrl":"https://brbox-app.herokuapp.com/", // Teste no servidor
 
   "isDarkModeDefault" : "true",
 

@@ -138,6 +138,7 @@ const Home = () => {
 
   useEffect(() => {
     if (isFocused) {
+      setLoadingNoMore(false);
       getGames();
     }
   }, [isFocused, gameSearch]);

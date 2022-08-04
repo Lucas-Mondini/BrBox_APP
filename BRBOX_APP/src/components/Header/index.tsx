@@ -18,10 +18,10 @@ interface HeaderProps {
 
 export default function Header({title, buttonIcon, customHeader, hideMenuButton, addAction}: HeaderProps)
 {
+  const { getTerm } = useTerm();
   const { darkMode } = useTheme();
-  const {getTerm} = useTerm();
 
-  const [dropDownMenu, setDropDownMenu] = useState<any>();
+  const [ dropDownMenu, setDropDownMenu ] = useState<any>();
 
   const color = !darkMode ? config.darkGreen : config.mediumGreen;
 
@@ -41,9 +41,11 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
 
       {dropDownMenu && dropDownMenu}
 
-      {customHeader
-      || <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 25 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
-      }
+        {customHeader ||
+          <View style={styles.headerTextView}>
+            <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 20 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
+          </View>
+        }
 
       {addAction &&
         <TouchableOpacity style={[styles.addButton]} onPress={addAction}>
