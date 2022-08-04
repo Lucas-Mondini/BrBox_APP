@@ -55,7 +55,7 @@ export default function TagLarge({tag, userVoteValue, callback, extraStyles}: Ta
           style={[styles.tag, {overflow:"hidden"}, extraStyles]}
         >
           <View style={[{height: 20, flexDirection: "row", width: "100%"}]}>
-            <View style={{backgroundColor: tag.count ? config.darkGreen : bg[0], flex: tag.upVotes ? tag.upVotes : 1}}/>
+            <View style={{backgroundColor: tag.count ? config.darkGreen : bg[0], flex: tag.count ? tag.upVotes : 1}}/>
             <View style={{backgroundColor: config.yellow, flex: tag.neutralVotes}}/>
             <View style={{backgroundColor: config.lightRed, flex: tag.downVotes}}/>
           </View>
