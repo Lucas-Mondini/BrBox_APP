@@ -6,10 +6,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: "3%",
     height: "100%",
   },
+  evaluationContainer: {
+    flexDirection: "row",
+    paddingHorizontal: "15%",
+    justifyContent: "space-evenly",
+  },
   descriptionContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
+    marginBottom: 15
+  },
+  titleContainer: {
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 15
   },
   descriptionText: {
@@ -33,6 +43,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginVertical: 35,
   },
+  evaluationTitles: {
+    textAlign: "left",
+    paddingLeft: 15
+  },
   subTitle: {
     fontFamily: config.fontFamilyBold,
     marginRight: 15,
@@ -40,6 +54,17 @@ const styles = StyleSheet.create({
     marginTop: 35,
     marginBottom: 15,
   },
+  leaveButtonView: {
+    marginTop: 15,
+    marginBottom: 50,
+  },
+  icon: {
+    width: 55,
+    height: 55,
+    borderRadius: 55,
+    justifyContent: "center",
+    alignItems: "center",
+  }
 });
 
 export default styles;

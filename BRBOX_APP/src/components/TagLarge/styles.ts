@@ -28,12 +28,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 50,
-    width: "80%"
+    width: "70%",
+    overflow:"hidden"
   },
   tagName: {
     fontFamily: config.fontFamilyBold,
     fontSize: 18,
     marginBottom: 10,
+  },
+  evaluations: {
+    fontFamily: config.fontFamilyBold
   },
   tagSmall: {
     marginRight: 5,
@@ -46,6 +50,11 @@ const styles = StyleSheet.create({
     width: "28%"
   },
   barContainer: {
+    height: 20,
+    width: "100%",
+    flexDirection: "row"
+  },
+  bar: {
     height: 20,
     width: "100%",
     flexDirection: "row"

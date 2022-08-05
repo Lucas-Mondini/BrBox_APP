@@ -25,6 +25,7 @@ import ToggleContent from '../../components/ToggleContent';
 import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
 import deedLinking from '../../utils/deepLinking';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const GameInfo = () => {
   const route = useRoute();
@@ -35,7 +36,7 @@ const GameInfo = () => {
   const { darkMode } = useTheme();
   const {
     name, loading, id,
-    loadGame, renderLinks, renderImages, renderBusinessModel
+    loadGame, renderLinks, renderImages, businessModelList,
   } = useGame();
 
   const [modal, setModal] = useState(false);
@@ -43,6 +44,8 @@ const GameInfo = () => {
   const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
 
   const params = route.params as Params;
+
+  const color = darkMode ? "#fff" : config.mainIconColor;
 
   async function shareApp()
   {
@@ -57,6 +60,19 @@ const GameInfo = () => {
     }
   }
 
+  function renderNamesFromArray(list: any[] | null, nameProperty: string)
+  {
+    if (!list) return null;
+
+    const textColor = darkMode ? config.mediumGreen : config.darkGreen;
+
+    const listComp = list.map((item, index) => (
+      <Text key={index} style={[styles.infoText, {color: textColor}]}>{item[nameProperty]} </Text>
+    ));
+
+    return <Text>{listComp}</Text>
+  }
+
   useEffect(() => {
     if (isFocused && params.id) {
       loadGame(params.id);
@@ -65,7 +81,11 @@ const GameInfo = () => {
 
   useEffect(() => {
     if (isFocused && !loading) {
-      setTagsContainer(<TagsContainers setEvaluationTags={setEvaluationTags}/>)
+      setTagsContainer(
+        <TagsContainers
+          setEvaluationTags={setEvaluationTags}
+        />
+      );
     }
   }, [isFocused, loading]);
 
@@ -77,6 +97,7 @@ const GameInfo = () => {
     <MainView
       loading={loading}
       showTitle
+      showBottom
       headerTitle={name || ""}
       headerAddButtonIcon="share-2"
       headerAddButtonAction={shareApp}
@@ -96,13 +117,25 @@ const GameInfo = () => {
 
         {renderLinks()}
 
+        <View style={[styles.infoContainer]}>
+          <Icon
+            name="information-outline"
+            size={35}
+            color={color}
+          />
+
+          <View style={[styles.information]}>
+            {renderNamesFromArray(businessModelList, "name")}
+          </View>
+        </View>
+
         <GameTimeCard onPress={() => setModal(!modal)}/>
 
-        <ToggleContent
+        {/* <ToggleContent
           title={100121}
           content={renderBusinessModel()}
           colapseOnStart
-        />
+        /> */}
 
         {tagsContainer && tagsContainer}
       </ScrollView>

@@ -63,11 +63,13 @@ export type TagValue = {
   name: string;
   icon: number;
   count: number;
+  total: number;
   value: number | string;
   downVotes: number;
   neutralVotes: number;
   upVotes: number;
-  total: number;
+  userVoteId: number;
+  userVoteValue: number;
   description_positive?: string;
   description_neutral?: string;
   description_negative?: string;

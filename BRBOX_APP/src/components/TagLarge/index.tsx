@@ -13,13 +13,14 @@ interface TagLargeProps {
   userVote?: boolean;
   userVoteId?: number;
   userVoteValue?: 1 | 2 | 3;
-  extraStyles?: object;
   callback?: () => void;
 }
 
-export default function TagLarge({tag, userVoteValue, callback, extraStyles}: TagLargeProps)
+export default function TagLarge({tag, userVoteValue, callback}: TagLargeProps)
 {
   const { darkMode } = useTheme();
+
+  const color = darkMode ? config.subTitleMainColor : config.dark;
 
   const bg = {
     0: "#696969",
@@ -35,7 +36,11 @@ export default function TagLarge({tag, userVoteValue, callback, extraStyles}: Ta
   if (!tag) return null;
 
   return (
-    <View style={[styles.tagContainer, {backgroundColor: darkMode ? config.darkGray : config.light}]}>
+    <TouchableOpacity
+      onPress={callback}
+      disabled={!callback}
+      style={[styles.tagContainer, {backgroundColor: darkMode ? config.darkGray : config.light}]}
+    >
       <View style={styles.imgContainer}>
         <View
           style={[styles.img, {backgroundColor: bg[userVoteValue || 0]}]}
@@ -47,22 +52,22 @@ export default function TagLarge({tag, userVoteValue, callback, extraStyles}: Ta
           />
         </View>
 
-        <Text style={styles.tagName}>{tag.name}</Text>
+        <Text style={[styles.tagName, {color}]}>{tag.name}</Text>
       </View>
 
       <View style={styles.container}>
-        <TouchableOpacity onPress={callback} disabled={!callback}
-          style={[styles.tag, {overflow:"hidden"}, extraStyles]}
+        <View
+          style={[styles.tag]}
         >
-          <View style={[{height: 20, flexDirection: "row", width: "100%"}]}>
+          <View style={styles.bar}>
             <View style={{backgroundColor: tag.count ? config.darkGreen : bg[0], flex: tag.count ? tag.upVotes : 1}}/>
             <View style={{backgroundColor: config.yellow, flex: tag.neutralVotes}}/>
             <View style={{backgroundColor: config.lightRed, flex: tag.downVotes}}/>
           </View>
-        </TouchableOpacity>
+        </View>
 
-        <Text>{formatVotes(tag.upVotes)}/{formatVotes(tag.neutralVotes)}/{formatVotes(tag.downVotes)}</Text>
+        <Text style={[styles.evaluations, {color}]}>{formatVotes(tag.upVotes)}/{formatVotes(tag.neutralVotes)}/{formatVotes(tag.downVotes)}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }

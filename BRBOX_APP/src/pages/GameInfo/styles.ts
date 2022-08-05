@@ -6,7 +6,18 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     paddingHorizontal: "3%",
-    paddingTop: "10%"
+    paddingTop: "10%",
+    marginBottom: 50
+  },
+  infoContainer: {
+    flexDirection: "row"
+  },
+  information: {
+    marginLeft: 8
+  },
+  infoText: {
+    fontSize: 15,
+    fontFamily: config.fontFamilyBold,
   },
   title: {
     fontSize: 20,

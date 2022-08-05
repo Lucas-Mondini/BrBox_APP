@@ -19,7 +19,7 @@ import useDelay from "../../hooks/Delay";
 import TagLarge from "../TagLarge";
 
 interface TagContainersProps {
-  setEvaluationTags: (tags: Tag[]) => void
+  setEvaluationTags: (tags: Tag[]) => void;
 }
 
 export default function TagsContainers({setEvaluationTags}: TagContainersProps)
@@ -36,7 +36,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   const [modal, setModal] = useState<React.ReactElement | null>(null);
   const [search, setSearch] = useState("");
   const [tagName, setTagName] = useState("");
-  const [firstLoad, setFirstLoad] = useState(true);
+  //const [firstLoad, setFirstLoad] = useState(true);
   const [loadingTags, setLoadingTags] = useState(true);
   const [selectedTags, setSelectedTags] = useState([] as Tag[]);
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
@@ -114,10 +114,11 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
 
     return evaluatedTags.map((tag: any) => (
       <TagLarge
-        extraStyles={{margin: 3}}
+        key={tag.id}
         callback={() => {
           setModal(
             <TagInfoModal
+              reloadGameInfo={() => getEvaluatedTags(tagValueList)}
               setModal={() => setModal(null)}
               tagInfo={tag}
             />
@@ -176,7 +177,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   }, [tagValueList]);
 
   return (
-    <View>
+    <View style={{marginBottom: 100}}>
       {modal && modal}
       <ToggleContent
         title={100088}
@@ -191,7 +192,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
         }
       />
 
-      <View style={styles.selectedTagsContainer}>
+      {/* <View style={styles.selectedTagsContainer}>
         <ToggleContent
           title={100080}
           content={renderSelectedTags()}
@@ -204,15 +205,15 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
         placeholderText={100000}
         value={search}
         onChangeText={setSearch}
-      />
+      /> */}
 
-      <View style={[styles.tagsListView, {marginBottom: 100, borderColor: color}]}>
+      {/* <View style={[styles.tagsListView, {marginBottom: 100, borderColor: color}]}>
         {loadingTags
         ? <Loading styles={{borderRadius: 8}} />
         : <View style={styles.tagsContainer}>
             <Text>{renderTags()}</Text>
           </View>}
-      </View>
+      </View> */}
     </View>
   );
 }

@@ -61,7 +61,11 @@ const Suggestion = () => {
   }, []);
 
   return (
-    <MainView>
+    <MainView
+      showTitle
+      showBottom
+      headerTitle={100006}
+    >
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}

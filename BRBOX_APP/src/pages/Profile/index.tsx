@@ -164,7 +164,12 @@ const Profile = () => {
   }, []);
 
   return (
-    <MainView loading={loading}>
+    <MainView
+      showTitle
+      showBottom
+      loading={loading}
+      headerTitle={100046}
+    >
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
