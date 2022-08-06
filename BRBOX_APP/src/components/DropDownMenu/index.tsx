@@ -8,6 +8,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../Contexts/Auth";
 import { useTheme } from "../../Contexts/Theme";
+import { Params } from "../../utils/types";
 
 interface DropDownMenuProps {
   setModal: (value: any) => void;
@@ -22,7 +23,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
 
   const color = !darkMode ? config.darkGreen : config.mediumGreen;
   const textColor = darkMode ? "#fff" : config.dark;
-  const backgroundColor = !darkMode ? config.light : config.darkGray;
+  const backgroundColor = !darkMode ? "#fff" : config.darkGray;
   const backgroundColorOption = !darkMode ? config.light : config.mediumGray;
 
   function callNavigationFunction(route: string, specificFunction?: Function)
@@ -45,6 +46,11 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
     }
   }
 
+  function goTo(route: string, params?: Params)
+  {
+    return navigation.reset({index: 0, routes: [{name: "Home"}, {name: route, params}]});
+  }
+
   return (
     <Modal transparent onRequestClose={() => setModal(null)}>
       <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setModal(null)}}>
@@ -57,12 +63,6 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home"}]}));
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100007).toUpperCase()}</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-            callNavigationFunction("BusinessModelList");
-          }}>
-            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100118).toUpperCase()}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
@@ -82,6 +82,30 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
           </TouchableOpacity>
 
           {user?.admin && <>
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+              callNavigationFunction("GameListAdmin");
+            }}>
+              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100153).toUpperCase()}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+              goTo("GenresModes", {genres: true});
+            }}>
+              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100155).toUpperCase()}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+              callNavigationFunction("GenresModes");
+            }}>
+              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100156).toUpperCase()}</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+              callNavigationFunction("BusinessModelList");
+            }}>
+              <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100118).toUpperCase()}</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
               callNavigationFunction("TagList");
             }}>

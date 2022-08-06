@@ -92,8 +92,17 @@ const AddGame = () => {
     deedLinking(navigation);
   }, []);
 
+  useEffect(() => {
+    if (businessModel) addBusinessModel();
+  }, [businessModel]);
+
   return (
-    <MainView loading={loading}>
+    <MainView
+      showTitle
+      showBottom
+      headerTitle={" "}
+      loading={loading}
+    >
       <ScrollView style={[styles.container]}>
         {modal && modal}
 
@@ -109,60 +118,73 @@ const AddGame = () => {
           onChangeText={setName}
         />
 
-        {renderLinks(true)}
+        <ToggleContent
+          title={100105}
+          content={
+            <>
+              {renderLinks(true)}
 
-        <Input
-          placeholderText={100049}
-          value={link}
-          onChangeText={setLink}
-          onSubmitEditing={addLink}
+              <Input
+                placeholderText={100049}
+                value={link}
+                onChangeText={setLink}
+                onSubmitEditing={addLink}
+              />
+
+              <TouchableOpacity onPress={() => showModal(true)}>
+                <View pointerEvents="none">
+                  <Input
+                    placeholderText={100050}
+                    value={platform?.name}
+                    onSubmitEditing={addLink}
+                  />
+                </View>
+              </TouchableOpacity>
+
+              <Button
+                text={100048}
+                extraStyle={{marginBottom: 15}}
+                extraTextStyle={{color: "#fff"}}
+                buttonColor="#17A2B8"
+                onPress={addLink}
+              />
+            </>
+          }
         />
 
-        <TouchableOpacity onPress={() => showModal(true)}>
-          <View pointerEvents="none">
-            <Input
-              placeholderText={100050}
-              value={platform?.name}
-              onSubmitEditing={addLink}
-            />
-          </View>
-        </TouchableOpacity>
+        <ToggleContent
+          title={100152}
+          content={
+            <>
+              {renderImages(true)}
 
-        <Button
-          text={100048}
-          extraStyle={{marginBottom: 15}}
-          extraTextStyle={{color: "#fff"}}
-          buttonColor="#17A2B8"
-          onPress={addLink}
-        />
+              <Input
+                placeholderText={100051}
+                value={imageName}
+                onChangeText={setImageName}
+                onSubmitEditing={addImage}
+              />
 
-        {renderImages(true)}
+              <Input
+                placeholderText={100052}
+                value={imageLink}
+                onChangeText={setImageLink}
+                onSubmitEditing={addImage}
+              />
 
-        <Input
-          placeholderText={100051}
-          value={imageName}
-          onChangeText={setImageName}
-          onSubmitEditing={addImage}
-        />
-
-        <Input
-          placeholderText={100052}
-          value={imageLink}
-          onChangeText={setImageLink}
-          onSubmitEditing={addImage}
-        />
-
-        <Button
-          text={100053}
-          onPress={addImage}
-          extraStyle={{marginBottom: 15}}
-          extraTextStyle={{color: "#fff"}}
-          buttonColor="#17A2B8"
+              <Button
+                text={100053}
+                onPress={addImage}
+                extraStyle={{marginBottom: 15}}
+                extraTextStyle={{color: "#fff"}}
+                buttonColor="#17A2B8"
+              />
+            </>
+          }
         />
 
         <ToggleContent
           title={100119}
-          colapseOnStart
           content={
             <View>
               {renderBusinessModel(true, true)}
@@ -171,18 +193,9 @@ const AddGame = () => {
                 <View pointerEvents="none">
                   <Input
                     placeholderText={100118}
-                    value={businessModel?.name}
                   />
                 </View>
               </TouchableOpacity>
-
-              <Button
-                text={100119}
-                onPress={addBusinessModel}
-                extraStyle={{marginBottom: 15, paddingHorizontal: 10}}
-                extraTextStyle={{color: "#fff"}}
-                buttonColor="#17A2B8"
-              />
             </View>
           }
         />

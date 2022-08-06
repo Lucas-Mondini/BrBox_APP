@@ -110,7 +110,12 @@ const TagRegister = () => {
   }, []);
 
   return (
-    <MainView loading={loading}>
+    <MainView
+      showTitle
+      showBottom
+      headerTitle={" "}
+      loading={loading}
+    >
       <IconsModal
         setModal={() => setModal(!modal)}
         visible={modal}

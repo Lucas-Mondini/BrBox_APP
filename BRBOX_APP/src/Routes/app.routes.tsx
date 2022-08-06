@@ -14,6 +14,9 @@ import BusinessModelList from '../pages/BusinessModelList';
 import AddBusinessModel from '../pages/AddBusinessModel';
 import { useAuth } from '../Contexts/Auth';
 import Suggestion from '../pages/Suggestion';
+import GameListAdmin from '../pages/GameListAdmin';
+import GenresModesList from '../pages/GenresModesList';
+import AddGenreMode from '../pages/AddGenreMode';
 
 const App = createStackNavigator();
 
@@ -50,6 +53,18 @@ const AppRoutes: React.FC = () => {
         />
 
         {user?.admin && <>
+          <App.Screen
+            name="GameListAdmin"
+            component={GameListAdmin}
+          />
+          <App.Screen
+            name="GenresModes"
+            component={GenresModesList}
+          />
+          <App.Screen
+            name="AddGenreMode"
+            component={AddGenreMode}
+          />
           <App.Screen
             name="TagList"
             component={TagList}

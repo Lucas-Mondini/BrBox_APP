@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   linkContainer: {
     alignItems: "center",
     justifyContent: "center",
-    marginTop: 35,
+    marginTop: 10,
     marginBottom: 10
   },
   platformsTitle: {

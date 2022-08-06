@@ -16,22 +16,25 @@ import { useTerm } from '../../Contexts/TermProvider';
 
 import config from "../../../brbox.config.json";
 import styles from './styles';
-import { Params, Platform } from '../../utils/types';
+import { GenreMode, Params } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
 import deedLinking from '../../utils/deepLinking';
 
-const AddPlatform = () => {
+const AddGenreMode = () => {
   const navigation = useNavigation<any>();
-  const route = useRoute();
-  const params = route.params as Params;
+  const routes = useRoute();
+  const params = routes.params as Params;
+
+  const isGenre = params && params.genres;
+  const route = isGenre ? "genre" : "mode";
 
   const isFocused = useIsFocused();
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
 
-  const [loading, setLoading] = useState(Boolean(params));
+  const [loading, setLoading] = useState(Boolean(params && params.id));
   const [loadingRequest, setLoadingRequest] = useState(false);
-  const [platform, setPlatform] = useState({} as Platform);
+  const [data, setData] = useState({} as GenreMode);
 
   const { darkMode } = useTheme();
 
@@ -39,48 +42,48 @@ const AddPlatform = () => {
     color: darkMode ? "#fff" : config.dark,
   };
 
-  async function loadTag()
+  async function loadData()
   {
     try {
       if (!params) {
         return;
       }
-      const response = await get(`/platform/${params.id}`, setLoading);
+      const response = await get(`/${route}/${params.id}`, setLoading);
 
-      setPlatform(response);
+      setData(response);
     } catch (error: any) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
-  async function saveTag()
+  async function saveData()
   {
     try {
       let response;
 
-      if (!platform.name || !platform.name.trim()) {
+      if (!data.name || !data.name.trim()) {
         return Alert.alert(getTerm(100095), getTerm(100097));
       }
 
-      if (!params && !platform.id) {
-        response = await post(`/platform/create`, setLoadingRequest, {
-          name: platform.name
+      if (!data.id) {
+        response = await post(`/${route}/create`, setLoadingRequest, {
+          name: data.name, games: [1]
         });
       } else {
-        response = await put(`/platform/update`, setLoadingRequest, {
-          id: platform.id,
-          new_name: platform.name
+        response = await put(`/${route}/update`, setLoadingRequest, {
+          id: data.id,
+          new_name: data.name, games: [1]
         });
       }
 
-      setPlatform(response);
+      setData(response);
     } catch (error) {
       return navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
   }
 
   useEffect(() => {
-    if (isFocused) loadTag();
+    if (isFocused && params && params.id) loadData();
   }, [isFocused]);
 
   useEffect(() => {
@@ -98,19 +101,19 @@ const AddPlatform = () => {
         <Text
           style={[styles.title, textColorStyle]}
         >
-          {getTerm(!params ? 100055 : 100059)}
+          {getTerm(!data.id ? isGenre ? 100162 : 100161 : isGenre ? 100164 : 100163)}
         </Text>
 
         <Input
           placeholderText={100013}
-          value={platform?.name}
-          onChangeText={name => setPlatform({...platform, name})}
+          value={data?.name}
+          onChangeText={name => setData({...data, name})}
         />
 
         <View style={styles.buttonView}>
           <Button
-            text={!params && !platform.id ? 100026 : 100015}
-            onPress={saveTag}
+            text={!data.id ? 100026 : 100015}
+            onPress={saveData}
             loading={loadingRequest}
           />
         </View>
@@ -119,4 +122,4 @@ const AddPlatform = () => {
   );
 };
 
- export default AddPlatform;
+ export default AddGenreMode;

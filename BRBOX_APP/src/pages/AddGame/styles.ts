@@ -6,7 +6,8 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     paddingHorizontal: "3%",
-    paddingTop: "10%"
+    paddingTop: "10%",
+    marginBottom: 60
   },
   title: {
     fontSize: 20,

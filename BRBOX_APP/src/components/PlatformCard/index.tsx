@@ -45,7 +45,7 @@ export default function PlatformCard({id, name, setLoading, onDelete, onPress}: 
         }
       }},
       {text: getTerm(100041)}
-    ])
+    ]);
   }
 
   return (

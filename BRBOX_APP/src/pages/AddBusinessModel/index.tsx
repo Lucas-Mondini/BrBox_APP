@@ -89,7 +89,12 @@ const AddBusinessModel = () => {
   }, []);
 
   return (
-    <MainView loading={loading}>
+    <MainView
+      showTitle
+      showBottom
+      headerTitle={" "}
+      loading={loading}
+    >
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}

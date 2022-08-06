@@ -5,7 +5,6 @@ import { LinkType } from "../../utils/types";
 
 import styles from "./styles";
 import PlatformLink from ".";
-import { useTerm } from "../../Contexts/TermProvider";
 
 interface PlatformLinkListProps {
   linkList: LinkType[];
@@ -16,8 +15,6 @@ interface PlatformLinkListProps {
 
 export default function PlatformLinkList({linkList, allowRemove, setLinkList}: PlatformLinkListProps)
 {
-  const {getTerm} = useTerm();
-
   function mapLinks()
   {
     return linkList.map(link => (
@@ -33,8 +30,6 @@ export default function PlatformLinkList({linkList, allowRemove, setLinkList}: P
 
   return (
     <View style={styles.linkContainer}>
-      {allowRemove && <Text style={styles.platformsTitle}>{getTerm(100105)}:</Text>}
-
       <Text>
         {mapLinks()}
       </Text>

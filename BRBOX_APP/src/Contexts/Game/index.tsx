@@ -48,7 +48,7 @@ type GameData = {
   loadGame: (id: number) => Promise<void>;
   createGame: () => Promise<void>;
   updateGame: () => Promise<void>;
-  deleteGame: (callback?: () => void) => Promise<void>;
+  deleteGame: (callback?: () => void, gameId?: number) => Promise<void>;
   addBusinessModel: () => void;
 
   renderLinks: (allowRemove?: boolean) => React.ReactElement;
@@ -216,14 +216,19 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setLoading(false);
   }
 
-  async function deleteGame(callback?: () => void)
+  async function deleteGame(callback?: () => void, gameId?: number)
   {
-    try {
-      const defaultFunction = () => {};
-      await destroy(`game/destroy/${id}`, callback || defaultFunction, setLoading);
-    } catch (err) {
-      Alert.alert(getTerm(100073), getTerm(100074));
-    }
+    Alert.alert(getTerm(100061), getTerm(100154), [
+      {text: getTerm(100040), onPress: async () => {
+        try {
+          const defaultFunction = () => {};
+          await destroy(`game/destroy/${gameId || id}`, callback || defaultFunction, setLoading);
+        } catch (error) {
+          Alert.alert(getTerm(100073), getTerm(100074));
+        }
+      }},
+      {text: getTerm(100041)}
+    ]);
   }
 
   async function updateGame()

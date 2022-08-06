@@ -6,11 +6,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingHorizontal: "3%",
-    marginBottom: 60
-  },
-  icon: {
-    textAlign: "center",
-    marginBottom: 35
   },
   title: {
     fontSize: 20,
@@ -18,9 +13,6 @@ const styles = StyleSheet.create({
     marginBottom:30,
     textAlign: "center",
     paddingTop: "10%"
-  },
-  description: {
-    textAlignVertical: "top"
   },
   buttonView: {
     marginTop: 25,

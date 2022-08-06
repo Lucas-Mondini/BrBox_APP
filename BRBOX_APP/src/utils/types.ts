@@ -19,6 +19,7 @@ export type Params = {
   tags?: TagValue[];
   email?: string;
   search?: boolean;
+  genres?: boolean;
   filterUser?: boolean;
 }
 
@@ -78,6 +79,11 @@ export type TagValue = {
 export type Platform = {
   id: number;
   platform: number;
+  name: string;
+}
+
+export type GenreMode = {
+  id: number;
   name: string;
 }
 
