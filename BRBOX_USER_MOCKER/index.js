@@ -79,11 +79,6 @@ for (let count = 0; count < 20; count++) {
                     headers: { auth_token: tk }
                 };
 
-                console.log({
-                    tagValueListId: tagValueListId,
-                    tag: tagId,
-                    value: (Math.floor(Math.random() * 3) + 1)
-                })
                 const i = await axios.post(
                     'http://localhost:8080/tagValue/add',
                     {
