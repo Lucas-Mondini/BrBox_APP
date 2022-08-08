@@ -5,6 +5,7 @@ import { AppDataSource } from "../../data-source";
 
 import Game from "../../Model/Game";
 import GameTime from "../../Model/Game/gameTime";
+import Score from "../../Model/Game/Score";
 import TagValue from "../../Model/Game/tag/tagValue";
 import Value from "../../Model/Game/tag/value";
 import BusinessModelListController from "./businessModel/businessModelList";
@@ -301,17 +302,26 @@ export default class GameController extends Controller {
                         if(!game)
                         return { status: 404, game: {message: "game not found" }};
                         
-                        const gameTime = await (await AppDataSource.getRepository(GameTime).findOne({where: {
+                        const gameTime = await AppDataSource.getRepository(GameTime).findOne({where: {
                             game: {
                                 id: game.id
                             },
                             user: {
                                 id: req.user.id
                             },
-                        }}))
+                        }})
+
+                        const score = await AppDataSource.getRepository(Score).findOne({
+                            where: {
+                                game: {
+                                    id: game.id
+                                }
+                            }
+                        })
 
                         const returnObj = {
                             ...this.linkFormatter(game),
+                            score: score?.value,
                             gameTime: gameTime? gameTime.time : null
                         }
                         
@@ -371,6 +381,19 @@ export default class GameController extends Controller {
                         reqImageList.params._id                 = game.imageList.id.toString();
                         reqTagValueList.params._id              = game.tagList.id.toString();
                         reqBusinessModelList.params._id         = game.businessModelList.id.toString();
+                        const gameTime = await AppDataSource.getRepository(GameTime).find({where: {
+                            game: {
+                                id: Number(id)
+                            }
+                        }})
+                        if(gameTime)
+                            AppDataSource.getRepository(GameTime).remove(gameTime);
+                        const gameScore = await AppDataSource.getRepository(Score).findOneOrFail({where: {
+                            game: {
+                                id: Number(id)
+                            }
+                        }})
+                        AppDataSource.getRepository(Score).delete(gameScore);
                         
                         
                         await new ExternalLinkListController().Delete(reqExternalLinkList);
