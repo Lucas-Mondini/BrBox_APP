@@ -51,10 +51,15 @@ trainset = data.build_full_trainset()
 svd.fit(trainset)
 
 ratings2[ratings2['userid'] == 1]
-a = []
-for i in range(10):
-    a.append(svd.predict(2, i+1, 1000))
 
-a;
-for i in a:
-    print(i)
+class CollaborativeFilter:
+    predicted = []
+    def __init__(self, userId, gameAmmount):
+        for i in range(gameAmmount):
+            predicted = svd.predict(userId, i + 1)
+            j_obj = {
+                "user": predicted[0],
+                "game": predicted[1],
+                "est": predicted[3]
+            }
+            self.predicted.append(j_obj)

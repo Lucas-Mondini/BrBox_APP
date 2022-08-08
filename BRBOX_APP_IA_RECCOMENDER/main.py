@@ -1,22 +1,28 @@
-import pandas as pd
-from surprise import Reader, Dataset, SVD
-from surprise.model_selection import KFold
+from http.server import BaseHTTPRequestHandler, HTTPServer
+from collaborativeFilteringRec import CollaborativeFilter
+import json
 
-reader = Reader()
-ratings = pd.read_csv('data/app.csv')
-print(ratings.head())
+hostName = "localhost"
+serverPort = 9000
 
-data = Dataset.load_from_df(ratings[['userId', 'tagId', 'score']], reader)
-kf = KFold(n_splits=5)
-kf.split(data)
+class MyServer(BaseHTTPRequestHandler):
+    def do_POST(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/json")
+        self.end_headers()
 
-svd = SVD()
+        content_len = int(self.headers.get('Content-Length'))
+        post_body = json.loads(self.rfile.read(content_len))
+        self.wfile.write(bytes(json.dumps(CollaborativeFilter(post_body['user'], post_body['games']).predicted), "utf-8"))
 
-trainset = data.build_full_trainset()
-svd.fit(trainset)
+if __name__ == "__main__":
+    webServer = HTTPServer((hostName, serverPort), MyServer)
+    print("Server started http://%s:%s" % (hostName, serverPort))
 
-ratings[ratings['userId'] == 1]
+    try:
+        webServer.serve_forever()
+    except KeyboardInterrupt:
+        pass
 
-print(svd.predict(1, 1, 1000))
-
-
+    webServer.server_close()
+    print("Server stopped.")
