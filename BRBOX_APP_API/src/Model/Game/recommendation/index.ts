@@ -3,7 +3,7 @@ import Game from "..";
 import User from "../../User";
 
 @Entity()
-export default class ContentRecommendation {
+export default class Recommendation {
     @PrimaryGeneratedColumn()
     id: number
 
