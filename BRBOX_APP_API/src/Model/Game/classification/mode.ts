@@ -10,7 +10,4 @@ export default class Mode {
     @Column({unique: true})
     name: string;
 
-    @ManyToMany(()=>Game, {nullable: false})
-    @JoinTable()
-    games: Game[];
 }

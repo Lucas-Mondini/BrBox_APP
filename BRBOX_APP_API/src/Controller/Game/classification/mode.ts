@@ -25,11 +25,10 @@ export default class ModeController extends Controller {
         //@ts-ignore
         Create = async (req: Request) => {
             try {
-                const {name, games} = req.body;
+                const {name} = req.body;
                 
                 const mode = await new Mode();
                 mode.name        = name;
-                mode.games       = await AppDataSource.getRepository(Game).findBy({id: In(games || [])});
                 await AppDataSource.getRepository(Mode).save(mode);
                 
                 return {status: 200, value: {
@@ -43,15 +42,13 @@ export default class ModeController extends Controller {
         //@ts-ignore
         Update = async (req: Request) => {
             try {
-                const {id, new_name, games} = req.body
+                const {id, new_name} = req.body
                 const mode = await AppDataSource.getRepository(Mode).findOneBy({id: Number(id)});
     
                 if(!mode)
                     return { status: 404, value: {message: "mode not found" }};
     
                 mode.name = new_name || mode.name;
-                if(games)
-                    mode.games       = await AppDataSource.getRepository(Game).findBy({id: In(games || [])});
                 
                 await AppDataSource.getRepository(Mode).save(mode);
                 

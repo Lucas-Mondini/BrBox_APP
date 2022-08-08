@@ -8,8 +8,4 @@ export default class Genre {
 
     @Column({unique: true})
     name: string;
-
-    @ManyToMany(()=>Game, {nullable: false})
-    @JoinTable()
-    games: Game[];
 }
