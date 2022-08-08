@@ -31,9 +31,7 @@ import BusinessModel from './Model/Game/businessModel';
 import BusinessModelList from './Model/Game/businessModel/businessModelList';
 import Code from './Model/User/code';
 import GameTime from './Model/Game/gameTime';
-import ContentRecommendation from './Model/Game/recommendation/content';
-import CustomRecommendation from './Model/Game/recommendation/custom';
-import SimilaritiesRecommendation from './Model/Game/recommendation/similarities';
+import Recommendation from './Model/Game/recommendation';
 import Score from './Model/Game/Score';
 import Mode from './Model/Game/classification/mode';
 import Genre from './Model/Game/classification/genre';
@@ -70,9 +68,7 @@ export const AppDataSource = new DataSource({
         BusinessModelList,
         Code,
         GameTime,
-        ContentRecommendation,
-        CustomRecommendation,
-        SimilaritiesRecommendation,
+        Recommendation,
         Score,
         Mode,
         Genre
