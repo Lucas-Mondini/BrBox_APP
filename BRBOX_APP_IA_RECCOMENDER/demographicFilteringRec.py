@@ -1,11 +1,38 @@
 import pandas as pd
+from database.connection import Database
+
 
 # Load Metadata
-metadata = pd.read_csv('data/app.csv', low_memory=False)
-
-# gameTime = [[0-2, 1], [2-5, 1], [5-8, 2], [8-12, 2], [12-20, 2], [20-50, 3], [50-100, 3], [100+, 3]]
-
-# mostRated
+#metadata = pd.read_csv('data/app.csv', low_memory=False)
+cursor, colnames = Database().execute_sql('''
+select 
+		u.id 					userId,
+		g.id 					game,
+		t.id 					tagId,
+		t."name"				tag,
+		v.id					score,
+		vote.countV 			vote_count,
+		t.description_positive 	overview
+from 
+		game g
+inner join
+		tag_value_list_tag_values_tag_value tvltvtv on tvltvtv."tagValueListId" = g."tagListId" 
+inner join 
+		tag_value tv on tv.id = tvltvtv."tagValueId"
+inner join 
+		tag t on t.id = tv."tagId"
+inner join 
+		value v on v.id = tv."valueId"
+inner join 
+		"user" u on u.id = tv."userId"
+inner join (
+		select count(tv2."tagId") as countv, game.id gameId from game
+		inner join tag_value_list_tag_values_tag_value tvltvtv2 on tvltvtv2."tagValueListId" = game."tagListId"
+		inner join tag_value tv2 on tv2.id = tvltvtv2."tagValueId"
+		group by game.id
+		) vote on vote.gameId = g.id ''')
+metadata = pd.DataFrame(cursor);
+metadata.columns = colnames
 
 # Calculate mean
 C = metadata['score'].mean()
@@ -36,6 +63,5 @@ q_tag['score'] = q_tag.apply(weighted_rating, axis=1)
 q_tag = q_tag.sort_values('score', ascending=False)
 
 # Print the top 5 tag
-print(q_tag[['game', 'tag', 'score', 'vote_count']].head(5))
-
+print(q_tag.groupby("userid")['game'].head(6))
 

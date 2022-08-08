@@ -35,22 +35,26 @@ inner join (
 		) vote on vote.gameId = g.id ''')
 ratings2 = pd.DataFrame(cursor);
 ratings2.columns = colnames
-print(ratings)
-print(ratings2)
-print(ratings.head())
-print(ratings2.head())
 
-data = Dataset.load_from_df(ratings[['userId', 'tagId', 'score']], reader)
+#busca no dataset as colunas ['userid', 'tagid', 'score']
+data = Dataset.load_from_df(ratings2[['userid', 'gameid', 'score']], reader)
+#separa a base em 5
 kf = KFold(n_splits=5)
 kf.split(data)
+#separa a base em 5
 
 svd = SVD()
 
+#constroi o conjunto de treinamento
 trainset = data.build_full_trainset()
+#treina o algoritmo baseado no conjunto de treinamento
 svd.fit(trainset)
 
-ratings[ratings2['userId'] == 1]
+ratings2[ratings2['userid'] == 1]
+a = []
+for i in range(10):
+    a.append(svd.predict(2, i+1, 1000))
 
-print(svd.predict(1, 1, 1000))
-
-
+a;
+for i in a:
+    print(i)
