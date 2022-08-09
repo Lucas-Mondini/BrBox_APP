@@ -1,8 +1,8 @@
-import axios from 'axios'
-import { finished } from 'stream';
 import { AppDataSource } from '../../../data-source';
 import Game from '../../../Model/Game';
 import BusinessModelList from '../../../Model/Game/businessModel/businessModelList';
+import Genre from '../../../Model/Game/classification/genre';
+import Mode from '../../../Model/Game/classification/mode';
 import ExternalLink from '../../../Model/Game/externalLink';
 import ExternalLinkList from '../../../Model/Game/externalLink/externalLinkList';
 import Image from '../../../Model/Game/image';
@@ -59,6 +59,8 @@ export default class SteamLoader {
             game.linkList = externalLinkList;
             game.tagList = new TagValueList()
             game.businessModelList = new BusinessModelList();
+            game.genres = new Array<Genre>();
+            game.modes = new Array<Mode>();
             gamesArray.push(game);
             counter++;
         }
@@ -86,8 +88,5 @@ export default class SteamLoader {
         const allGames = await AppDataSource.getRepository(Game).find()
         if(allGames.length == 0)
         await this.loadFromJSON();
-        
-        
-        
     }
 }

@@ -1,8 +1,10 @@
-import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne } from "typeorm";
+import { Entity, CreateDateColumn, Column, PrimaryGeneratedColumn, JoinColumn, OneToOne, ManyToMany, JoinTable } from "typeorm";
 import ImageList from "./image/imageList";
 import TagValueList from "./tag/tagValueList";
 import ExtternalLinkList from "./externalLink/externalLinkList"
 import BusinessModelList from "./businessModel/businessModelList";
+import Genre from "./classification/genre";
+import Mode from "./classification/mode";
 
 @Entity()
 export default class Game {
@@ -30,6 +32,14 @@ export default class Game {
     @OneToOne(() => BusinessModelList, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
     @JoinColumn({referencedColumnName: "id"})
     businessModelList: BusinessModelList;
+
+    @ManyToMany(()=> Genre, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
+    @JoinTable()
+    genres: Genre[]
+
+    @ManyToMany(()=> Mode, {eager: true, nullable: false, cascade: true, onDelete: "CASCADE"})
+    @JoinTable()
+    modes: Mode[]
 
     @CreateDateColumn()
     createdDate: Date
