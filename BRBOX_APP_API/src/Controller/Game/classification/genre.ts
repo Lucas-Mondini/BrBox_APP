@@ -2,23 +2,10 @@ import { Controller } from "../..";
 import { Request } from "express";
 import Genre from "../../../Model/Game/classification/genre";
 import { AppDataSource } from "../../../data-source";
-import Game from "../../../Model/Game";
-import { In } from "typeorm";
 
 export default class GenreController extends Controller {
     constructor() {
-        super(Genre, [  "games",
-                        "games.imageList",
-                        "games.linkList",
-                        "games.tagList",
-                        "games.linkList.externalLinks",
-                        "games.linkList.externalLinks.platform",
-                        "games.imageList.images",
-                        "games.tagList.tagValues",
-                        "games.tagList.tagValues.tag",
-                        "games.tagList.tagValues.value",
-                        "games.businessModelList",
-                        "games.businessModelList.businessModels"]);
+        super(Genre, []);
     }
 
         //@ts-ignore

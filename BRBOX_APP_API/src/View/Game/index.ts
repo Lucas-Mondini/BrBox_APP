@@ -41,4 +41,24 @@ export default class GameView extends View {
         const object = await controller.RemoveBusinessModel(req);
         return res.status(object.status).json(object.value);
     }
+
+    AddGenre = async (req: Request, res: Response) => {
+        const object = await controller.AddGenre(req);
+        return res.status(object.status).json(object.value);
+    }
+
+    RemoveGenre = async (req: Request, res: Response) => {
+        const object = await controller.RemoveGenre(req);
+        return res.status(object.status).json(object.value);
+    }
+
+    AddMode = async (req: Request, res: Response) => {
+        const object = await controller.AddMode(req);
+        return res.status(object.status).json(object.value);
+    }
+
+    RemoveMode = async (req: Request, res: Response) => {
+        const object = await controller.RemoveMode(req);
+        return res.status(object.status).json(object.value);
+    }
 }

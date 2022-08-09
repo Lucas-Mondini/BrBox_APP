@@ -1,14 +1,19 @@
 import { Request } from "express";
+import { json } from "stream/consumers";
+import { In } from "typeorm";
 import { FindOptionsOrder } from "typeorm/find-options/FindOptionsOrder";
 import {Controller} from "../";
 import { AppDataSource } from "../../data-source";
 
 import Game from "../../Model/Game";
+import Genre from "../../Model/Game/classification/genre";
+import Mode from "../../Model/Game/classification/mode";
 import GameTime from "../../Model/Game/gameTime";
 import Score from "../../Model/Game/Score";
 import TagValue from "../../Model/Game/tag/tagValue";
 import Value from "../../Model/Game/tag/value";
 import BusinessModelListController from "./businessModel/businessModelList";
+import GenreController from "./classification/genre";
 import ExternalLinkListController from "./externalLink/externalLinkList";
 import ImageListController from "./image/imageList";
 import TagValueListController from "./tag/tagValueList";
@@ -23,7 +28,9 @@ export default class GameController extends Controller {
         "imageList.images",
         "tagList.tagValues",
         "tagList.tagValues.tag", "tagList.tagValues.value",
-        "businessModelList", "businessModelList.businessModels"])
+        "businessModelList", "businessModelList.businessModels",
+        "genres",
+        "modes"])
     }
     
     //@ts-ignore
@@ -293,7 +300,6 @@ export default class GameController extends Controller {
                         return {status: 200, value: {
                             games: []
                         }};
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e) || e.message}}};
                     }
                 }
                 
@@ -531,6 +537,84 @@ export default class GameController extends Controller {
                         BMReq.body.businessModelListId = game.businessModelList.id
                         
                         game.businessModelList = await new BusinessModelListController().RemoveBusinessModel(BMReq);
+                        
+                        return {status: 200, value: {
+                            ...this.linkFormatter(game)
+                        }};
+                        
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                }
+                AddGenre = async(req: Request) => {
+                    try {
+                        const {gameId, GenreIds} = req.body
+                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                        var genres = await AppDataSource.getRepository(Genre).find({where: {id: In(GenreIds)}})
+                        if(genres)
+                            for (const g of genres) {
+                                if(!game.genres.some(i => {return JSON.stringify(g) === JSON.stringify(i)}))
+                                    game.genres.push(g)
+                            }
+                        await AppDataSource.getRepository(Game).save(game);
+                        
+                        
+                        return {status: 200, value: {
+                            ...this.linkFormatter(game)
+                        }};
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                    
+                }
+                
+                RemoveGenre = async (req: Request) => {
+                    try {
+                        const {gameId, genreId} = req.body
+                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+
+                        game.genres = game.genres.filter(i=> i.id != genreId)
+                        await AppDataSource.getRepository(Game).save(game);
+
+                        
+                        return {status: 200, value: {
+                            ...this.linkFormatter(game)
+                        }};
+                        
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                }
+                AddMode = async(req: Request) => {
+                    try {
+                        const {gameId, ModeIds} = req.body
+                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+                        var modes = await AppDataSource.getRepository(Mode).find({where: {id: In(ModeIds)}})
+                        if(modes)
+                            for (const m of modes) {
+                                if(!game.modes.some(i => {return JSON.stringify(m) === JSON.stringify(i)}))
+                                    game.modes.push(m)
+                            }
+                        await AppDataSource.getRepository(Game).save(game);
+                        
+                        
+                        return {status: 200, value: {
+                            ...this.linkFormatter(game)
+                        }};
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                    
+                }
+                
+                RemoveMode = async (req: Request) => {
+                    try {
+                        const {gameId, modeId} = req.body
+                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+
+                        game.modes = game.modes.filter(i=> i.id != modeId)
+                        await AppDataSource.getRepository(Game).save(game);
+
                         
                         return {status: 200, value: {
                             ...this.linkFormatter(game)
