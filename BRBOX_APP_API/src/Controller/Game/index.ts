@@ -289,6 +289,10 @@ export default class GameController extends Controller {
                         }};
                     }
                     catch (e : any) {
+                        //XGH axioma 2
+                        return {status: 200, value: {
+                            games: []
+                        }};
                         return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e) || e.message}}};
                     }
                 }
