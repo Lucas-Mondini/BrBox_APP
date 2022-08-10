@@ -14,10 +14,12 @@ import styles from './styles';
 import { Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import PlatformCard from '../../components/PlatformCard';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const Platforms = () => {
   const navigation = useNavigation<any>();
+  const {deepLinking} = useLinking();
+
   const [loading, setLoading] = useState(true);
   const [platforms, setPlatforms] = useState<Platform[]>([]);
   const isFocused = useIsFocused()
@@ -69,7 +71,7 @@ const Platforms = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

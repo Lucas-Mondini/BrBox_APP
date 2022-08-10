@@ -19,7 +19,7 @@ import Loading from '../../components/Loading';
 
 import styles from './styles';
 import useDelay from '../../hooks/Delay';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const GameListAdmin = () => {
   const route = useRoute();
@@ -42,6 +42,7 @@ const GameListAdmin = () => {
 
   const { get } = useRequest();
   const { getTerm } = useTerm();
+  const {deepLinking} = useLinking();
   const { signOut, user } = useAuth();
 
   async function getGames(loadingMoreGames: boolean = false)
@@ -143,7 +144,7 @@ const GameListAdmin = () => {
   }, [gameName]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

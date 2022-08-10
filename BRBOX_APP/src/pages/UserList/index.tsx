@@ -13,15 +13,17 @@ import styles from './styles';
 
 import { Game } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const UserList = () => {
+  const isFocused = useIsFocused()
   const navigation = useNavigation<any>();
+
   const [users, setUsers] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
-  const isFocused = useIsFocused()
 
   const {get} = useRequest();
+  const {deepLinking} = useLinking();
 
   async function getUsers()
   {
@@ -70,7 +72,7 @@ const UserList = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

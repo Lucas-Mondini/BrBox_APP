@@ -8,13 +8,15 @@ import config from "../../../brbox.config.json";
 import { useTheme } from "../../Contexts/Theme";
 import { useTerm } from "../../Contexts/TermProvider";
 import { Params } from "../../utils/types";
+import { useLinking } from "../../Contexts/LinkingProvider";
 
 export default function BottomMenu()
 {
   const navigation = useNavigation<any>();
 
-  const { darkMode } = useTheme();
+  const { share } = useLinking();
   const { getTerm } = useTerm();
+  const { darkMode } = useTheme();
 
   const iconColor = darkMode ? "#fff" : config.mainIconColor;
   const backgroundColor = {backgroundColor: darkMode ? config.dark : "#fff"}
@@ -27,9 +29,7 @@ export default function BottomMenu()
   async function shareApp()
   {
     try {
-      await Share.share({
-        message: getTerm(100107)+"\n\n\n"+config.playStoreUrl,
-      });
+      await share(getTerm(100107), "playStore");
     } catch (error) {
       Alert.alert(getTerm(100108), getTerm(100109))
     }

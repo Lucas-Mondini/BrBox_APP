@@ -18,7 +18,7 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import { GenreMode, Params } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const AddGenreMode = () => {
   const navigation = useNavigation<any>();
@@ -30,6 +30,7 @@ const AddGenreMode = () => {
 
   const isFocused = useIsFocused();
   const {getTerm} = useTerm();
+  const {deepLinking} = useLinking();
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(Boolean(params && params.id));
@@ -67,12 +68,12 @@ const AddGenreMode = () => {
 
       if (!data.id) {
         response = await post(`/${route}/create`, setLoadingRequest, {
-          name: data.name, games: [1]
+          name: data.name
         });
       } else {
         response = await put(`/${route}/update`, setLoadingRequest, {
           id: data.id,
-          new_name: data.name, games: [1]
+          new_name: data.name
         });
       }
 
@@ -87,7 +88,7 @@ const AddGenreMode = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

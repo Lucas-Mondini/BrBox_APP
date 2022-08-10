@@ -4,7 +4,7 @@ import { Alert, Text, View } from 'react-native';
 import styles from './styles';
 import config from "../../../brbox.config.json";
 import { getMaxId, removeObjectFromArray } from '../../utils/functions';
-import { BusinessModel, ImageType, LinkType, Platform } from '../../utils/types';
+import { BusinessModel, GenreMode, ImageType, LinkType, Platform } from '../../utils/types';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
@@ -12,6 +12,7 @@ import { useTheme } from '../Theme';
 import ImageCarousel from '../../components/ImageCarousel';
 import BusinessModelCard from '../../components/BusinessModelCard';
 import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
+import GenreModeCard from '../../components/GenreModeCard';
 
 type GameData = {
   id: number;
@@ -54,6 +55,7 @@ type GameData = {
   renderLinks: (allowRemove?: boolean) => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
   renderBusinessModel: (isEdit?: boolean, showTitle?: boolean) => React.ReactElement;
+  renderGenreMode: (isGenre: boolean) => React.ReactElement;
 
   clearGameContext: () => void;
 }
@@ -76,6 +78,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [gameTime, setGameTime] = useState<Number | string | null>(null);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
+  const [modeList, setModeList] = useState<GenreMode[]>([]);
+  const [genreList, setGenreList] = useState<GenreMode[]>([]);
   const [imageName, setImageName] = useState("");
   const [imageLink, setImageLink] = useState("");
   const [tagValueList, setTagValueList] = useState(0);
@@ -194,6 +198,41 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     );
   }
 
+  function renderGenreMode(isGenre: boolean)
+  {
+    let content;
+
+    const list = isGenre ? genreList : modeList;
+
+    if (list.length == 0) {
+      content = (
+        <Text
+          style={[styles.noContentText]}
+        >
+          {getTerm(100122)}
+        </Text>
+      );
+    } else {
+      content = list.map((item) => (
+        <GenreModeCard
+          hideBottom
+          id={item.id}
+          key={item.id}
+          name={item.name}
+          disabled={true}
+          setLoading={setLoading}
+          deleteCustomFunction={() => removeObjectFromArray(item.id, isGenre ? genreList : modeList, isGenre ? setGenreList : setModeList)}
+        />
+      ));
+    }
+
+    return (
+      <View>
+        {content}
+      </View>
+    );
+  }
+
   async function loadGame(id: number)
   {
     setLoading(true);
@@ -204,8 +243,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setId(response.id);
       setName(response.name);
       setImages(response.imageList.images);
+      setModeList(response.modes);
       setGameTime(response.gameTime);
       setLinkList(response.linkList.externalLinks);
+      setGenreList(response.genres);
       setTagValueList(response.tagList.id);
       setBusinessModelId(response.businessModelList.id);
       setBusinessModelList(response.businessModelList.businessModels);
@@ -247,8 +288,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
+        setModeList(response.modes);
         setGameTime(response.gameTime);
         setLinkList(response.linkList.externalLinks);
+        setGenreList(response.genres);
         setTagValueList(response.tagList.id);
         setBusinessModelId(response.businessModelList.id);
         setBusinessModelList(response.businessModelList.businessModels);
@@ -274,8 +317,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
+        setModeList(response.modes);
         setGameTime(response.gameTime);
         setLinkList(response.linkList.externalLinks);
+        setGenreList(response.genres);
         setTagValueList(response.tagList.id);
         setBusinessModelId(response.businessModelList.id);
         setBusinessModelList(response.businessModelList.businessModels);
@@ -324,7 +369,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       tagValueList,businessModel, businessModelList, businessModelId, gameTime,
       setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime,
       setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList,
-      addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame,
+      addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, renderGenreMode,
       createGame, updateGame, deleteGame, clearGameContext, addBusinessModel
     }}>
       {children}

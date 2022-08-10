@@ -14,15 +14,17 @@ import styles from './styles';
 
 import { Tag } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const TagList = () => {
+  const isFocused = useIsFocused()
   const navigation = useNavigation<any>();
+
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<Tag[]>([]);
-  const isFocused = useIsFocused()
 
   const {get} = useRequest();
+  const {deepLinking} = useLinking();
 
   async function getTags()
   {
@@ -71,7 +73,7 @@ const TagList = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

@@ -19,19 +19,18 @@ import { Params, Tag } from '../../utils/types';
 
 import { useTheme } from '../../Contexts/Theme';
 import TagsContainers from '../../components/TagsContainers';
-import TopTags from '../../components/TopTags';
 import { useTerm } from '../../Contexts/TermProvider';
-import ToggleContent from '../../components/ToggleContent';
 import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
-import deedLinking from '../../utils/deepLinking';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const GameInfo = () => {
   const route = useRoute();
   const isFocused = useIsFocused();
   const navigation = useNavigation();
 
+  const { share } = useLinking();
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
   const {
@@ -43,6 +42,7 @@ const GameInfo = () => {
   const [tagsContainer, setTagsContainer] = useState<React.ReactElement>();
   const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
 
+  const {deepLinking} = useLinking();
   const params = route.params as Params;
 
   const color = darkMode ? "#fff" : config.mainIconColor;
@@ -52,9 +52,7 @@ const GameInfo = () => {
     try {
       const message = getTerm(100141).replace("%1", name);
 
-      await Share.share({
-        message: message+"\n\n\n"+config.apiUrl+"gameUtils/gameInfoOpenApp?gameId="+id,
-      });
+      await share(message, "api", `gameUtils/gameInfoOpenApp?gameId=${id}`);
     } catch (error) {
       Alert.alert(getTerm(100108), getTerm(100109))
     }
@@ -90,7 +88,7 @@ const GameInfo = () => {
   }, [isFocused, loading]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

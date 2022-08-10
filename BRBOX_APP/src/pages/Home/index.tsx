@@ -19,7 +19,7 @@ import Loading from '../../components/Loading';
 
 import styles from './styles';
 import useDelay from '../../hooks/Delay';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const Home = () => {
   const route = useRoute();
@@ -45,6 +45,7 @@ const Home = () => {
   const { get } = useRequest();
   const { getTerm } = useTerm();
   const { signOut, user } = useAuth();
+  const { deepLinking, gameId, removeLinkingListener } = useLinking();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
@@ -150,8 +151,16 @@ const Home = () => {
   }, [gameName]);
 
   useEffect(() => {
-    deedLinking(navigation);
-  }, []);
+    if (!loading && isFocused) {
+      if (gameId) {
+        removeLinkingListener();
+        navigation.navigate("GameInfo", {id: gameId});
+      } else {
+        deepLinking(navigation);
+      }
+    }
+
+  }, [loading, isFocused]);
 
   return (
     <MainView

@@ -3,13 +3,15 @@ import config from "../../../brbox.config.json"
 
 const styles = StyleSheet.create({
   card: {
-    borderBottomWidth: 2,
-    borderBottomColor: config.yellow,
     minHeight: 55,
     marginBottom: 10,
     paddingBottom: 5,
     width: "100%",
     flexDirection: "row"
+  },
+  cardBottom: {
+    borderBottomWidth: 2,
+    borderBottomColor: config.yellow
   },
   title: {
     fontFamily: config.fontFamilyBold,

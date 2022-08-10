@@ -9,6 +9,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../../Contexts/Auth";
 import { useTheme } from "../../Contexts/Theme";
 import { Params } from "../../utils/types";
+import { useLinking } from "../../Contexts/LinkingProvider";
 
 interface DropDownMenuProps {
   setModal: (value: any) => void;
@@ -17,6 +18,8 @@ interface DropDownMenuProps {
 export default function DropDownMenu({setModal}: DropDownMenuProps)
 {
   const navigation = useNavigation<any>();
+
+  const { share } = useLinking();
   const {getTerm} = useTerm();
   const {signOut, user} = useAuth();
   const { darkMode, setDarkMode } = useTheme();
@@ -38,9 +41,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
   async function shareApp()
   {
     try {
-      await Share.share({
-        message: getTerm(100107)+"\n\n\n"+config.playStoreUrl,
-      });
+      await share(getTerm(100107), "playStore");
     } catch (error) {
       Alert.alert(getTerm(100108), getTerm(100109))
     }

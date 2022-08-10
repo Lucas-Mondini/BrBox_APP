@@ -18,15 +18,16 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, BusinessModel } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const AddBusinessModel = () => {
-  const navigation = useNavigation<any>();
   const route = useRoute();
   const params = route.params as Params;
-
   const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
+
   const {getTerm} = useTerm();
+  const {deepLinking} = useLinking();
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(Boolean(params));
@@ -85,7 +86,7 @@ const AddBusinessModel = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

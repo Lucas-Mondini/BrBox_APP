@@ -17,13 +17,14 @@ import { useTerm } from '../../Contexts/TermProvider';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 import { useTheme } from '../../Contexts/Theme';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const Suggestion = () => {
   const navigation = useNavigation<any>();
 
   const { post } = useRequest();
   const { getTerm } = useTerm();
+  const {deepLinking} = useLinking();
 
   const [suggestion, setSuggestion] = useState("");
   const [loadingRequest, setLoadingRequest] = useState(false);
@@ -57,7 +58,7 @@ const Suggestion = () => {
   }
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

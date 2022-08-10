@@ -1,6 +1,7 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  RefreshControl,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -24,19 +25,21 @@ import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
 import BusinessModelModal from '../../components/BusinessModelModal';
 import ToggleContent from '../../components/ToggleContent';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const AddGame = () => {
   const {
     id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList,
     setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel,
-    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel
+    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel,
+    renderGenreMode
   } = useGame();
 
   const route = useRoute();
   const {getTerm} = useTerm();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
+  const {deepLinking} = useLinking();
 
   const params = route.params as Params;
 
@@ -61,35 +64,49 @@ const AddGame = () => {
     if (params.new) setLoading(false);
   }, [isFocused]);
 
-  function showModal(platform?: boolean)
+  function showModal(modalType: "Platforms" | "BusinessModel" | "Modes" | "Genres")
   {
     let modalEl = null;
 
-    if (platform) {
-      modalEl = (
-        <PlatformsModal
-          visible={true}
-          setModal={() => setModal(null)}
-          usedPlatforms={linkList}
-          setPlatform={setPlatform}
-        />
-      );
-    } else {
-      modalEl = (
-        <BusinessModelModal
-          visible={true}
-          setModal={() => setModal(null)}
-          setBusinessModel={setBusinessModel}
-          usedBusinessModels={businessModelList}
-        />
-      );
+    switch (modalType) {
+      case "Platforms":
+        modalEl = (
+          <PlatformsModal
+            visible={true}
+            setModal={() => setModal(null)}
+            usedPlatforms={linkList}
+            setPlatform={setPlatform}
+          />
+        );
+        break;
+      case "BusinessModel":
+        modalEl = (
+          <BusinessModelModal
+            visible={true}
+            setModal={() => setModal(null)}
+            setBusinessModel={setBusinessModel}
+            usedBusinessModels={businessModelList}
+          />
+        );
+        break;
+      case "Modes":
+      case "Genres":
+        modalEl = (
+          <PlatformsModal
+            visible={true}
+            setModal={() => setModal(null)}
+            usedPlatforms={linkList}
+            setPlatform={setPlatform}
+          />
+        );
+        break;
     }
 
     setModal(modalEl);
   }
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   useEffect(() => {
@@ -100,10 +117,17 @@ const AddGame = () => {
     <MainView
       showTitle
       showBottom
-      headerTitle={" "}
+      headerTitle={name}
       loading={loading}
     >
-      <ScrollView style={[styles.container]}>
+      <ScrollView
+        style={[styles.container]}
+        refreshControl={
+          <RefreshControl refreshing={loading} onRefresh={() => {
+            if (isFocused && params.id && !params.new) loadGame(params.id);
+          }}/>
+        }
+      >
         {modal && modal}
 
         <Text
@@ -131,7 +155,7 @@ const AddGame = () => {
                 onSubmitEditing={addLink}
               />
 
-              <TouchableOpacity onPress={() => showModal(true)}>
+              <TouchableOpacity onPress={() => showModal("Platforms")}>
                 <View pointerEvents="none">
                   <Input
                     placeholderText={100050}
@@ -189,7 +213,7 @@ const AddGame = () => {
             <View>
               {renderBusinessModel(true, true)}
 
-              <TouchableOpacity onPress={() => showModal()}>
+              <TouchableOpacity onPress={() => showModal("BusinessModel")}>
                 <View pointerEvents="none">
                   <Input
                     placeholderText={100118}
@@ -199,6 +223,43 @@ const AddGame = () => {
             </View>
           }
         />
+
+        {Boolean(id) && <>
+          <ToggleContent
+            title={100155}
+            content={
+              <View>
+                {renderGenreMode(true)}
+
+                <TouchableOpacity onPress={() => showModal('Genres')}>
+                  <View pointerEvents="none">
+                    <Input
+                      placeholderText={100162}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            }
+          />
+
+          <ToggleContent
+            title={100156}
+            content={
+              <View>
+                {renderGenreMode(false)}
+
+                <TouchableOpacity onPress={() => showModal('Modes')}>
+                  <View pointerEvents="none">
+                    <Input
+                      placeholderText={100161}
+                    />
+                  </View>
+                </TouchableOpacity>
+              </View>
+            }
+          />
+        </>
+        }
 
         <Button
           text={id ? 100015 : 100026}

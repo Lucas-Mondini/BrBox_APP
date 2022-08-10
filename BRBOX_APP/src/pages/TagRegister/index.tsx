@@ -21,16 +21,17 @@ import { useTheme } from '../../Contexts/Theme';
 import IconsModal from '../../components/IconsModal';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getIcon } from '../../utils/functions';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const TagRegister = () => {
-  const navigation = useNavigation<any>();
   const route = useRoute();
   const params = route.params as Params;
+  const navigation = useNavigation<any>();
 
   const isFocused = useIsFocused();
   const {getTerm} = useTerm();
   const {get, put, post} = useRequest();
+  const {deepLinking} = useLinking();
 
   const [icon, setIcon] = useState(0);
   const [modal, setModal] = useState(false);
@@ -106,7 +107,7 @@ const TagRegister = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

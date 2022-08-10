@@ -22,14 +22,17 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Params } from '../../utils/types';
 import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const Profile = () => {
-  const navigation = useNavigation<any>();
-  const {user, setUser, signOut} = useAuth();
-  const {getTerm} = useTerm();
-  const {get, put, post} = useRequest();
   const route = useRoute();
+  const navigation = useNavigation<any>();
+
+  const {getTerm} = useTerm();
+  const {deepLinking} = useLinking();
+  const {get, put, post} = useRequest();
+  const {user, setUser, signOut} = useAuth();
+
   const params = route.params as Params;
 
   const [loading, setLoading] = useState(true);
@@ -160,7 +163,7 @@ const Profile = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

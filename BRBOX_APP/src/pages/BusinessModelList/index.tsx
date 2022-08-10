@@ -15,16 +15,18 @@ import { BusinessModel } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import { useTerm } from '../../Contexts/TermProvider';
 import BusinessModelCard from '../../components/BusinessModelCard';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const BusinessModelList = () => {
+  const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
-  const [loading, setLoading] = useState(true);
-  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
-  const isFocused = useIsFocused()
-  const {getTerm} = useTerm();
 
   const {get} = useRequest();
+  const {getTerm} = useTerm();
+  const {deepLinking} = useLinking();
+
+  const [loading, setLoading] = useState(true);
+  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
 
   async function getBusinessModels()
   {
@@ -72,7 +74,7 @@ const BusinessModelList = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

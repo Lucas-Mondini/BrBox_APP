@@ -13,14 +13,15 @@ interface GenreModeCardProps {
   id: number;
   name: string;
   genre?: boolean;
-  description: string;
+  disabled?: boolean;
+  hideBottom?: boolean;
 
   onDelete?: () => void;
   setLoading: (value: boolean) => void;
   deleteCustomFunction?: () => void;
 }
 
-export default function GenreModeCard({id, name, genre, setLoading, onDelete}: GenreModeCardProps)
+export default function GenreModeCard({id, name, genre, disabled, hideBottom, setLoading, onDelete, deleteCustomFunction}: GenreModeCardProps)
 {
   const navigation = useNavigation<any>();
 
@@ -35,6 +36,8 @@ export default function GenreModeCard({id, name, genre, setLoading, onDelete}: G
   }
 
   async function deleteData() {
+    if (deleteCustomFunction) return deleteCustomFunction();
+
     if (!onDelete) return;
 
     Alert.alert(getTerm(genre ? 100159 : 100157), getTerm(genre ? 100160 : 100158),[
@@ -46,13 +49,14 @@ export default function GenreModeCard({id, name, genre, setLoading, onDelete}: G
         }
       }},
       {text: getTerm(100041)}
-    ])
+    ]);
   }
 
   return (
     <TouchableOpacity
-      style={[styles.card]}
+      style={[styles.card, !hideBottom && styles.cardBottom]}
       onPress={navigateToInfo}
+      disabled={disabled}
     >
       <View style={{width: "85%"}}>
         <Text style={[styles.title, textColor]}>{name}</Text>

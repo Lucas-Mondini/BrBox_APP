@@ -6,6 +6,7 @@ import { LinkType } from "../../utils/types";
 import { removeObjectFromArray } from "../../utils/functions";
 
 import styles from "./styles";
+import { useLinking } from "../../Contexts/LinkingProvider";
 
 interface PlatformLinkProps {
   link: LinkType;
@@ -17,6 +18,8 @@ interface PlatformLinkProps {
 
 export default function PlatformLink({link, linkList, allowRemove, setLinkList}: PlatformLinkProps)
 {
+  const { openUrl } = useLinking()
+
   function getPlatformIcon(platformName: string)
   {
     let icon = "";
@@ -46,7 +49,7 @@ export default function PlatformLink({link, linkList, allowRemove, setLinkList}:
       activeOpacity={allowRemove ? 1 : 0.8}
       onPress={async () => {
         if (!allowRemove) {
-          await Linking.openURL(link.link);
+          await openUrl(link.link);
         }
       }}
     >

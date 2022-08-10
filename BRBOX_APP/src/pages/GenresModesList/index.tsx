@@ -13,18 +13,20 @@ import styles from './styles';
 
 import { BusinessModel, Params } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
-import deedLinking from '../../utils/deepLinking';
 import GenreModeCard from '../../components/GenreModeCard';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const GenresModesList = () => {
   const route = useRoute();
 
   const params = route.params as Params;
 
-  const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<BusinessModel[]>([]);
+  
   const isFocused = useIsFocused()
+  const navigation = useNavigation<any>();
+  const {deepLinking} = useLinking();
 
   const {get} = useRequest();
 
@@ -75,7 +77,7 @@ const GenresModesList = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (

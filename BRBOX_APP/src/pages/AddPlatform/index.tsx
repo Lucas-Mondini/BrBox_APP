@@ -18,7 +18,7 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, Platform } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
-import deedLinking from '../../utils/deepLinking';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 const AddPlatform = () => {
   const navigation = useNavigation<any>();
@@ -27,6 +27,7 @@ const AddPlatform = () => {
 
   const isFocused = useIsFocused();
   const {getTerm} = useTerm();
+  const {deepLinking} = useLinking();
   const {get, put, post} = useRequest();
 
   const [loading, setLoading] = useState(Boolean(params));
@@ -84,7 +85,7 @@ const AddPlatform = () => {
   }, [isFocused]);
 
   useEffect(() => {
-    deedLinking(navigation);
+    deepLinking(navigation);
   }, []);
 
   return (
