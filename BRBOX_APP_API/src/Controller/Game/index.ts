@@ -36,22 +36,30 @@ export default class GameController extends Controller {
     //@ts-ignore
     Create = async (req: Request) => {
         try {
-            const {name} = req.body;
+            const {name, genres, modes} = req.body;
             
             const game = new Game();
             game.name = name;
             
             
-            const linkList = new ExternalLinkListController().Create(req);;
-            const game_imageList = new ImageListController().Create(req);
-            const game_tagValueList = new TagValueListController().Create(req);
-            const game_businessModelList = new BusinessModelListController().Create(req);
+            const linkList = await new ExternalLinkListController().Create(req);;
+            const game_imageList = await new ImageListController().Create(req);
+            const game_tagValueList = await new TagValueListController().Create(req);
+            const game_businessModelList = await new BusinessModelListController().Create(req);
             
             
-            game.linkList = await linkList
-            game.imageList = await game_imageList;
-            game.tagList = await game_tagValueList;
-            game.businessModelList = await game_businessModelList;
+            game.linkList = linkList
+            game.imageList = game_imageList;
+            game.tagList = game_tagValueList;
+            game.businessModelList = game_businessModelList;
+            if(genres) {
+                const game_genres = await AppDataSource.getRepository(Genre).find({where: {id: In(genres)}});
+                game.genres = game_genres;
+            }
+            if(modes) {
+                const game_modes = await AppDataSource.getRepository(Mode).find({where: {id: In(modes)}});
+                game.modes = game_modes;
+            }
             
             
             await AppDataSource.getRepository(Game).save(game);
@@ -347,7 +355,7 @@ export default class GameController extends Controller {
                 //@ts-ignore
                 Update = async (req: Request) => {
                     try {
-                        const {id, new_name} = req.body
+                        const {id, new_name, genres, modes} = req.body
                         const game = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
                         
                         if(!game)
@@ -362,6 +370,15 @@ export default class GameController extends Controller {
                         game.linkList = externalLinkList;
                         game.imageList = imageList;
                         game.businessModelList = businessModelList;
+
+                        if(genres) {
+                            const game_genres = await AppDataSource.getRepository(Genre).find({where: {id: In(genres)}});
+                            game.genres = game_genres;
+                        }
+                        if(modes) {
+                            const game_modes = await AppDataSource.getRepository(Mode).find({where: {id: In(modes)}});
+                            game.modes = game_modes;
+                        }
                         
                         await AppDataSource.getRepository(Game).save(game);
                         
