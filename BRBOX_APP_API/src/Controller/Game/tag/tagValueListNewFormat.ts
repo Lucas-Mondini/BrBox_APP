@@ -19,9 +19,9 @@ import { weightCalculator } from "../../../Utils/calculator";
  {
    const finalValues: any[] = [];
 
-   const userdata = list.filter((item) => (item.user.id === userId))
+   //const userdata = list.filter((item) => (item.user.id === userId))
    for (let item1 of list) {
-     const uservote = userdata.filter(item => item.tag.id === item1.tag.id);
+     const uservote = list.filter(item => item.user.id === userId && item.tag.id === item1.tag.id);
      const countTags = list.filter((item) => item.tag.id === item1.tag.id);
      const countUpVotes = list.filter((item) => item.value.id === 1 && item.tag.id === item1.tag.id).length;
      const countDownVotes = list.filter((item) => item.value.id === 3 && item.tag.id === item1.tag.id).length;
