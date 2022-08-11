@@ -15,23 +15,27 @@ import { weightCalculator } from "../../../Utils/calculator";
    * @param list
    * @return Tag[]
    */
- function groupEvaluatedTags(list: any[]): any[]
+ function groupEvaluatedTags(list: any[], userId: any): any[]
  {
    const finalValues: any[] = [];
 
+   const userdata = list.filter((item) => (item.user.id === userId))
    for (let item1 of list) {
+     const uservote = userdata.filter(item => item.tag.id === item1.tag.id);
      const countTags = list.filter((item) => item.tag.id === item1.tag.id);
      const countUpVotes = list.filter((item) => item.value.id === 1 && item.tag.id === item1.tag.id).length;
      const countDownVotes = list.filter((item) => item.value.id === 3 && item.tag.id === item1.tag.id).length;
      const countNeutralVotes = list.filter((item) => item.value.id === 2 && item.tag.id === item1.tag.id).length;
+     item1.userVoteValue = uservote.length > 0? uservote[0].value.id : null;
+     item1.userVoteId = uservote.length > 0? uservote[0].id : null;
 
      finalValues.push({
        id: countTags[0].tag.id,
        icon: countTags[0].tag.icon,
        count: countTags.length,
-       upVotes: countUpVotes,
-       neutralVotes: countNeutralVotes,
-       downVotes: countDownVotes,
+       upVotes: countUpVotes * item1.weight,
+       neutralVotes: countNeutralVotes * item1.weight,
+       downVotes: countDownVotes * item1.weight,
        evalId: countTags[0].id,
        name: countTags[0].tag.name,
        value: countTags[0].value.id,
@@ -40,33 +44,7 @@ import { weightCalculator } from "../../../Utils/calculator";
        description_negative: countTags[0].tag.description_negative,
        userVote: item1.userVote,
        userVoteValue: item1.userVoteValue,
-       userVoteId: item1.userVoteId
-     });
-   }
-
-   return [
-     ...new Map(finalValues.map((item) => [item["id"], item])).values(),
-   ];
- }
- function groupTagsOnReturnObjectFormat(list: any[]): any[]
- {
-   const finalValues: any[] = [];
-
-   for (let item1 of list) {
-     finalValues.push({
-       id: item1.id,
-       icon: item1.icon,
-       count: 0,
-       upVotes: 0,
-       neutralVotes: 0,
-       downVotes: 0,
-       evalId: null,
-       name: item1.name,
-       value: 0,
-       description_positive: item1.description_positive,
-       description_neutral: item1.description_neutral,
-       description_negative: item1.description_negative,
-       userVote: false
+       userVoteId: item1.userVoteId,
      });
    }
 
@@ -81,38 +59,15 @@ export default class TagValueListControllerNewFormat extends Controller {
 
     //@ts-ignore
     Get = async (req: Request) => {
-        try {
-            const id = req.params.id
-            const tagValue = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
-            let tags = await AppDataSource.getRepository(Tag).find();
-
-            const tagValues = tagValue.tagValues.map((i: any) => 
-            {
-                if(i.user.id == req.user.id) {
-                    i.userVote = true;
-                    i.userVoteValue = i.value.id;
-                    i.userVoteId = i.id;
-                }
-                else
-                    i.userVote = false;
-                return i;
-            })
-            let retObj = groupEvaluatedTags(tagValues);
-            tags = groupTagsOnReturnObjectFormat(tags.filter(i => {
-                for (const j of retObj) {
-                    if(j.id == i.id)
-                        return false;
-                }
-                return true;
-            } ))
-            retObj.push(...tags);
-
-            
-            return {status: 200, value: {tagValue: retObj}};
-        }
-         catch (e : any) {
-            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-        }
-    }
+      try {
+          const id = req.params.id
+          const tagValue = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+          
+          return {status: 200, value: {tagValue: groupEvaluatedTags(tagValue.tagValues, req.user.id)}};
+      }
+       catch (e : any) {
+          return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+      }
+  }
     
 }
