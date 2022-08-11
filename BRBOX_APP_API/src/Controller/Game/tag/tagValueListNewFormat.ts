@@ -52,6 +52,34 @@ import { weightCalculator } from "../../../Utils/calculator";
      ...new Map(finalValues.map((item) => [item["id"], item])).values(),
    ];
  }
+
+ function groupNotEvaluatedTags(list: any[]): any[] {
+    if(list.length > 0) {
+      const finalValues: any[] = [];
+      for (const item of list){
+        finalValues.push({
+          id: item.id,
+          icon: item.icon,
+          count: 0,
+          upVotes: 0,
+          neutralVotes: 0,
+          downVotes: 0,
+          evalId: null,
+          name: item.name,
+          value: null,
+          description_positive: item.description_positive,
+          description_neutral: item.description_neutral,
+          description_negative: item.description_negative,
+          userVote: null,
+          userVoteValue: null,
+          userVoteId: null,
+        });
+      }
+      return finalValues;
+    }
+    return [];
+ }
+
 export default class TagValueListControllerNewFormat extends Controller {
     constructor() {
         super(TagValueList, ["tagValues", "tagValues.tag", "tagValues.user", "tagValues.value"])
@@ -62,8 +90,10 @@ export default class TagValueListControllerNewFormat extends Controller {
       try {
           const id = req.params.id
           const tagValue = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+          const tags = (await AppDataSource.getRepository(Tag).find()).filter(i => tagValue.tagValues.every(j => j.tag.id != i.id))
           
-          return {status: 200, value: {tagValue: groupEvaluatedTags(tagValue.tagValues, req.user.id)}};
+          const returnObj = [...groupEvaluatedTags(tagValue.tagValues, req.user.id), ...groupNotEvaluatedTags(tags)]
+          return {status: 200, value: {tagValue: returnObj}};
       }
        catch (e : any) {
           return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
