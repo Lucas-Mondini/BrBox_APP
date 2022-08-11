@@ -26,12 +26,13 @@ import { useTheme } from '../../Contexts/Theme';
 import BusinessModelModal from '../../components/BusinessModelModal';
 import ToggleContent from '../../components/ToggleContent';
 import { useLinking } from '../../Contexts/LinkingProvider';
+import GenreModeModal from '../../components/GenreModeModal';
 
 const AddGame = () => {
   const {
-    id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList,
-    setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel,
-    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel,
+    id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList, genreList, modeList,
+    setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel, setGenreList,
+    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel, setModeList,
     renderGenreMode
   } = useGame();
 
@@ -91,12 +92,15 @@ const AddGame = () => {
         break;
       case "Modes":
       case "Genres":
+        const isGenre = modalType === "Genres";
+
         modalEl = (
-          <PlatformsModal
+          <GenreModeModal
             visible={true}
+            isGenre={isGenre}
             setModal={() => setModal(null)}
-            usedPlatforms={linkList}
-            setPlatform={setPlatform}
+            usedData={isGenre ? genreList : modeList}
+            setGenreMode={isGenre ? setGenreList : setModeList}
           />
         );
         break;
@@ -224,42 +228,39 @@ const AddGame = () => {
           }
         />
 
-        {Boolean(id) && <>
-          <ToggleContent
-            title={100155}
-            content={
-              <View>
-                {renderGenreMode(true)}
+        <ToggleContent
+          title={100155}
+          content={
+            <View>
+              {renderGenreMode(true)}
 
-                <TouchableOpacity onPress={() => showModal('Genres')}>
-                  <View pointerEvents="none">
-                    <Input
-                      placeholderText={100162}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            }
-          />
+              <TouchableOpacity onPress={() => showModal('Genres')}>
+                <View pointerEvents="none">
+                  <Input
+                    placeholderText={100162}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
+        />
 
-          <ToggleContent
-            title={100156}
-            content={
-              <View>
-                {renderGenreMode(false)}
+        <ToggleContent
+          title={100156}
+          content={
+            <View>
+              {renderGenreMode(false)}
 
-                <TouchableOpacity onPress={() => showModal('Modes')}>
-                  <View pointerEvents="none">
-                    <Input
-                      placeholderText={100161}
-                    />
-                  </View>
-                </TouchableOpacity>
-              </View>
-            }
-          />
-        </>
-        }
+              <TouchableOpacity onPress={() => showModal('Modes')}>
+                <View pointerEvents="none">
+                  <Input
+                    placeholderText={100161}
+                  />
+                </View>
+              </TouchableOpacity>
+            </View>
+          }
+        />
 
         <Button
           text={id ? 100015 : 100026}

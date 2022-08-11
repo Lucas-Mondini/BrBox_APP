@@ -34,8 +34,8 @@ const GameInfo = () => {
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
   const {
-    name, loading, id,
-    loadGame, renderLinks, renderImages, businessModelList,
+    name, loading, id, businessModelList, genreList, modeList,
+    loadGame, renderLinks, renderImages,
   } = useGame();
 
   const [modal, setModal] = useState(false);
@@ -60,12 +60,12 @@ const GameInfo = () => {
 
   function renderNamesFromArray(list: any[] | null, nameProperty: string)
   {
-    if (!list) return null;
+    if (!list || list.length === 0) return null;
 
     const textColor = darkMode ? config.mediumGreen : config.darkGreen;
 
     const listComp = list.map((item, index) => (
-      <Text key={index} style={[styles.infoText, {color: textColor}]}>{item[nameProperty]} </Text>
+      <Text key={index} style={[styles.infoText, {color: textColor}]}>{item[nameProperty]} {(list.length > 1 && list.length !== index + 1) && "| "}</Text>
     ));
 
     return <Text>{listComp}</Text>
@@ -115,25 +115,23 @@ const GameInfo = () => {
 
         {renderLinks()}
 
-        <View style={[styles.infoContainer]}>
-          <Icon
-            name="information-outline"
-            size={35}
-            color={color}
-          />
+        {(modeList.length > 0 || genreList.length > 0 || businessModelList.length > 0) &&
+          <View style={[styles.infoContainer]}>
+            <Icon
+              name="information-outline"
+              size={35}
+              color={color}
+            />
 
-          <View style={[styles.information]}>
-            {renderNamesFromArray(businessModelList, "name")}
+            <View style={[styles.information]}>
+              {modeList.length > 0 && renderNamesFromArray(modeList, "name")}
+              {genreList.length > 0 && renderNamesFromArray(genreList, "name")}
+              {businessModelList.length > 0 && renderNamesFromArray(businessModelList, "name")}
+            </View>
           </View>
-        </View>
+        }
 
         <GameTimeCard onPress={() => setModal(!modal)}/>
-
-        {/* <ToggleContent
-          title={100121}
-          content={renderBusinessModel()}
-          colapseOnStart
-        /> */}
 
         {tagsContainer && tagsContainer}
       </ScrollView>

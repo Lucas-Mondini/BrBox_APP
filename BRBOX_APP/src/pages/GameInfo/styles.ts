@@ -10,7 +10,8 @@ const styles = StyleSheet.create({
     marginBottom: 50
   },
   infoContainer: {
-    flexDirection: "row"
+    flexDirection: "row",
+    alignItems: "center"
   },
   information: {
     marginLeft: 8

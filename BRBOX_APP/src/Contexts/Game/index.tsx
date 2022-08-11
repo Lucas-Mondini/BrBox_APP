@@ -22,7 +22,9 @@ type GameData = {
   loading: boolean;
   linkList: LinkType[];
   gameTime: Number | string | null;
+  modeList: GenreMode[];
   platform: Platform | null;
+  genreList: GenreMode[];
   imageName: string;
   imageLink: string;
   tagValueList: number;
@@ -37,7 +39,9 @@ type GameData = {
   setLoading: (value: boolean) => void;
   setGameTime: (value: Number| string | null) => void;
   setPlatform: (value: Platform | null) => void;
+  setModeList: (value: GenreMode[]) => void;
   setLinkList: (value: LinkType[]) => void;
+  setGenreList: (value: GenreMode[]) => void;
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
   setTagValueList: (value: number) => void;
@@ -282,7 +286,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         const businessModel = businessModelList.map(businessModel => businessModel.id);
 
         const response = await put(`/game/update`, setLoading, {
-          id, new_name: name, new_description: name, externalLinks, images: imageList, businessModel
+          id, new_name: name, new_description: name, externalLinks,
+          images: imageList, businessModel, genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
         });
 
         setId(response.id);
@@ -311,7 +316,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         const businessModel = businessModelList.map(businessModel => businessModel.id);
 
         const response = await post(`/game/create`, setLoading, {
-          name, externalLinks, images: imageList, businessModel
+          name, externalLinks, images: imageList, businessModel, genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
         });
 
         setId(response.id);
@@ -365,12 +370,12 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform,
-      tagValueList,businessModel, businessModelList, businessModelId, gameTime,
+      id, name, link, imageName, imageLink, loading, images, linkList, platform, genreList,
+      tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList,
       setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime,
-      setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList,
+      setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList, setGenreList,
       addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, renderGenreMode,
-      createGame, updateGame, deleteGame, clearGameContext, addBusinessModel
+      createGame, updateGame, deleteGame, clearGameContext, addBusinessModel, setModeList
     }}>
       {children}
     </GameContext.Provider>

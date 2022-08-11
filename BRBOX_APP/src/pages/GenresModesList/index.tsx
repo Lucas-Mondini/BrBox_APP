@@ -23,7 +23,7 @@ const GenresModesList = () => {
 
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<BusinessModel[]>([]);
-  
+
   const isFocused = useIsFocused()
   const navigation = useNavigation<any>();
   const {deepLinking} = useLinking();
@@ -62,7 +62,6 @@ const GenresModesList = () => {
                 id={item.id}
                 name={item.name}
                 genre={params && params.genres}
-                description={item.description}
                 setLoading={setLoading}
                 onDelete={fetchData}
               />
