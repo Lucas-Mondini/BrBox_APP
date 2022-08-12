@@ -133,8 +133,7 @@ export default function PlatformsModal({setModal, reloadGameInfo, tagInfo}: Plat
     >
       <ScrollView style={[styles.container, {backgroundColor: color}]}>
         <View style={[styles.titleContainer]}>
-
-          <Text style={[styles.title, {color: titleColor}]}>{tagInformation.name}</Text>
+          <Text style={[styles.title, {width: "65%", color: titleColor}]}>{tagInformation.name}</Text>
           <View style={[styles.icon, {backgroundColor: darkMode ? config.darkGray : config.light}]}>
             <Icon
               name={getIcon(tagInformation.icon)}

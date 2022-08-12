@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     fontFamily: config.fontFamilyBold,
     marginRight: 15,
     fontSize: 15,
-    marginTop: 35,
+    marginTop: 15,
     marginBottom: 15,
   },
   leaveButtonView: {
@@ -59,6 +59,8 @@ const styles = StyleSheet.create({
     marginBottom: 50,
   },
   icon: {
+    position: "absolute",
+    left: 0,
     width: 55,
     height: 55,
     borderRadius: 55,

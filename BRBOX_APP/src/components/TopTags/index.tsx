@@ -10,16 +10,24 @@ interface TopTagsProps {
   tags?: TagValue[];
   home?: boolean;
   large?: boolean;
-  evaluations?: TagType[];
 }
 
-export default function TopTags({tags, home, large, evaluations}: TopTagsProps)
+export default function TopTags({tags, home, large}: TopTagsProps)
 {
   const {width} = Dimensions.get('window');
 
-  const [modal, setModal] = useState<React.ReactElement | null>(null);
-
   if (!tags) return null;
+
+  function sum() {
+    if (tags) {
+      const one = tags[0] ? tags[0].total : 0;
+      const two = tags[1] ? tags[1].total : 0;
+      const three = tags[2] ? tags[2].total : 0;
+      return one+two+three;
+    }
+
+    return 0;
+  }
 
   function returnTags(tag?: TagValue)
   {
@@ -28,7 +36,8 @@ export default function TopTags({tags, home, large, evaluations}: TopTagsProps)
     const style: any = {
       "up": "greenBar",
       "neutral": "yellow",
-      "down": "lightRed"
+      "down": "lightRed",
+      "user": "orange",
     }
 
     return (
@@ -41,30 +50,20 @@ export default function TopTags({tags, home, large, evaluations}: TopTagsProps)
           noEvaluations
           specificStyle={style[tag.value]}
           large={large}
-          callback={!large ? () => {} : () => {
-            if (!evaluations) return null;
-
-            const tagInfoObj: any = evaluations.filter(e => e.name === tag.tag)[0];
-
-            setModal(
-              <TagInfoModal
-                setModal={() => setModal(null)}
-                tagInfo={tagInfoObj}
-              />
-            );
-          }}
         />
       </View>
     );
   }
 
   return (
-    <View style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall, large ? {} : {marginLeft: width >= 400 ? 60 : 30}]}>
-      {modal && modal}
-
+    <View style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall]}>
       {returnTags(tags[0])}
       {returnTags(tags[1])}
       {returnTags(tags[2])}
+      {(sum() > 0) && <>
+        { /*@ts-ignore*/}
+        {returnTags({total: sum(), value: "user", icon: 100})}</>
+      }
     </View>
   );
 }

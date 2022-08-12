@@ -20,7 +20,7 @@ interface GameTimeCardProps {
 export default function GameTimeCard({onPress}: GameTimeCardProps) {
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
-  const { gameTime } = useGame();
+  const { gameTime, rate } = useGame();
 
   const color = darkMode ? config.subTitleMainColor : config.dark;
 
@@ -30,9 +30,12 @@ export default function GameTimeCard({onPress}: GameTimeCardProps) {
       disabled={!onPress}
     >
       <View style={[styles.card,]}>
-        <View style={[styles.gameTimeContainer]}>
-          <Text style={[styles.text, {color, textDecorationLine: !gameTime ? "underline" : "none"}]}>{getTerm(!gameTime ? 100138 : 100140).replace("%1", String(gameTime))}</Text>
-          <Icon name="progress-clock" color={color} size={35} />
+        <View style={[styles.gameTimeInfo]}>
+          <Text style={[styles.rate]}><Text style={[styles.rateBig]}>{rate}</Text>/10</Text>
+          <View style={[styles.gameTimeContainer]}>
+            <Text style={[styles.text, {color, textDecorationLine: !gameTime ? "underline" : "none"}]}>{getTerm(!gameTime ? 100138 : 100140).replace("%1", String(gameTime))}</Text>
+            <Icon name="progress-clock" color={color} size={35} />
+          </View>
         </View>
       </View>
     </TouchableOpacity>

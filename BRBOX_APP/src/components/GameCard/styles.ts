@@ -42,6 +42,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: config.fontFamilyBold,
     color: "#000"
+  },
+  rate: {
+    position: "absolute",
+    bottom: 5,
+    right: 5,
+    fontFamily: config.fontFamilyBold,
+    color: config.greenBar
+  },
+  rateBig: {
+    fontSize: 20,
   }
 });
 

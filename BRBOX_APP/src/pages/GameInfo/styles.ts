@@ -6,7 +6,6 @@ const styles = StyleSheet.create({
   container: {
     height: "100%",
     paddingHorizontal: "3%",
-    paddingTop: "10%",
     marginBottom: 50
   },
   infoContainer: {

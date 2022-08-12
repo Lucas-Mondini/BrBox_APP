@@ -46,13 +46,17 @@ export default function GameCard({id, title, tags, imgUri, extraCallbackOnNaviga
           <Image style={styles.img} source={{uri: imgUri}} />
         </View>
         <View style={styles.info}>
-          <View>
+          <View style={{width: "89%"}}>
             <Text style={[styles.title, textColor]}>{splitText(title, width >= 400 ? 25 : 18)}</Text>
 
             <TopTags
               tags={tags}
               home
             />
+
+            {tags.length > 0 &&
+              <Text style={[styles.rate]}><Text style={[styles.rateBig]}>7</Text>/10</Text>
+            }
           </View>
         </View>
       </View>

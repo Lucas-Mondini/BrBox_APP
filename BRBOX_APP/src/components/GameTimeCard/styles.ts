@@ -11,6 +11,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center"
   },
+  gameTimeInfo: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
+  },
   text: {
     fontFamily: config.fontFamilyBold,
     fontSize: 18,
@@ -21,6 +26,13 @@ const styles = StyleSheet.create({
   input: {
     marginTop: 15
   },
+  rate: {
+    fontFamily: config.fontFamilyBold,
+    color: config.greenBar
+  },
+  rateBig: {
+    fontSize: 20,
+  }
 });
 
 export default styles;

@@ -16,6 +16,7 @@ import GenreModeCard from '../../components/GenreModeCard';
 
 type GameData = {
   id: number;
+  rate: number;
   name: string;
   link: string;
   images: ImageType[];
@@ -75,6 +76,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const {getTerm} = useTerm();
   const {get, put, post, destroy} = useRequest();
 
+  const [rate, setRate] = useState(0);
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
@@ -244,6 +246,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     try {
       const response = await get(`/game/${id}`);
 
+      setRate(response.score);
       setId(response.id);
       setName(response.name);
       setImages(response.imageList.images);
@@ -371,7 +374,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   return (
     <GameContext.Provider value={{
       id, name, link, imageName, imageLink, loading, images, linkList, platform, genreList,
-      tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList,
+      tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList, rate,
       setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime,
       setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList, setGenreList,
       addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, renderGenreMode,

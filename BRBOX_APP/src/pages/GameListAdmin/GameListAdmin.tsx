@@ -43,7 +43,7 @@ const GameListAdmin = () => {
   const { get } = useRequest();
   const { getTerm } = useTerm();
   const {deepLinking} = useLinking();
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
 
   async function getGames(loadingMoreGames: boolean = false)
   {
@@ -68,7 +68,7 @@ const GameListAdmin = () => {
       setGames([...gamesList, ...response.games]);
       setPage(page+1);
     } catch (err) {
-      return signOut();
+      return;
     }
 
     setLoading(false);

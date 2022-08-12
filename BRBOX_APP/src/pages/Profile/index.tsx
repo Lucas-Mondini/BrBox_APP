@@ -81,7 +81,6 @@ const Profile = () => {
         navigation.goBack();
       }
     } catch (error) {
-      signOut();
     }
   }
 

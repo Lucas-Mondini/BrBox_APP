@@ -44,7 +44,7 @@ const Home = () => {
 
   const { get } = useRequest();
   const { getTerm } = useTerm();
-  const { signOut, user } = useAuth();
+  const { user } = useAuth();
   const { deepLinking, gameId, removeLinkingListener } = useLinking();
 
   async function getGames(loadingMoreGames: boolean = false)
@@ -70,7 +70,7 @@ const Home = () => {
       setGames([...gamesList, ...response.games]);
       setPage(page+1);
     } catch (err) {
-      return signOut();
+      return;
     }
 
     setLoading(false);
