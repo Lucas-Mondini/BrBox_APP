@@ -21,11 +21,11 @@
   "subTitleMainColor":"#BFBFBF",
 
   "apiUrl":"http://10.0.2.2:8080/", // Servidor
-  //"apiUrl":"https://brbox-app.herokuapp.com/", // Teste no servidor
+  //"apiUrl":"https://brbox-app.herokuapp.com/",
 
   "isDarkModeDefault" : "true",
 
   "playStoreUrl":"https://play.google.com/store/apps/details?id=com.brbox_app&hl=pt-BR&ah=RHr4WgG7T5CWol2L_VMcyV1_voA",
 
-  "version": "0.1.2"
+  "version": "0.1.3"
 }
