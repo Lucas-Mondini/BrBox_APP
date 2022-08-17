@@ -1,4 +1,2 @@
-cython
-numpy
-pandas
-scikit-surprise
+psycopg2~=2.9.3
+scikit-learn~=1.1.1

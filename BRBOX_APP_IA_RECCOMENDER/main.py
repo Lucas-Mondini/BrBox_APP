@@ -13,7 +13,8 @@ class MyServer(BaseHTTPRequestHandler):
 
         content_len = int(self.headers.get('Content-Length'))
         post_body = json.loads(self.rfile.read(content_len))
-        self.wfile.write(bytes(json.dumps(CollaborativeFilter(post_body['user'], post_body['games']).predicted), "utf-8"))
+        ret = json.dumps(CollaborativeFilter(post_body['user'], post_body['games'], post_body['values']).predicted)
+        self.wfile.write(bytes(ret, "utf-8"))
 
 if __name__ == "__main__":
     webServer = HTTPServer((hostName, serverPort), MyServer)
