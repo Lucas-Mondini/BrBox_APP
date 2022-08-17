@@ -79,7 +79,7 @@ export default class GameController extends Controller {
         try {
             const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = ""} = req.query
 
-            reccomend(req.user.id);
+            //reccomend(req.user.id);
             
             var where = "1 = $1";
             let wherename = "1"
@@ -104,72 +104,7 @@ export default class GameController extends Controller {
             
             //Query magica, não toque nela, sujeito a mão cair
             //horas gastas nessa query: 22h
-            let games = await AppDataSource.query(` 
-            select
-                game.id as gameId,
-                game.name gameName,
-                image.id as imageId,
-                image.link as imageLink,
-                tag_data.name tagname,
-                tag_data.id tagid,
-                tag_data.icon tagicon,
-                COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
-                COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
-                COALESCE(SUM(tag_data.qty_neut), 0) as qty_neutral,
-                COALESCE(SUM(tag_data.qty_down), 0) as qty_down
-            from 
-                game
-            left join 
-                        (
-                            select
-                                tvltvtv."tagValueListId",
-                                tag.id,
-                                tag."name",
-                                tag.icon,
-                                value."name" as value_name,
-                                value.id as value_id,
-                                coalesce(sum(tag_value."valueId"), 0) as qty_tot,
-                                coalesce(sum(CASE when value.id = 1 then 1 * tag_value.weight end), 0) as qty_up,
-								coalesce(sum(CASE when value.id = 2 then 1 * tag_value.weight end), 0) as qty_neut,
-								coalesce(sum(CASE when value.id = 3 then 1 * tag_value.weight end), 0) as qty_down
-                            from
-                                tag_value_list
-                            inner join 
-                                tag_value_list_tag_values_tag_value tvltvtv on tvltvtv."tagValueListId" = tag_value_list.id
-                            inner join 
-                                tag_value on tag_value.id = tvltvtv."tagValueId"
-                            inner join 
-                                tag on  tag.id = tag_value."tagId"
-                            inner join 
-                                value on value.id = tag_value."valueId" 
-                            group by 
-                                tvltvtv."tagValueListId", tag.id, tag."name", value.id, value."name"
-                ) tag_data on (game."tagListId" = tag_data."tagValueListId")
-                INNER join (
-                			select image.id, image.link, ilii."imageListId" listId
-                			from image_list_images_image ilii
-         					inner join image on image.id = ilii."imageId"
-							) image on (image.listId = game."imageListId")
-                where (
-                        game.id in (
-                                    select game.id from game 
-                                    where ${where}
-                                    ${orderBy}
-                                    limit $2
-                                    offset $3
-                                    )
-                    )
-                group by
-                    game.id,
-                    game."name",
-                    image.id,
-                    image.link,
-                    tag_data."name",
-                    tag_data."id",
-                    tag_data.icon
-                order by 
-                    game.id
-                                `,
+            let games = await AppDataSource.query(this.getIndexQuery(where, orderBy, 0),
                                 [   
                                     wherename,
                                     ammount,
@@ -735,6 +670,82 @@ export default class GameController extends Controller {
                     })
                     return game;
                 }
-                
+
+                getIndexQuery = (where: string, orderBy: string, Mode: number) => {
+                    /**
+                     * 
+                     * modes : 
+                     *      0 default
+                     *      1 user only
+                     * 
+                     */
+
+                    return ` 
+                    select
+                        game.id as gameId,
+                        game.name gameName,
+                        image.id as imageId,
+                        image.link as imageLink,
+                        tag_data.name tagname,
+                        tag_data.id tagid,
+                        tag_data.icon tagicon,
+                        COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
+                        COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
+                        COALESCE(SUM(tag_data.qty_neut), 0) as qty_neutral,
+                        COALESCE(SUM(tag_data.qty_down), 0) as qty_down
+                    from 
+                        game
+                    left join 
+                                (
+                                    select
+                                        tvltvtv."tagValueListId",
+                                        tag.id,
+                                        tag."name",
+                                        tag.icon,
+                                        value."name" as value_name,
+                                        value.id as value_id,
+                                        coalesce(sum(tag_value."valueId"), 0) as qty_tot,
+                                        coalesce(sum(CASE when value.id = 1 then 1 * tag_value.weight end), 0) as qty_up,
+                                        coalesce(sum(CASE when value.id = 2 then 1 * tag_value.weight end), 0) as qty_neut,
+                                        coalesce(sum(CASE when value.id = 3 then 1 * tag_value.weight end), 0) as qty_down
+                                    from
+                                        tag_value_list
+                                    inner join 
+                                        tag_value_list_tag_values_tag_value tvltvtv on tvltvtv."tagValueListId" = tag_value_list.id
+                                    inner join 
+                                        tag_value on tag_value.id = tvltvtv."tagValueId"
+                                    inner join 
+                                        tag on  tag.id = tag_value."tagId"
+                                    inner join 
+                                        value on value.id = tag_value."valueId" 
+                                    group by 
+                                        tvltvtv."tagValueListId", tag.id, tag."name", value.id, value."name"
+                        ) tag_data on (game."tagListId" = tag_data."tagValueListId")
+                        INNER join (
+                                    select image.id, image.link, ilii."imageListId" listId
+                                    from image_list_images_image ilii
+                                     inner join image on image.id = ilii."imageId"
+                                    ) image on (image.listId = game."imageListId")
+                        where (
+                                game.id in (
+                                            select game.id from game 
+                                            where ${where}
+                                            ${orderBy}
+                                            limit $2
+                                            offset $3
+                                            )
+                            )
+                        group by
+                            game.id,
+                            game."name",
+                            image.id,
+                            image.link,
+                            tag_data."name",
+                            tag_data."id",
+                            tag_data.icon
+                        order by 
+                            game.id
+                                        `
+                }              
                 
             }
