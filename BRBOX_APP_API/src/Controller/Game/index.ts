@@ -13,6 +13,7 @@ import Score from "../../Model/Game/Score";
 import TagValue from "../../Model/Game/tag/tagValue";
 import TagValueList from "../../Model/Game/tag/tagValueList";
 import Value from "../../Model/Game/tag/value";
+import { reccomend } from "../../services/reccomendation";
 import BusinessModelListController from "./businessModel/businessModelList";
 import GenreController from "./classification/genre";
 import ExternalLinkListController from "./externalLink/externalLinkList";
@@ -77,6 +78,8 @@ export default class GameController extends Controller {
     Index = async (req: Request) => {
         try {
             const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = ""} = req.query
+
+            reccomend(req.user.id);
             
             var where = "1 = $1";
             let wherename = "1"
