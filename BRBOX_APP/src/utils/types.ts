@@ -97,3 +97,8 @@ export type Value = {
   id: number;
   name: string;
 }
+
+export type RadioOption = {
+  value: number;
+  text: string;
+}

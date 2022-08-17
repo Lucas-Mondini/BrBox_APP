@@ -6,6 +6,7 @@ import {
   ScrollView,
   Share,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -24,6 +25,7 @@ import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useLinking } from '../../Contexts/LinkingProvider';
+import GameAssocInfoModal from '../../components/GameAssocInfoModal';
 
 const GameInfo = () => {
   const route = useRoute();
@@ -39,6 +41,7 @@ const GameInfo = () => {
   } = useGame();
 
   const [modal, setModal] = useState(false);
+  const [modalAssoc, setModalAssoc] = useState(false);
   const [tagsContainer, setTagsContainer] = useState<React.ReactElement>();
   const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
 
@@ -105,6 +108,11 @@ const GameInfo = () => {
         setModal={() => setModal(!modal)}
       />
 
+      <GameAssocInfoModal
+        visible={modalAssoc}
+        setModal={() => setModalAssoc(!modalAssoc)}
+      />
+
       <ScrollView
         style={[styles.container]}
         refreshControl={
@@ -116,7 +124,10 @@ const GameInfo = () => {
         {renderLinks()}
 
         {(modeList.length > 0 || genreList.length > 0 || businessModelList.length > 0) &&
-          <View style={[styles.infoContainer]}>
+          <TouchableOpacity
+            style={[styles.infoContainer]}
+            onPress={() => setModalAssoc(!modalAssoc)}
+          >
             <Icon
               name="information-outline"
               size={35}
@@ -128,7 +139,7 @@ const GameInfo = () => {
               {genreList.length > 0 && renderNamesFromArray(genreList, "name")}
               {businessModelList.length > 0 && renderNamesFromArray(businessModelList, "name")}
             </View>
-          </View>
+          </TouchableOpacity>
         }
 
         <GameTimeCard onPress={() => setModal(!modal)}/>

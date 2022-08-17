@@ -20,13 +20,13 @@ import { useGame } from '../../Contexts/Game';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getIcon } from '../../utils/functions';
 
-interface PlatformsModalProps {
+interface TagInfoModalProps {
   setModal: () => void;
   reloadGameInfo: () => void;
   tagInfo: TagValue;
 }
 
-export default function PlatformsModal({setModal, reloadGameInfo, tagInfo}: PlatformsModalProps) {
+export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInfoModalProps) {
   const iconColors: any = {
     0: "#FFF",
     1: config.greenBar,

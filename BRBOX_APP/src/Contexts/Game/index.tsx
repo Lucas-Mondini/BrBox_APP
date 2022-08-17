@@ -22,7 +22,7 @@ type GameData = {
   images: ImageType[];
   loading: boolean;
   linkList: LinkType[];
-  gameTime: Number | string | null;
+  gameTime: number | null;
   modeList: GenreMode[];
   platform: Platform | null;
   genreList: GenreMode[];
@@ -38,7 +38,7 @@ type GameData = {
   setLink: (value: string) => void;
   setImages: (value: ImageType[]) => void;
   setLoading: (value: boolean) => void;
-  setGameTime: (value: Number| string | null) => void;
+  setGameTime: (value: number | null) => void;
   setPlatform: (value: Platform | null) => void;
   setModeList: (value: GenreMode[]) => void;
   setLinkList: (value: LinkType[]) => void;
@@ -81,7 +81,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
   const [images, setImages] = useState([] as ImageType[]);
-  const [gameTime, setGameTime] = useState<Number | string | null>(null);
+  const [gameTime, setGameTime] = useState<number | null>(null);
   const [linkList, setLinkList] = useState([] as LinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [modeList, setModeList] = useState<GenreMode[]>([]);
