@@ -14,5 +14,7 @@ gameRouter.post("/addGenre",     view.AddGenre)
 gameRouter.post("/removeGenre",  view.RemoveGenre)
 gameRouter.post("/addMode",     view.AddMode)
 gameRouter.post("/removeMode",  view.RemoveMode)
+gameRouter.post("/userTop3",  Auth.user, view.UserTop3)
+gameRouter.post("/userRatings",  Auth.user, view.UserRatings)
 
 export default gameRouter;

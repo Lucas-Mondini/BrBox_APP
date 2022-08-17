@@ -61,4 +61,14 @@ export default class GameView extends View {
         const object = await controller.RemoveMode(req);
         return res.status(object.status).json(object.value);
     }
+
+    UserTop3 = async (req: Request, res: Response) => {
+        const object = await controller.UserTop3(req);
+        return res.status(object.status).json(object.value);
+    }
+
+    UserRatings = async (req: Request, res: Response) => {
+        const object = await controller.UserRatings(req);
+        return res.status(object.status).json(object.value);
+    }
 }

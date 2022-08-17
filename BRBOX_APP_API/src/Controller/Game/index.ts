@@ -11,7 +11,9 @@ import Mode from "../../Model/Game/classification/mode";
 import GameTime from "../../Model/Game/gameTime";
 import Score from "../../Model/Game/Score";
 import TagValue from "../../Model/Game/tag/tagValue";
+import TagValueList from "../../Model/Game/tag/tagValueList";
 import Value from "../../Model/Game/tag/value";
+import { reccomend } from "../../services/reccomendation";
 import BusinessModelListController from "./businessModel/businessModelList";
 import GenreController from "./classification/genre";
 import ExternalLinkListController from "./externalLink/externalLinkList";
@@ -76,6 +78,8 @@ export default class GameController extends Controller {
     Index = async (req: Request) => {
         try {
             const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = ""} = req.query
+
+            reccomend(req.user.id);
             
             var where = "1 = $1";
             let wherename = "1"
@@ -308,6 +312,83 @@ export default class GameController extends Controller {
                         return {status: 200, value: {
                             games: []
                         }};
+                    }
+                }
+                
+                UserTop3 = async (req: Request) => {
+                    try {
+                        const id = req.user.id;
+                        const games = await AppDataSource.getRepository(Game).find({where: {
+                            tagList: {
+                                tagValues: {
+                                    user: {
+                                        id: id
+                                    }
+                                }
+                            }
+                        }, relations: [...this.relations, "tagList.tagValues"]})
+
+                        let format = new Array();
+                        const retObj = new Array();
+                        for (const game of games) {
+                            format.push(this.linkFormatter(game))
+                            game.tagList = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {
+                                id: game.tagList.id,
+                                tagValues: {
+                                    user: {
+                                        id: req.user.id
+                                    }
+                                }
+                            }, relations: ["tagValues"]})
+                        }
+                        format = format.sort((i, j)=> j.tagList.tagValues.length - i.tagList.tagValues.length)
+                        for (let i = 0; i < 3; i++) {
+                            if(format[i])
+                                retObj.push(format[i]);
+                        }
+
+                        return {status: 200, value: {
+                            games: [...retObj]
+                        }};
+
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+                    }
+                }
+
+                UserRatings = async (req: Request) => {
+                    try {
+                        const id = req.user.id;
+                        const games = await AppDataSource.getRepository(Game).find({where: {
+                            tagList: {
+                                tagValues: {
+                                    user: {
+                                        id: id
+                                    }
+                                }
+                            }
+                        }, relations: [...this.relations, "tagList.tagValues"]})
+
+                        let format = new Array();
+                        for (const game of games) {
+                            format.push(this.linkFormatter(game))
+                            game.tagList = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {
+                                id: game.tagList.id,
+                                tagValues: {
+                                    user: {
+                                        id: req.user.id
+                                    }
+                                }
+                            }, relations: ["tagValues"]})
+                        }
+                        format = format.sort((i, j)=> j.tagList.tagValues.length - i.tagList.tagValues.length)
+
+                        return {status: 200, value: {
+                            games: [...format]
+                        }};
+
+                    } catch (e : any) {
+                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
                     }
                 }
                 
