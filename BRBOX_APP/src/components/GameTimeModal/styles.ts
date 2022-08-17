@@ -1,19 +1,22 @@
 import { StyleSheet } from "react-native";
+import config from "../../../brbox.config.json";
 
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: "3%",
-    height: "100%",
-    justifyContent: "center"
+    height: "75%",
+    justifyContent: "space-between",
   },
   modal: {
-    height: "25%",
-    marginTop: "50%",
-    justifyContent: "center"
+    //justifyContent: "space-between",
   },
-  input: {
-    marginTop: 15
-  },
+  title: {
+    textAlign: "center",
+    marginTop: 25,
+    marginBottom: 25,
+    fontSize: 23,
+    fontFamily: config.fontFamilyBold,
+  }
 });
 
 export default styles;

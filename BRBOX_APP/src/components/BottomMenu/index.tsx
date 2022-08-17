@@ -37,7 +37,7 @@ export default function BottomMenu()
 
   return (
     <View style={[styles.bottomMenuContainer, backgroundColor]}>
-      <TouchableOpacity style={styles.button} onPress={() => goTo("Home", {search: true})}>
+      <TouchableOpacity style={styles.button} onPress={() => goTo("SearchGame")}>
         <Icon name="search" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {filterUser: true})}}>
