@@ -102,650 +102,745 @@ export default class GameController extends Controller {
             
             const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0
             
-            //Query magica, não toque nela, sujeito a mão cair
-            //horas gastas nessa query: 22h
-            let games = await AppDataSource.query(this.getIndexQuery(where, orderBy, 0),
-                                [   
-                                    wherename,
-                                    ammount,
-                                    skip
-                                ]);
-                            //transforma o retorno da query em objeto para ser exibido na tela
-                            games = games.map((i : any) => {
-                                const game =  {
-                                    id: i.gameid,
-                                    name: i.gamename,
-                                    image: i.imagelink,
-                                    tags: games .filter((j : any) => j.gameid == i.gameid)
-                                                .map((j: any) => {
-                                                    if(j.tagname)
-                                                        return {
-                                                            tag: j.tagname,
-                                                            id: j.tagid,
-                                                            icon: j.tagicon,
-                                                            total: Number(j.qty_up) + Number(j.qty_neutral) + Number(j.qty_down),
-                                                            upVotes: j.qty_up,
-                                                            neutralVotes: j.qty_neutral,
-                                                            downVotes: j.qty_down
-                                                        }
-                                                    return 
-                                    })
-                                }
-                                return game;
-                                //limpa os repetidos
-                            }).filter((value : any, index: any) => 
-                            games.findIndex((v: any) => v.gameid === value.id ) == index
-                            //adiciona os valores principais encontrados nos top votados de maneira unica
-                          ).map((game: any) => {
+            let games = await this.getGamesFormatted(req, where, orderBy, wherename, ammount, skip, 0)
 
-                            game.tags = game.tags.filter( (i:any) => i != undefined)
-                            if(game.tags) {
-
-                                game.tags = game.tags.filter(
-                                    (value: any, index: any, self: any) => index === self.findIndex(
-                                        (t : any) => (t.tag == value.tag)
-                                        ))
-                                const sortedUp      = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
-                                const sortedNeutral = [...game.tags.sort((a: any, b: any) => b.neutralVotes - a.neutralVotes)]
-                                const sortedDown    = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
-
-                                game.tags = [];
-                                if(sortedUp[0] && Number(sortedUp[0].upVotes) > 0) {
-                                    game.tags.push({
-                                        value: "up",
-                                        ...sortedUp[0]
-                                    })
-                                }
-                                if(sortedNeutral) {
-                                    for (const sort of sortedNeutral) {
-                                        let breakValue = false
-                                        if (game.tags.length > 0) {
-                                            for (const tagsInGames of game.tags) {
-                                                if(sort.id != tagsInGames.id && Number(sort.neutralVotes) > 0) {
-                                                    game.tags.push({
-                                                        value: "neutral",
-                                                        ...sort
-                                                    })
-                                                    breakValue = true;
-                                                    break;
-                                                }
-                                            }
-                                        } else {
-                                            if(sort && Number(sort.neutralVotes) > 0) {
-                                                game.tags.push({
-                                                    value: "neutral",
-                                                    ...sort
-                                                })
-                                            }
-                                            breakValue = true;
-                                        }
-                                        if(breakValue)
-                                            break;
-                                    }
-                                }
-
-                                if(sortedDown) {
-                                    for (const sort of sortedDown) {
-                                        let breakValue = false
-                                        if (game.tags.length > 0) {
-                                            for (const tagsInGames of game.tags) {
-                                                if(sort.id != tagsInGames.id && Number(sort.downVotes) > 0) {
-                                                    game.tags.push({
-                                                        value: "down",
-                                                        ...sort
-                                                    })
-                                                    breakValue = true;
-                                                    break;
-                                                }
-                                            }
-                                        } else {
-                                            if(sort && Number(sort.downVotes) > 0) {
-                                                game.tags.push({
-                                                    value: "down",
-                                                    ...sort
-                                                })
-                                            }
-                                            breakValue = true;
-                                        }
-                                        if(breakValue)
-                                            break;
-                                    }
-                                }
-                            }
-
-                                return game
-                          });
-
-                          //busca o tempo de jogo do usuario em cada jogo retornado pela query anterior
-                          const gametime = await AppDataSource.query(`
-                            select * 
-                            from 
-                                game_time gt 
-                            where 
-                                "userId" = ${req.user.id} and "gameId" in (${games.map((i: any) => i.id).toString()})
-                          `);
-
-                          //adiciona o gametime no objeto a ser retornado
-                          games.map((i : any) => {
-                            for (const j of gametime) {
-                                if(j.gameId == i.id) {
-                                    i.gameTime = j.time
-                                    return i
-                                } else {
-                                    i.gameTime = 0
-                                }
-                            }
-                            return i
-                        });
-
-                        return {status: 200, value: {
-                            games
-                        }};
-                    }
-                    catch (e : any) {
-                        //XGH axioma 2
-                        return {status: 200, value: {
-                            games: []
-                        }};
-                    }
-                }
+            return {status: 200, value: {
+                games
+            }};
+        }
+        catch (e : any) {
+            //XGH axioma 2
+            return {status: 200, value: {
+                games: []
+            }};
+        }
+    }
                 
-                UserTop3 = async (req: Request) => {
-                    try {
-                        const id = req.user.id;
-                        const games = await AppDataSource.getRepository(Game).find({where: {
-                            tagList: {
-                                tagValues: {
-                                    user: {
-                                        id: id
-                                    }
-                                }
-                            }
-                        }, relations: [...this.relations, "tagList.tagValues"]})
+UserTop3 = async (req: Request) => {
+    try {
+        var where = "1 = $1";
+        let wherename = "1"
+        let games = await this.getGamesFromUserFormated(req, where, wherename);
+        let top3 = games.slice(0, 3)
+                   
+        return {status: 200, value: {
+            top3
+        }};
+    } catch (e : any) {
+        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+    }
+}
 
-                        let format = new Array();
-                        const retObj = new Array();
-                        for (const game of games) {
-                            format.push(this.linkFormatter(game))
-                            game.tagList = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {
-                                id: game.tagList.id,
-                                tagValues: {
-                                    user: {
-                                        id: req.user.id
-                                    }
-                                }
-                            }, relations: ["tagValues"]})
-                        }
-                        format = format.sort((i, j)=> j.tagList.tagValues.length - i.tagList.tagValues.length)
-                        for (let i = 0; i < 3; i++) {
-                            if(format[i])
-                                retObj.push(format[i]);
-                        }
-
-                        return {status: 200, value: {
-                            games: [...retObj]
-                        }};
-
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
-
-                UserRatings = async (req: Request) => {
-                    try {
-                        const id = req.user.id;
-                        const games = await AppDataSource.getRepository(Game).find({where: {
-                            tagList: {
-                                tagValues: {
-                                    user: {
-                                        id: id
-                                    }
-                                }
-                            }
-                        }, relations: [...this.relations, "tagList.tagValues"]})
-
-                        let format = new Array();
-                        for (const game of games) {
-                            format.push(this.linkFormatter(game))
-                            game.tagList = await AppDataSource.getRepository(TagValueList).findOneOrFail({where: {
-                                id: game.tagList.id,
-                                tagValues: {
-                                    user: {
-                                        id: req.user.id
-                                    }
-                                }
-                            }, relations: ["tagValues"]})
-                        }
-                        format = format.sort((i, j)=> j.tagList.tagValues.length - i.tagList.tagValues.length)
-
-                        return {status: 200, value: {
-                            games: [...format]
-                        }};
-
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
+    UserRatings = async (req: Request) => {
+        try {
+            var where = "1 = $1";
+            let wherename = "1"
+            let games = await this.getGamesFromUserFormated(req, where, wherename);
+                       
+            return {status: 200, value: {
+                games
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
                 
-                //@ts-ignore
-                Get = async (req: Request) => {
-                    try {
-                        const id = req.params.id
-                        const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
-                        
-                        if(!game)
-                        return { status: 404, game: {message: "game not found" }};
-                        
-                        const gameTime = await AppDataSource.getRepository(GameTime).findOne({where: {
-                            game: {
-                                id: game.id
-                            },
-                            user: {
-                                id: req.user.id
-                            },
-                        }})
+    //@ts-ignore
+    Get = async (req: Request) => {
+        try {
+            const id = req.params.id
+            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: this.relations});
+            
+            if(!game)
+            return { status: 404, game: {message: "game not found" }};
+            
+            const gameTime = await AppDataSource.getRepository(GameTime).findOne({where: {
+                game: {
+                    id: game.id
+                },
+                user: {
+                    id: req.user.id
+                },
+            }})
 
-                        const score = await AppDataSource.getRepository(Score).findOne({
-                            where: {
-                                game: {
-                                    id: game.id
-                                }
-                            }
-                        })
+            const score = await AppDataSource.getRepository(Score).findOne({
+                where: {
+                    game: {
+                        id: game.id
+                    }
+                }
+            })
 
-                        const returnObj = {
-                            ...this.linkFormatter(game),
-                            score: score?.value,
-                            gameTime: gameTime? gameTime.time : null
-                        }
-                        
-                        return {status: 200, value: {
-                            ...returnObj
-                        }};
-                    }  catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                    
-                }
-                
-                //@ts-ignore
-                Update = async (req: Request) => {
-                    try {
-                        const {id, new_name, genres, modes} = req.body
-                        const game = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
-                        
-                        if(!game)
-                        return { status: 404, value: {message: "game not found" }};
-                        
-                        
-                        const externalLinkList = await new ExternalLinkListController().Update(req, game.linkList.id);
-                        const imageList = await new ImageListController().Update(req, game.imageList.id);
-                        const businessModelList = await new BusinessModelListController().Update(req, game.businessModelList.id);
-                        
-                        game.name = new_name || game.name;
-                        game.linkList = externalLinkList;
-                        game.imageList = imageList;
-                        game.businessModelList = businessModelList;
+            const returnObj = {
+                ...this.linkFormatter(game),
+                score: score?.value,
+                gameTime: gameTime? gameTime.time : null
+            }
+            
+            return {status: 200, value: {
+                ...returnObj
+            }};
+        }  catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+        
+    }
+    
+    //@ts-ignore
+    Update = async (req: Request) => {
+        try {
+            const {id, new_name, genres, modes} = req.body
+            const game = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
+            
+            if(!game)
+            return { status: 404, value: {message: "game not found" }};
+            
+            
+            const externalLinkList = await new ExternalLinkListController().Update(req, game.linkList.id);
+            const imageList = await new ImageListController().Update(req, game.imageList.id);
+            const businessModelList = await new BusinessModelListController().Update(req, game.businessModelList.id);
+            
+            game.name = new_name || game.name;
+            game.linkList = externalLinkList;
+            game.imageList = imageList;
+            game.businessModelList = businessModelList;
 
-                        if(genres) {
-                            const game_genres = await AppDataSource.getRepository(Genre).find({where: {id: In(genres)}});
-                            game.genres = game_genres;
-                        }
-                        if(modes) {
-                            const game_modes = await AppDataSource.getRepository(Mode).find({where: {id: In(modes)}});
-                            game.modes = game_modes;
-                        }
-                        
-                        await AppDataSource.getRepository(Game).save(game);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                    }
-                    catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
-                
-                Delete = async (req: Request) => {
-                    try {
-                        const id = req.params.id
-                        const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: ["tagList", "imageList", "linkList"]});
-                        
-                        if(!game)
-                        return { status: 404, value: {message: "value not found" }};
-                        
-                        const reqExternalLinkList = req;
-                        const reqImageList = req;
-                        const reqTagValueList = req;
-                        const reqBusinessModelList = req;
+            if(genres) {
+                const game_genres = await AppDataSource.getRepository(Genre).find({where: {id: In(genres)}});
+                game.genres = game_genres;
+            }
+            if(modes) {
+                const game_modes = await AppDataSource.getRepository(Mode).find({where: {id: In(modes)}});
+                game.modes = game_modes;
+            }
+            
+            await AppDataSource.getRepository(Game).save(game);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        }
+        catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+    
+    Delete = async (req: Request) => {
+        try {
+            const id = req.params.id
+            const game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: Number(id)}, relations: ["tagList", "imageList", "linkList"]});
+            
+            if(!game)
+            return { status: 404, value: {message: "value not found" }};
+            
+            const reqExternalLinkList = req;
+            const reqImageList = req;
+            const reqTagValueList = req;
+            const reqBusinessModelList = req;
 
-                        reqExternalLinkList.params.id           = game.linkList.id.toString();
-                        reqImageList.params._id                 = game.imageList.id.toString();
-                        reqTagValueList.params._id              = game.tagList.id.toString();
-                        reqBusinessModelList.params._id         = game.businessModelList.id.toString();
-                        const gameTime = await AppDataSource.getRepository(GameTime).find({where: {
-                            game: {
-                                id: Number(id)
-                            }
-                        }})
-                        if(gameTime)
-                            AppDataSource.getRepository(GameTime).remove(gameTime);
-                        const gameScore = await AppDataSource.getRepository(Score).findOneOrFail({where: {
-                            game: {
-                                id: Number(id)
-                            }
-                        }})
-                        AppDataSource.getRepository(Score).delete(gameScore);
-                        
-                        
-                        await new ExternalLinkListController().Delete(reqExternalLinkList);
-                        await new ImageListController().Delete(reqImageList);
-                        await new TagValueListController().Delete(reqTagValueList);
-                        await new BusinessModelListController().Delete(reqBusinessModelList);
-                        
-                        
-                        
-                        
-                        await AppDataSource.getRepository(Game).remove(game);
-                        const dead = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
-                        
-                        if(!dead)
-                        return {
-                            status: 200,
-                            value: {message: "deleted 1 value"}
-                        }
-                        return {
-                            status: 501,
-                            value: {message: "unhandled error"}
-                        }
-                    }
-                    catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
+            reqExternalLinkList.params.id           = game.linkList.id.toString();
+            reqImageList.params._id                 = game.imageList.id.toString();
+            reqTagValueList.params._id              = game.tagList.id.toString();
+            reqBusinessModelList.params._id         = game.businessModelList.id.toString();
+            const gameTime = await AppDataSource.getRepository(GameTime).find({where: {
+                game: {
+                    id: Number(id)
                 }
-                
-                
-                AddLink = async(req: Request) => {
-                    try {
-                        const {gameId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        
-                        const ELLReq = req;
-                        ELLReq.body.externalLinkListId = game.linkList.id
-                        
-                        game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                    
+            }})
+            if(gameTime)
+                AppDataSource.getRepository(GameTime).remove(gameTime);
+            const gameScore = await AppDataSource.getRepository(Score).findOneOrFail({where: {
+                game: {
+                    id: Number(id)
                 }
-                
-                RemoveLink = async (req: Request) => {
-                    try {
-                        const {gameId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        
-                        const ELLReq = req;
-                        ELLReq.body.externalLinkListId = game.linkList.id
-                        
-                        game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                        
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
-                
-                AddImage = async(req: Request) => {
-                    try {
-                        const {gameId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        
-                        const ILReq = req;
-                        ILReq.body.imageListId = game.imageList.id
-                        
-                        game.imageList = await new ImageListController().AddImages(ILReq);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                    
-                }
-                
-                RemoveImage = async (req: Request) => {
-                    try {
-                        const {gameId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        
-                        const ILReq = req;
-                        ILReq.body.imageListId = game.imageList.id
-                        
-                        game.imageList = await new ImageListController().RemoveImage(ILReq);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                        
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
+            }})
+            AppDataSource.getRepository(Score).delete(gameScore);
+            
+            
+            await new ExternalLinkListController().Delete(reqExternalLinkList);
+            await new ImageListController().Delete(reqImageList);
+            await new TagValueListController().Delete(reqTagValueList);
+            await new BusinessModelListController().Delete(reqBusinessModelList);
+            
+            
+            
+            
+            await AppDataSource.getRepository(Game).remove(game);
+            const dead = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
+            
+            if(!dead)
+            return {
+                status: 200,
+                value: {message: "deleted 1 value"}
+            }
+            return {
+                status: 501,
+                value: {message: "unhandled error"}
+            }
+        }
+        catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+    
+    
+    AddLink = async(req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            
+            const ELLReq = req;
+            ELLReq.body.externalLinkListId = game.linkList.id
+            
+            game.linkList = await new ExternalLinkListController().AddLink(ELLReq);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+        
+    }
+    
+    RemoveLink = async (req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            
+            const ELLReq = req;
+            ELLReq.body.externalLinkListId = game.linkList.id
+            
+            game.linkList = await new ExternalLinkListController().RemoveLink(ELLReq);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+            
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+    
+    AddImage = async(req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            
+            const ILReq = req;
+            ILReq.body.imageListId = game.imageList.id
+            
+            game.imageList = await new ImageListController().AddImages(ILReq);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+        
+    }
+    
+    RemoveImage = async (req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            
+            const ILReq = req;
+            ILReq.body.imageListId = game.imageList.id
+            
+            game.imageList = await new ImageListController().RemoveImage(ILReq);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+            
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
 
-                AddBusinessModel = async(req: Request) => {
-                    try {
-                        const {gameId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        
-                        const BMReq = req;
-                        BMReq.body.businessModelListId = game.businessModelList.id
-                        
-                        game.businessModelList = await new BusinessModelListController().AddBusinessModels(BMReq);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                    
+    AddBusinessModel = async(req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            
+            const BMReq = req;
+            BMReq.body.businessModelListId = game.businessModelList.id
+            
+            game.businessModelList = await new BusinessModelListController().AddBusinessModels(BMReq);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+        
+    }
+    
+    RemoveBusinessModel = async (req: Request) => {
+        try {
+            const {gameId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            
+            const BMReq = req;
+            BMReq.body.businessModelListId = game.businessModelList.id
+            
+            game.businessModelList = await new BusinessModelListController().RemoveBusinessModel(BMReq);
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+            
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+    AddGenre = async(req: Request) => {
+        try {
+            const {gameId, GenreIds} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            var genres = await AppDataSource.getRepository(Genre).find({where: {id: In(GenreIds)}})
+            if(genres)
+                for (const g of genres) {
+                    if(!game.genres.some(i => {return JSON.stringify(g) === JSON.stringify(i)}))
+                        game.genres.push(g)
                 }
-                
-                RemoveBusinessModel = async (req: Request) => {
-                    try {
-                        const {gameId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        
-                        const BMReq = req;
-                        BMReq.body.businessModelListId = game.businessModelList.id
-                        
-                        game.businessModelList = await new BusinessModelListController().RemoveBusinessModel(BMReq);
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                        
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
-                AddGenre = async(req: Request) => {
-                    try {
-                        const {gameId, GenreIds} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        var genres = await AppDataSource.getRepository(Genre).find({where: {id: In(GenreIds)}})
-                        if(genres)
-                            for (const g of genres) {
-                                if(!game.genres.some(i => {return JSON.stringify(g) === JSON.stringify(i)}))
-                                    game.genres.push(g)
-                            }
-                        await AppDataSource.getRepository(Game).save(game);
-                        
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                    
-                }
-                
-                RemoveGenre = async (req: Request) => {
-                    try {
-                        const {gameId, genreId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            await AppDataSource.getRepository(Game).save(game);
+            
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+        
+    }
+    
+    RemoveGenre = async (req: Request) => {
+        try {
+            const {gameId, genreId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
 
-                        game.genres = game.genres.filter(i=> i.id != genreId)
-                        await AppDataSource.getRepository(Game).save(game);
+            game.genres = game.genres.filter(i=> i.id != genreId)
+            await AppDataSource.getRepository(Game).save(game);
 
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                        
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+            
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+    AddMode = async(req: Request) => {
+        try {
+            const {gameId, ModeIds} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            var modes = await AppDataSource.getRepository(Mode).find({where: {id: In(ModeIds)}})
+            if(modes)
+                for (const m of modes) {
+                    if(!game.modes.some(i => {return JSON.stringify(m) === JSON.stringify(i)}))
+                        game.modes.push(m)
                 }
-                AddMode = async(req: Request) => {
-                    try {
-                        const {gameId, ModeIds} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
-                        var modes = await AppDataSource.getRepository(Mode).find({where: {id: In(ModeIds)}})
-                        if(modes)
-                            for (const m of modes) {
-                                if(!game.modes.some(i => {return JSON.stringify(m) === JSON.stringify(i)}))
-                                    game.modes.push(m)
-                            }
-                        await AppDataSource.getRepository(Game).save(game);
-                        
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                    
-                }
-                
-                RemoveMode = async (req: Request) => {
-                    try {
-                        const {gameId, modeId} = req.body
-                        var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
+            await AppDataSource.getRepository(Game).save(game);
+            
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+        
+    }
+    
+    RemoveMode = async (req: Request) => {
+        try {
+            const {gameId, modeId} = req.body
+            var game = await AppDataSource.getRepository(Game).findOneOrFail({where: {id: gameId}, relations: this.relations});
 
-                        game.modes = game.modes.filter(i=> i.id != modeId)
-                        await AppDataSource.getRepository(Game).save(game);
+            game.modes = game.modes.filter(i=> i.id != modeId)
+            await AppDataSource.getRepository(Game).save(game);
 
-                        
-                        return {status: 200, value: {
-                            ...this.linkFormatter(game)
-                        }};
-                        
-                    } catch (e : any) {
-                        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
-                    }
-                }
-                
-                
-                linkFormatter = (game: Game) => {
-                    (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
-                        return (<any>item) = {  
-                            id: item.id,
-                            platform: item.platform.id,
-                            platformName: item.platform.name,
-                            link: item.link
-                        }
+            
+            return {status: 200, value: {
+                ...this.linkFormatter(game)
+            }};
+            
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
+    
+    
+    linkFormatter = (game: Game) => {
+        (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
+            return (<any>item) = {  
+                id: item.id,
+                platform: item.platform.id,
+                platformName: item.platform.name,
+                link: item.link
+            }
+        })
+        return game;
+    }
+
+    getGamesFromUserFormated = async (req: any, where: any, wherename: any) => {
+        let games = await this.getGamesFromUser(req, where, "", wherename);
+        return games.map((game: any) => {
+
+            game.tags = game.tags.filter( (i:any) => i != undefined)
+            if(game.tags) {
+
+                game.tags = game.tags.filter(
+                    (value: any, index: any, self: any) => index === self.findIndex(
+                        (t : any) => (t.tag == value.tag)
+                        ))
+                const sortedUp      = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
+                const sortedNeutral = [...game.tags.sort((a: any, b: any) => b.neutralVotes - a.neutralVotes)]
+                const sortedDown    = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
+
+                game.tags = [];
+                if(sortedUp[0] && Number(sortedUp[0].upVotes) > 0) {
+                    game.tags.push({
+                        value: "up",
+                        ...sortedUp[0]
                     })
-                    return game;
+                }
+                if(sortedNeutral) {
+                    for (const sort of sortedNeutral) {
+                        let breakValue = false
+                        if (game.tags.length > 0) {
+                            for (const tagsInGames of game.tags) {
+                                if(sort.id != tagsInGames.id && Number(sort.neutralVotes) > 0) {
+                                    game.tags.push({
+                                        value: "neutral",
+                                        ...sort
+                                    })
+                                    breakValue = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            if(sort && Number(sort.neutralVotes) > 0) {
+                                game.tags.push({
+                                    value: "neutral",
+                                    ...sort
+                                })
+                            }
+                            breakValue = true;
+                        }
+                        if(breakValue)
+                            break;
+                    }
                 }
 
-                getIndexQuery = (where: string, orderBy: string, Mode: number) => {
-                    /**
-                     * 
-                     * modes : 
-                     *      0 default
-                     *      1 user only
-                     * 
-                     */
+                if(sortedDown) {
+                    for (const sort of sortedDown) {
+                        let breakValue = false
+                        if (game.tags.length > 0) {
+                            for (const tagsInGames of game.tags) {
+                                if(sort.id != tagsInGames.id && Number(sort.downVotes) > 0) {
+                                    game.tags.push({
+                                        value: "down",
+                                        ...sort
+                                    })
+                                    breakValue = true;
+                                    break;
+                                }
+                            }
+                        } else {
+                            if(sort && Number(sort.downVotes) > 0) {
+                                game.tags.push({
+                                    value: "down",
+                                    ...sort
+                                })
+                            }
+                            breakValue = true;
+                        }
+                        if(breakValue)
+                            break;
+                    }
+                }
+            }
+                return game
+            });
+    }
+    getGamesFromUser =async (req: any, where: any, orderBy: any, wherename: any) => {
+        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, 1),
+                    [   
+                        wherename,
+                        9999999,
+                        0
+                    ])
 
-                    return ` 
-                    select
-                        game.id as gameId,
-                        game.name gameName,
-                        image.id as imageId,
-                        image.link as imageLink,
-                        tag_data.name tagname,
-                        tag_data.id tagid,
-                        tag_data.icon tagicon,
-                        COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
-                        COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
-                        COALESCE(SUM(tag_data.qty_neut), 0) as qty_neutral,
-                        COALESCE(SUM(tag_data.qty_down), 0) as qty_down
-                    from 
-                        game
-                    left join 
-                                (
-                                    select
-                                        tvltvtv."tagValueListId",
-                                        tag.id,
-                                        tag."name",
-                                        tag.icon,
-                                        value."name" as value_name,
-                                        value.id as value_id,
-                                        coalesce(sum(tag_value."valueId"), 0) as qty_tot,
-                                        coalesce(sum(CASE when value.id = 1 then 1 * tag_value.weight end), 0) as qty_up,
-                                        coalesce(sum(CASE when value.id = 2 then 1 * tag_value.weight end), 0) as qty_neut,
-                                        coalesce(sum(CASE when value.id = 3 then 1 * tag_value.weight end), 0) as qty_down
-                                    from
-                                        tag_value_list
-                                    inner join 
-                                        tag_value_list_tag_values_tag_value tvltvtv on tvltvtv."tagValueListId" = tag_value_list.id
-                                    inner join 
-                                        tag_value on tag_value.id = tvltvtv."tagValueId"
-                                    inner join 
-                                        tag on  tag.id = tag_value."tagId"
-                                    inner join 
-                                        value on value.id = tag_value."valueId" 
-                                    group by 
-                                        tvltvtv."tagValueListId", tag.id, tag."name", value.id, value."name"
-                        ) tag_data on (game."tagListId" = tag_data."tagValueListId")
-                        INNER join (
-                                    select image.id, image.link, ilii."imageListId" listId
-                                    from image_list_images_image ilii
-                                     inner join image on image.id = ilii."imageId"
-                                    ) image on (image.listId = game."imageListId")
-                        where (
-                                game.id in (
-                                            select game.id from game 
-                                            where ${where}
-                                            ${orderBy}
-                                            limit $2
-                                            offset $3
-                                            )
-                            )
-                        group by
-                            game.id,
-                            game."name",
-                            image.id,
-                            image.link,
-                            tag_data."name",
-                            tag_data."id",
-                            tag_data.icon
-                        order by 
-                            game.id
-                                        `
-                }              
+            games = games.map((i : any) => {
+                const game =  {
+                    id: i.gameid,
+                    name: i.gamename,
+                    image: i.imagelink,
+                    tags: games .filter((j : any) => j.gameid == i.gameid)
+                                .map((j: any) => {
+                                    if(j.tagname)
+                                        return {
+                                            tag: j.tagname,
+                                            id: j.tagid,
+                                            icon: j.tagicon,
+                                            total: Number(j.qty_up) + Number(j.qty_neutral) + Number(j.qty_down),
+                                            upVotes: j.qty_up,
+                                            neutralVotes: j.qty_neutral,
+                                            downVotes: j.qty_down
+                                        }
+                                    return 
+                    })
+                }
+                return game;
+                //limpa os repetidos
+            }).filter((value : any, index: any) => 
+            games.findIndex((v: any) => v.gameid === value.id ) == index
+            //adiciona os valores principais encontrados nos top votados de maneira unica
+            ).map((value : any) =>  {
+                    value.tags = value.tags.filter((value: any, index: any, self: any) =>
+                        index === self.findIndex((t: any) => (
+                    t.id === value.id
+                    ))
+                )
+                return value;
+            });
+            
+            games = games.sort((i: any, j: any) => j.tags.length - i.tags.length)
+            return games;
+    }
+    getGamesFormatted = async (req: any, where: string, orderBy: string, wherename: string, ammount: any, skip: any, mode: number) => {
+        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, mode),
+                    [   
+                        wherename,
+                        ammount,
+                        skip
+                    ]);
+                //transforma o retorno da query em objeto para ser exibido na tela
+                games = games.map((i : any) => {
+                    const game =  {
+                        id: i.gameid,
+                        name: i.gamename,
+                        image: i.imagelink,
+                        tags: games .filter((j : any) => j.gameid == i.gameid)
+                                    .map((j: any) => {
+                                        if(j.tagname)
+                                            return {
+                                                tag: j.tagname,
+                                                id: j.tagid,
+                                                icon: j.tagicon,
+                                                total: Number(j.qty_up) + Number(j.qty_neutral) + Number(j.qty_down),
+                                                upVotes: j.qty_up,
+                                                neutralVotes: j.qty_neutral,
+                                                downVotes: j.qty_down
+                                            }
+                                        return 
+                        })
+                    }
+                    return game;
+                    //limpa os repetidos
+                }).filter((value : any, index: any) => 
+                games.findIndex((v: any) => v.gameid === value.id ) == index
+                //adiciona os valores principais encontrados nos top votados de maneira unica
+                ).map((game: any) => {
+
+                game.tags = game.tags.filter( (i:any) => i != undefined)
+                if(game.tags) {
+
+                    game.tags = game.tags.filter(
+                        (value: any, index: any, self: any) => index === self.findIndex(
+                            (t : any) => (t.tag == value.tag)
+                            ))
+                    const sortedUp      = [...game.tags.sort((a: any, b: any) => b.upVotes - a.upVotes)]
+                    const sortedNeutral = [...game.tags.sort((a: any, b: any) => b.neutralVotes - a.neutralVotes)]
+                    const sortedDown    = [...game.tags.sort((a: any, b: any) => b.downVotes - a.downVotes)]
+
+                    game.tags = [];
+                    if(sortedUp[0] && Number(sortedUp[0].upVotes) > 0) {
+                        game.tags.push({
+                            value: "up",
+                            ...sortedUp[0]
+                        })
+                    }
+                    if(sortedNeutral) {
+                        for (const sort of sortedNeutral) {
+                            let breakValue = false
+                            if (game.tags.length > 0) {
+                                for (const tagsInGames of game.tags) {
+                                    if(sort.id != tagsInGames.id && Number(sort.neutralVotes) > 0) {
+                                        game.tags.push({
+                                            value: "neutral",
+                                            ...sort
+                                        })
+                                        breakValue = true;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                if(sort && Number(sort.neutralVotes) > 0) {
+                                    game.tags.push({
+                                        value: "neutral",
+                                        ...sort
+                                    })
+                                }
+                                breakValue = true;
+                            }
+                            if(breakValue)
+                                break;
+                        }
+                    }
+
+                    if(sortedDown) {
+                        for (const sort of sortedDown) {
+                            let breakValue = false
+                            if (game.tags.length > 0) {
+                                for (const tagsInGames of game.tags) {
+                                    if(sort.id != tagsInGames.id && Number(sort.downVotes) > 0) {
+                                        game.tags.push({
+                                            value: "down",
+                                            ...sort
+                                        })
+                                        breakValue = true;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                if(sort && Number(sort.downVotes) > 0) {
+                                    game.tags.push({
+                                        value: "down",
+                                        ...sort
+                                    })
+                                }
+                                breakValue = true;
+                            }
+                            if(breakValue)
+                                break;
+                        }
+                    }
+                }
+
+                    return game
+                });
+                //busca o tempo de jogo do usuario em cada jogo retornado pela query anterior
+                const gametime = await AppDataSource.query(`
+                select * 
+                from 
+                    game_time gt 
+                where 
+                    "userId" = ${req.user.id} and "gameId" in (${games.map((i: any) => i.id).toString()})
+                `);
+
+                //adiciona o gametime no objeto a ser retornado
+                games.map((i : any) => {
+                for (const j of gametime) {
+                    if(j.gameId == i.id) {
+                        i.gameTime = j.time
+                        return i
+                    } else {
+                        i.gameTime = 0
+                    }
+                }
+                return i
+            });
+                return games;
+    }
+
+    getIndexQuery = (req: any, where: string, orderBy: string, Mode: number) => {
+        /**
+         * 
+         * modes : 
+         *      0 default
+         *      1 user only
+         * 
+         */
+
+        //Query magica, não toque nela, sujeito a mão cair
+        //horas gastas nessa query: 25h
+        return ` 
+        select
+            game.id as gameId,
+            game.name gameName,
+            image.id as imageId,
+            image.link as imageLink,
+            tag_data.name tagname,
+            tag_data.id tagid,
+            tag_data.icon tagicon,
+            ${(Mode == 1? 
+                "tag_data.userId," : 
+                "")}
+            COALESCE(SUM(tag_data.qty_tot), 0) as qty_total,
+            COALESCE(SUM(tag_data.qty_up), 0) as qty_up,
+            COALESCE(SUM(tag_data.qty_neut), 0) as qty_neutral,
+            COALESCE(SUM(tag_data.qty_down), 0) as qty_down
+        from 
+            game
+        left join 
+                    (
+                        select
+                            tvltvtv."tagValueListId",
+                            tag.id,
+                            tag."name",
+                            tag.icon,
+                            value."name" as value_name,
+                            value.id as value_id,
+                            ${(Mode == 1? 
+                                `tag_value."userId" as userId,` : 
+                                "")}
+                            coalesce(sum(tag_value."valueId"), 0) as qty_tot,
+                            coalesce(sum(CASE when value.id = 1 then 1 * tag_value.weight end), 0) as qty_up,
+                            coalesce(sum(CASE when value.id = 2 then 1 * tag_value.weight end), 0) as qty_neut,
+                            coalesce(sum(CASE when value.id = 3 then 1 * tag_value.weight end), 0) as qty_down
+                        from
+                            tag_value_list
+                        inner join 
+                            tag_value_list_tag_values_tag_value tvltvtv on tvltvtv."tagValueListId" = tag_value_list.id
+                        inner join 
+                            tag_value on tag_value.id = tvltvtv."tagValueId"
+                        inner join 
+                            tag on  tag.id = tag_value."tagId"
+                        inner join 
+                            value on value.id = tag_value."valueId" 
+                        group by 
+                            tvltvtv."tagValueListId", tag.id, tag."name", value.id, value."name" ${(Mode == 1 ?
+                                    `, tag_value."userId"` 
+                                    : "")}
+            ) tag_data on (game."tagListId" = tag_data."tagValueListId")
+            INNER join (
+                        select image.id, image.link, ilii."imageListId" listId
+                        from image_list_images_image ilii
+                            inner join image on image.id = ilii."imageId"
+                        ) image on (image.listId = game."imageListId")
+            where (
+                    game.id in (
+                                select game.id from game 
+                                where ${where}
+                                ${orderBy}
+                                limit $2
+                                offset $3
+                                ) ${(Mode == 1 ?
+                                        `and userId = ${req.user.id}` :
+                                        "")}
+                )
+            group by
+                game.id,
+                game."name",
+                image.id,
+                image.link,
+                tag_data."name",
+                tag_data."id",
+                tag_data.icon
+                ${(Mode == 1 ? `,
+                                tag_data.userid` 
+                                : "")}
+            order by 
+                game.id
+                            `
+    }              
                 
             }
