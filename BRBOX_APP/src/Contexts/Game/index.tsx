@@ -51,7 +51,7 @@ type GameData = {
 
   addLink: () => void;
   addImage: () => void;
-  loadGame: (id: number) => Promise<void>;
+  loadGame: (id: number, errorCallback: () => void) => Promise<void>;
   createGame: () => Promise<void>;
   updateGame: () => Promise<void>;
   deleteGame: (callback?: () => void, gameId?: number) => Promise<void>;
@@ -239,14 +239,14 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     );
   }
 
-  async function loadGame(id: number)
+  async function loadGame(id: number, errorCallback: () => void)
   {
     setLoading(true);
 
     try {
       const response = await get(`/game/${id}`);
 
-      setRate(response.score);
+      setRate(Number(response.score));
       setId(response.id);
       setName(response.name);
       setImages(response.imageList.images);
@@ -258,7 +258,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setBusinessModelId(response.businessModelList.id);
       setBusinessModelList(response.businessModelList.businessModels);
     } catch (error) {
-      Alert.alert(getTerm(100071), getTerm(100072));
+      errorCallback();
     }
 
     setLoading(false);

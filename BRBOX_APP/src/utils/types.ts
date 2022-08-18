@@ -16,6 +16,7 @@ export type User = {
 export type Params = {
   id?: number;
   new?: boolean;
+  top3?: boolean;
   tags?: TagValue[];
   email?: string;
   search?: boolean;
@@ -101,4 +102,9 @@ export type Value = {
 export type RadioOption = {
   value: number;
   text: string;
+}
+
+export type Message = {
+  title: number;
+  message: number;
 }

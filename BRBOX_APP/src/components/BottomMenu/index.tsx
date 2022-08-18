@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { Alert, Share, TouchableOpacity, View } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import styles from "./styles";
 
@@ -28,11 +28,7 @@ export default function BottomMenu()
 
   async function shareApp()
   {
-    try {
-      await share(getTerm(100107), "playStore");
-    } catch (error) {
-      Alert.alert(getTerm(100108), getTerm(100109))
-    }
+    await share(getTerm(100107), "playStore");
   }
 
   return (

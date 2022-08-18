@@ -4,7 +4,6 @@ import config from "../../../brbox.config.json"
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: "3%",
-    height: "80%",
     justifyContent: "center"
   },
   option: {

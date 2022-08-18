@@ -1,6 +1,7 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
+  Alert,
   RefreshControl,
   ScrollView,
   Text,
@@ -57,9 +58,14 @@ const AddGame = () => {
     deleteGame(navigation.reset({index: 0, routes: [{name: "Home"}]}));
   }
 
+  function errorMessage()
+  {
+    Alert.alert(getTerm(100071), getTerm(100072));
+  }
+
   useEffect(() => {
     if (isFocused && params.id && !params.new) {
-      loadGame(params.id);
+      loadGame(params.id, errorMessage);
     }
 
     if (params.new) setLoading(false);
@@ -128,7 +134,7 @@ const AddGame = () => {
         style={[styles.container]}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={() => {
-            if (isFocused && params.id && !params.new) loadGame(params.id);
+            if (isFocused && params.id && !params.new) loadGame(params.id, errorMessage);
           }}/>
         }
       >

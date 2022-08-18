@@ -1,5 +1,5 @@
 import { StyleSheet } from "react-native";
-import config from "../../../brbox.config.json"
+import config from "../../../brbox.config.json";
 
 const styles = StyleSheet.create({
   platformCard: {

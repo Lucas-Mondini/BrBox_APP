@@ -124,7 +124,7 @@ UserTop3 = async (req: Request) => {
         let top3 = games.slice(0, 3)
                    
         return {status: 200, value: {
-            top3
+            games: top3
         }};
     } catch (e : any) {
         return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};

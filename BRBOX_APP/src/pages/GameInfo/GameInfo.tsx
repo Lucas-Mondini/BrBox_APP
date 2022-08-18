@@ -16,7 +16,7 @@ import { useGame } from '../../Contexts/Game';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 
-import { Params, Tag } from '../../utils/types';
+import { Message, Params, Tag } from '../../utils/types';
 
 import { useTheme } from '../../Contexts/Theme';
 import TagsContainers from '../../components/TagsContainers';
@@ -26,11 +26,12 @@ import GameTimeCard from '../../components/GameTimeCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useLinking } from '../../Contexts/LinkingProvider';
 import GameAssocInfoModal from '../../components/GameAssocInfoModal';
+import MessageModal from '../../components/MessageModal';
 
 const GameInfo = () => {
   const route = useRoute();
   const isFocused = useIsFocused();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const { share } = useLinking();
   const { getTerm } = useTerm();
@@ -44,6 +45,8 @@ const GameInfo = () => {
   const [modalAssoc, setModalAssoc] = useState(false);
   const [tagsContainer, setTagsContainer] = useState<React.ReactElement>();
   const [evaluationTags, setEvaluationTags] = useState<Tag[]>([]);
+
+  const [message, setMessage] = useState<Message | null>(null);
 
   const {deepLinking} = useLinking();
   const params = route.params as Params;
@@ -74,9 +77,14 @@ const GameInfo = () => {
     return <Text>{listComp}</Text>
   }
 
+  function setMessageError()
+  {
+    setMessage({title: 100071, message: 100072});
+  }
+
   useEffect(() => {
     if (isFocused && params.id) {
-      loadGame(params.id);
+      loadGame(params.id, setMessageError);
     }
   }, [isFocused]);
 
@@ -103,6 +111,17 @@ const GameInfo = () => {
       headerAddButtonIcon="share-2"
       headerAddButtonAction={shareApp}
     >
+      <MessageModal
+        visible={!!message}
+        message={message}
+        setModal={() => setMessage(null)}
+        buttonCustomText={100149}
+        buttonCustomFunction={() => {
+          setMessage(null);
+          navigation.reset({index: 0, routes: [{name: "Home"}]});
+        }}
+      />
+
       <GameTimeModal
         visible={modal}
         setModal={() => setModal(!modal)}
@@ -116,7 +135,7 @@ const GameInfo = () => {
       <ScrollView
         style={[styles.container]}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={() => loadGame(id)}/>
+          <RefreshControl refreshing={loading} onRefresh={() => loadGame(id, setMessageError)}/>
         }
       >
         {renderImages()}
@@ -142,9 +161,9 @@ const GameInfo = () => {
           </TouchableOpacity>
         }
 
-        <GameTimeCard onPress={() => setModal(!modal)}/>
+        {!!id && <GameTimeCard onPress={() => setModal(!modal)}/>}
 
-        {tagsContainer && tagsContainer}
+        {(tagsContainer && !!id) && tagsContainer}
       </ScrollView>
     </MainView>
   );

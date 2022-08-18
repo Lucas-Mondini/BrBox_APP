@@ -40,26 +40,43 @@ const Home = () => {
   const [gameName, setGameName] = useState("");
   const [gameSearch, setGameSearch] = useState("");
 
-  const [hideButton, setHideButton] = useState(params ? params.search : false);
+  const [hideButton, setHideButton] = useState(false);
 
-  const { get } = useRequest();
+  const { get, post } = useRequest();
   const { getTerm } = useTerm();
-  const { user } = useAuth();
   const { deepLinking, gameId, removeLinkingListener } = useLinking();
+
+  function getTitle()
+  {
+    if (params) {
+      if (params.top3) return 100171;
+      else if (params.filterUser) return 100001;
+    }
+  }
 
   async function getGames(loadingMoreGames: boolean = false)
   {
     try {
+      let response: any;
+
       if (loadingNoMore) {
         setLoadingMore(false);
         setLoading(false);
         return;
       };
 
-      const response = await get(
-        `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&userId=${params && params.filterUser ? user?.id : ""}`,
-        loadingMoreGames ? setLoadingMore : setLoading
-      );
+      if (params && (params.filterUser || params.top3)) {
+        response = await post(
+          `/game/${params.top3 ? "userTop3" : `userRatings?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`}`,
+          loadingMoreGames ? setLoadingMore : setLoading,
+          {}
+        );
+      } else {
+        response = await get(
+          `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}}`,
+          loadingMoreGames ? setLoadingMore : setLoading
+        );
+      }
 
       const gamesList = gameName ? [] : games;
 
@@ -102,7 +119,7 @@ const Home = () => {
                 title={item.name}
                 tags={item.tags}
                 imgUri={item.image}
-                extraCallbackOnNavigate={resetGameList}
+                extraCallbackOnNavigate={!params ? resetGameList : undefined}
               />
             )
           }
@@ -167,9 +184,10 @@ const Home = () => {
       showTitle
       showBottom
       loading={loading}
+      headerTitle={getTitle()}
       customHeader={header()}
       hideMenuButton={hideButton}
-      headerAddButtonAction={toggleSearch}
+      headerAddButtonAction={!params ? toggleSearch : undefined}
       headerAddButtonIcon={hideButton ? "x" : "search"}
     >
       <View style={styles.container}>

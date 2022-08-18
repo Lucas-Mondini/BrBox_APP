@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  Alert,
   ScrollView,
   Text,
   View,
@@ -16,6 +15,8 @@ import config from "../../../brbox.config.json";
 import styles from './styles';
 import Button from '../../components/Button';
 import { useTheme } from '../../Contexts/Theme';
+import MessageModal from '../../components/MessageModal';
+import { Message } from '../../utils/types';
 
 const Register = () => {
   const {register, loading} = useAuth();
@@ -32,23 +33,31 @@ const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [message, setMessage] = useState<Message | null>(null);
+
   async function registerUser()
   {
     if (!mail || !password || !confirmPassword || !username) {
-      return Alert.alert(getTerm(100085), getTerm(100087));
+      return setMessage({title: 100085, message: 100087});
     }
 
     if (password !== confirmPassword) {
-      return Alert.alert(getTerm(100101), getTerm(100102));
+      return setMessage({title: 100101, message: 100102});
     }
 
     await register(username, mail, password, confirmPassword, () => {
-      Alert.alert(getTerm(100077), getTerm(100078));
+      return setMessage({title: 100077, message: 100078});
     });
   }
 
   return (
     <MainView>
+      <MessageModal
+        visible={!!message}
+        message={message}
+        setModal={() => setMessage(null)}
+      />
+
       <View style={styles.titleView}>
         <Text
           style={[styles.title, titleColorStyle]}

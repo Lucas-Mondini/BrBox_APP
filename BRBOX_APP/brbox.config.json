@@ -20,7 +20,7 @@
   "placeholdersColor":"#7f7f7f",
   "subTitleMainColor":"#BFBFBF",
 
-  "apiUrl":"http://10.0.2.2:8080/", // Servidor
+  "apiUrl":"http://10.0.2.2:9512/", // Servidor
   //"apiUrl":"https://brbox-app.herokuapp.com/",
 
   "isDarkModeDefault" : "true",

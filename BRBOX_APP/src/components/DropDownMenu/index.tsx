@@ -1,5 +1,5 @@
 import React from "react";
-import { Alert, Modal, ScrollView, Share, Text, TouchableOpacity, View } from "react-native";
+import { Modal, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
@@ -40,11 +40,7 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
 
   async function shareApp()
   {
-    try {
-      await share(getTerm(100107), "playStore");
-    } catch (error) {
-      Alert.alert(getTerm(100108), getTerm(100109))
-    }
+    await share(getTerm(100107), "playStore");
   }
 
   function goTo(route: string, params?: Params)
@@ -64,6 +60,18 @@ export default function DropDownMenu({setModal}: DropDownMenuProps)
             callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home"}]}));
           }}>
             <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100007).toUpperCase()}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+            callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home", params: {filterUser: true}}]}));
+          }}>
+            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100001).toUpperCase()}</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+            callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home", params: {top3: true}}]}));
+          }}>
+            <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100171).toUpperCase()}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {

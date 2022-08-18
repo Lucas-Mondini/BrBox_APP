@@ -19,6 +19,8 @@ import { useRequest } from '../../Contexts/Request';
 import config from "../../../brbox.config.json";
 
 import styles from './styles';
+import { Message } from '../../utils/types';
+import MessageModal from '../../components/MessageModal';
 
 const Login = () => {
   const navigation = useNavigation<any>();
@@ -28,6 +30,7 @@ const Login = () => {
   const { signIn, loading, setLoading } = useAuth();
 
   const [mail, setMail] = useState("");
+  const [message, setMessage] = useState<Message | null>(null);
   const [password, setPassword] = useState("");
   const [forgotPassword, setForgotPassword] = useState(false);
 
@@ -38,11 +41,11 @@ const Login = () => {
   async function login()
   {
     if (!mail.trim() || !password.trim()) {
-      return Alert.alert(getTerm(100085), getTerm(100086));
+      return setMessage({title: 100085, message: 100086});
     }
 
     await signIn(mail, password, () => {
-      Alert.alert(getTerm(100083), getTerm(100084));
+      return setMessage({title: 100083, message: 100084});
     });
   }
 
@@ -60,6 +63,12 @@ const Login = () => {
   return (
     <MainView>
       <View style={[styles.container]}>
+        <MessageModal
+          visible={!!message}
+          message={message}
+          setModal={() => setMessage(null)}
+        />
+
         <ScrollView>
           <View style={styles.titleView}>
             <Text

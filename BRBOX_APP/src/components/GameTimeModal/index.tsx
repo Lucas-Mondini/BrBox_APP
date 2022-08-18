@@ -61,32 +61,29 @@ export default function GameTimeModal({visible, setModal}: GameTimeModalProps) {
       visible={visible}
       style={[styles.modal, {backgroundColor: color}]}
     >
+      <Text style={[styles.title, textColorStyle]}>{getTerm(100169)}:</Text>
 
-      <View style={[styles.container]}>
-        <Text style={[styles.title, textColorStyle]}>{getTerm(100169)}:</Text>
+      <RadioSelector
+        options={[
+          {value: 1, text: hours("0 - 2")},
+          {value: 3, text: hours("2 - 5")},
+          {value: 7, text: hours("5 - 8")},
+          {value: 9, text: hours("8 - 12")},
+          {value: 13, text: hours("12 - 20")},
+          {value: 21, text: hours("20 - 50")},
+          {value: 55, text: hours("50 - 100")},
+          {value: 112, text: hours("100+")}
+        ]}
+        selectedOption={userGameTime}
+        setOption={setUserGameTime}
+      />
 
-        <RadioSelector
-          options={[
-            {value: 1, text: hours("0 - 2")},
-            {value: 3, text: hours("2 - 5")},
-            {value: 7, text: hours("5 - 8")},
-            {value: 9, text: hours("8 - 12")},
-            {value: 13, text: hours("12 - 20")},
-            {value: 21, text: hours("20 - 50")},
-            {value: 55, text: hours("50 - 100")},
-            {value: 112, text: hours("100+")}
-          ]}
-          selectedOption={userGameTime}
-          setOption={setUserGameTime}
-        />
-
-        <Button
-          text={100026}
-          onPress={saveGameTime}
-          loading={loading}
-          extraStyle={{marginTop: 15}}
-        />
-      </View>
+      <Button
+        text={100026}
+        onPress={saveGameTime}
+        loading={loading}
+        extraStyle={{marginTop: 15}}
+      />
     </DefaultModal>
   );
 };

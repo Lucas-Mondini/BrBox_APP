@@ -1,7 +1,6 @@
 import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   ScrollView,
   Text,
   TouchableOpacity,
@@ -19,10 +18,11 @@ import { useTerm } from '../../Contexts/TermProvider';
 import config from "../../../brbox.config.json";
 import styles from './styles';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Params } from '../../utils/types';
+import { Message, Params } from '../../utils/types';
 import DarkZone from '../../components/DarkZone';
 import { useTheme } from '../../Contexts/Theme';
 import { useLinking } from '../../Contexts/LinkingProvider';
+import MessageModal from '../../components/MessageModal';
 
 const Profile = () => {
   const route = useRoute();
@@ -44,6 +44,7 @@ const Profile = () => {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState<Message | null>(null);
 
   const { darkMode } = useTheme();
 
@@ -129,7 +130,7 @@ const Profile = () => {
 
   function validateUser(action: "SAVE" | "UPDATE" | "DELETE")
   {
-    const messages = {
+    const messages: any = {
       "SAVE": {title: getTerm(100095), message: getTerm(100087)},
       "UPDATE": {title: getTerm(100095), message: getTerm(100100)},
       "DELETE": {title: getTerm(100098), message: getTerm(100099)},
@@ -137,17 +138,17 @@ const Profile = () => {
 
     if (action === "SAVE" || action === "UPDATE") {
       if (!username.trim() || !email.trim()) {
-        Alert.alert(messages[action].title, messages[action].message);
+        setMessage(messages[action]);
         return false;
       }
 
       if (action === "UPDATE" && newPassword !== confirmPassword) {
-        Alert.alert(getTerm(100101), getTerm(100102));
+        setMessage({title: 100101, message: 100102});
         return false;
       }
     } else {
       if (!password && !params) {
-        Alert.alert(messages[action].title, messages[action].message);
+        setMessage(messages[action]);
         return false;
       }
     }
@@ -172,6 +173,12 @@ const Profile = () => {
       loading={loading}
       headerTitle={100046}
     >
+      <MessageModal
+        visible={!!message}
+        message={message}
+        setModal={() => setMessage(null)}
+      />
+
       <ScrollView style={[styles.container]}>
         <Text
           style={[styles.title, textColorStyle]}
