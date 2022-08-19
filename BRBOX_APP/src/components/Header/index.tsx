@@ -21,7 +21,7 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
 
-  const [ dropDownMenu, setDropDownMenu ] = useState<any>();
+  const [ dropDownMenu, setDropDownMenu ] = useState(false);
 
   const color = !darkMode ? config.darkGreen : config.mediumGreen;
 
@@ -29,7 +29,7 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
     <View style={[styles.headerContainer, {borderBottomColor: color}]}>
       {(!dropDownMenu && !hideMenuButton) &&
         <TouchableOpacity style={[styles.menuButton]} onPress={() => {
-          setDropDownMenu(<DropDownMenu setModal={setDropDownMenu}/>);
+          setDropDownMenu(true);
         }}>
           <Icon
             name="menu"
@@ -39,13 +39,16 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
         </TouchableOpacity>
       }
 
-      {dropDownMenu && dropDownMenu}
+      <DropDownMenu
+        visible={dropDownMenu}
+        setModal={setDropDownMenu}
+      />
 
-        {customHeader ||
-          <View style={styles.headerTextView}>
-            <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 20 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
-          </View>
-        }
+      {customHeader ||
+        <View style={styles.headerTextView}>
+          <Text style={[styles.title, {color, fontSize: typeof title === "string" ? 20 : 35}]}>{typeof title === "string" ? title : getTerm(title)}</Text>
+        </View>
+      }
 
       {addAction &&
         <TouchableOpacity style={[styles.addButton]} onPress={addAction}>

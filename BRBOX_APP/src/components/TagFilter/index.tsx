@@ -31,14 +31,13 @@ export default function TagFilter({ id, text, idList, hideText, idListSetter }: 
 
   return (
     <TouchableOpacity onPress={() => {
-        setSelected(!selected);
-      }}
-      style={{backgroundColor: bgColor, paddingHorizontal: 5, marginHorizontal: 5,  borderRadius: 8, justifyContent: "center", alignItems: "center", minHeight: 30}}
-    >
+      setSelected(!selected);
+    }}>
       <Text style={[{
+        margin: 2, backgroundColor: bgColor, paddingHorizontal: 5, borderRadius: 8, minHeight: 30, maxWidth: "50%", justifyContent:"center", alignItems: "center",
         textAlign: "center", color: config.dark, fontFamily: config.fontFamilyBold, display: hideText ? "none" : "flex"
       }]}>
-        {text}
+          {text}
       </Text>
     </TouchableOpacity>
   );

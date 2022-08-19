@@ -12,10 +12,10 @@ import { ImageType } from '../../utils/types';
 const {width} = Dimensions.get('window');
 
 const SPACING = 5;
-const ITEM_LENGTH = width * 0.7;
+const ITEM_LENGTH = width * 0.75;
 const EMPTY_ITEM_LENGTH = (width - ITEM_LENGTH) / 2;
 const BORDER_RADIUS = 10;
-const CURRENT_ITEM_TRANSLATE_Y = 15;
+const CURRENT_ITEM_TRANSLATE_Y = 0;//15;
 
 interface ImageCarouselProps {
   data: ImageType[];
@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
   flatListContent: {
     height: CURRENT_ITEM_TRANSLATE_Y * 2 + ITEM_LENGTH,
     marginBottom: CURRENT_ITEM_TRANSLATE_Y,
+    marginTop: 15,
   },
   itemContent: {
     marginHorizontal: SPACING * 2,

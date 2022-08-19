@@ -9,7 +9,6 @@ import {
 import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
 
-import { useAuth } from '../../Contexts/Auth';
 import { useTerm } from '../../Contexts/TermProvider';
 import { useRequest } from '../../Contexts/Request';
 import { Game, Params } from '../../utils/types';

@@ -91,10 +91,9 @@ export default function BusinessModelModal({visible, usedBusinessModels, setModa
       setModal={setModal}
       visible={visible}
       loading={loading}
+      style={{backgroundColor: color, ...styles.container}}
     >
-      <View style={[styles.container, {backgroundColor: color}]}>
-        {renderPlatforms()}
-      </View>
+      {renderPlatforms()}
     </DefaultModal>
   );
 };

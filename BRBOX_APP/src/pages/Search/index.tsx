@@ -81,7 +81,9 @@ const Search = () => {
 
   function renderFilterTags(index: number, list: any[], idList: number[], idListSetter: (value: number[]) => void)
   {
-    const tags = list.map((tag, i) => (
+    const sorted = list.sort((a,b) => a.name.length - b.name.length);
+
+    const tags = sorted.map((tag, i) => (
       <TagFilter
         id={tag.id}
         key={i}
@@ -94,11 +96,9 @@ const Search = () => {
 
     return (
       <View style={[styles.filterContainer, {borderColor: tab === index ? config.greenBar : "transparent", display: tab === index ?  "flex" : "none", zIndex: tab === index ? 999 : 1}]}>
-        <View>
-          <Text style={styles.filterTags}>
-            {tags}
-          </Text>
-        </View>
+        <Text style={styles.filterTags}>
+          {tags}
+        </Text>
       </View>
     );
   }

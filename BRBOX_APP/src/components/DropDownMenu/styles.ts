@@ -13,8 +13,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 71,
     bottom: 56,
-    left: 0,
-    width: "60%",
+    left: 0
   },
   menuOptionsContainer: {
     paddingHorizontal: 10,
