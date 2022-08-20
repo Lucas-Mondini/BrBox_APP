@@ -144,6 +144,31 @@ UserTop3 = async (req: Request) => {
             return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
+
+    top5Voted = async (req: Request) => {
+        try {
+            const gameIds = await AppDataSource.query(`
+            select game.id gameid, count(tv.id) voteCount from game
+            left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
+            left join tag_value tv on tv.id  = tvl."tagValueId" 
+            group by game.id
+            order by voteCount desc, gameid asc
+            limit 5`)
+            const top5 = gameIds.map((i: any) => i.gameid)
+            
+            const where = `game.id in (${top5.toString()}) OR game.id = $1`;
+            
+            
+            let games = await this.getGamesFormatted(req, where, "", "-1", 5, 0, 0)
+            games.sort((i: any, j: any) => j.votecount - i.votecount)
+                       
+            return {status: 200, value: {
+                games
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
                 
     //@ts-ignore
     Get = async (req: Request) => {
@@ -627,6 +652,7 @@ UserTop3 = async (req: Request) => {
                     const game =  {
                         id: i.gameid,
                         name: i.gamename,
+                        isDlc: i.isdlc,
                         image: i.imagelink,
                         tags: games .filter((j : any) => j.gameid == i.gameid)
                                     .map((j: any) => {
@@ -748,6 +774,27 @@ UserTop3 = async (req: Request) => {
                 }
                 return i
             });
+            const votecount = await AppDataSource.query(`
+                select game.id gameid, count(tv."userId") voteCount from game
+	            left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
+	            left join tag_value tv on tv.id  = tvl."tagValueId" 
+                where game.id in (${games.map((i: any) => i.id).toString()})
+	            group by game.id
+	            order by voteCount desc, gameid asc
+                `)
+            const uservotedcount = await AppDataSource.query(`
+                select game.id gameid, count(distinct tv."userId") userVotedCount from game
+	            left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
+	            left join tag_value tv on tv.id  = tvl."tagValueId" 
+                where game.id in (${games.map((i: any) => i.id).toString()})
+	            group by game.id
+	            order by userVotedCount desc, gameid asc
+                `)
+            games.map((i: any)=> {
+                i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
+                i.uservotedcount = Number(uservotedcount.filter((j:any) => j.gameid == i.id)[0].uservotedcount)
+                return i
+            });
                 return games;
     }
 
@@ -766,6 +813,7 @@ UserTop3 = async (req: Request) => {
         select
             game.id as gameId,
             game.name gameName,
+            game."DLC" as isDlc,
             image.id as imageId,
             image.link as imageLink,
             tag_data.name tagname,
