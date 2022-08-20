@@ -8,6 +8,7 @@ import Tag from "../../../Model/Game/tag";
 import Value from "../../../Model/Game/tag/value";
 import GameTime from "../../../Model/Game/gameTime";
 import { weightCalculator } from "../../../Utils/calculator";
+import Score from "../../../Model/Game/Score";
 
 
 /**
@@ -132,6 +133,7 @@ export default class TagValueListController extends Controller {
             
             tagValueList.tagValues.push(tagValue);
             await AppDataSource.getRepository(TagValueList).save(tagValueList)
+            Score.UpdateAll();
             return {status: 200, value: {...req.body, tagValueId: tagValue.id}}
         }
          catch (e : any) {
@@ -154,6 +156,7 @@ export default class TagValueListController extends Controller {
                 return tag.id != tagValueId;
             })
             await AppDataSource.getRepository(TagValue).delete(tagValue);
+            Score.UpdateAll();
             return {status: 200, value: await AppDataSource.getRepository(TagValueList).save(tagValueList)}
         }        
          catch (e : any) {
