@@ -19,6 +19,7 @@ type GameData = {
   rate: number;
   name: string;
   link: string;
+  isDlc: boolean | null;
   images: ImageType[];
   loading: boolean;
   linkList: LinkType[];
@@ -80,6 +81,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [id, setId] = useState(0);
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
+  const [isDlc, setIsDlc] = useState<boolean | null>(null);
   const [images, setImages] = useState([] as ImageType[]);
   const [gameTime, setGameTime] = useState<number | null>(null);
   const [linkList, setLinkList] = useState([] as LinkType[]);
@@ -246,8 +248,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     try {
       const response = await get(`/game/${id}`);
 
-      setRate(Number(response.score));
+      setRate(Number(response.score) || 0);
       setId(response.id);
+      setIsDlc(response.DLC);
       setName(response.name);
       setImages(response.imageList.images);
       setModeList(response.modes);
@@ -373,7 +376,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
 
   return (
     <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform, genreList,
+      id, name, link, imageName, imageLink, loading, images, linkList, platform, genreList, isDlc,
       tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList, rate,
       setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime,
       setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList, setGenreList,

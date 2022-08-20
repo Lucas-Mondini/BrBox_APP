@@ -52,6 +52,12 @@ const styles = StyleSheet.create({
   },
   rateBig: {
     fontSize: 20,
+  },
+  icon: {
+    position: "absolute",
+    zIndex: 1000,
+    top: 0,
+    left: 0
   }
 });
 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, View } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { Animated, Modal, View } from 'react-native';
 
 import Loading from '../Loading';
 import config from "../../../brbox.config.json";
@@ -18,8 +18,30 @@ type ModalProps = {
 
 const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, children, animationType, style}) =>
 {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
   const { darkMode } = useTheme();
   const color = darkMode ? "#fff" : config.dark;
+
+  const fadeIn = () => {
+    Animated.timing(fadeAnim, {
+      useNativeDriver: false,
+      toValue: 1,
+      duration: 1000
+    }).start();
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      useNativeDriver: false,
+      toValue: 0
+    }).start();
+  };
+
+  useEffect(() => {
+    if (visible) fadeIn();
+    else fadeOut();
+  }, [visible]);
 
   return (
     <Modal
@@ -27,15 +49,18 @@ const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, childre
       transparent
       onRequestClose={setModal}
       visible={visible}
-      animationType={animationType || "slide"}
+      animationType={animationType || "fade"}
     >
-      <View
-        style={styles.modalBackground}
+      <Animated.View
+        style={[
+          styles.modalBackground,
+          {opacity: fadeAnim}
+        ]}
       >
         <View style={[styles.modalContent, style || {flex: 1}]}>
           {loading ? <Loading styles={{borderRadius: 8}} /> : children}
         </View>
-      </View>
+      </Animated.View>
     </Modal>
   );
 }

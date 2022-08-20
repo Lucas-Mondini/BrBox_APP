@@ -37,7 +37,7 @@ const GameInfo = () => {
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
   const {
-    name, loading, id, businessModelList, genreList, modeList,
+    name, loading, id, businessModelList, genreList, modeList, isDlc,
     loadGame, renderLinks, renderImages,
   } = useGame();
 
@@ -107,7 +107,7 @@ const GameInfo = () => {
       loading={loading}
       showTitle
       showBottom
-      headerTitle={name || ""}
+      headerTitle={(`${name} ${isDlc ? "(DLC)" : ""}`) || ""}
       headerAddButtonIcon="share-2"
       headerAddButtonAction={shareApp}
     >
