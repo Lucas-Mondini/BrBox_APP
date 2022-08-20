@@ -91,10 +91,9 @@ export default function GenreModeModal({visible, isGenre, usedData, setModal, se
       setModal={setModal}
       visible={visible}
       loading={loading}
+      style={{backgroundColor: color, ...styles.container}}
     >
-      <View style={[styles.container, {backgroundColor: color}]}>
-        {render()}
-      </View>
+      {render()}
     </DefaultModal>
   );
 };

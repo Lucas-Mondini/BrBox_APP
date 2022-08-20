@@ -34,7 +34,7 @@ const Tab: React.FC<TabProps> = ({setState, options, styles}) =>
     options.forEach((option, index) => {
       tabs.push(
         <TouchableOpacity
-          activeOpacity={0.8}
+          activeOpacity={0.6}
           onPress={() => {
             setActiveTab(index);
             setState(option.state);

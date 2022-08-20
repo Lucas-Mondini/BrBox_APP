@@ -10,11 +10,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginBottom: 10,
     borderRadius: 8,
-    paddingHorizontal: "3%",
     paddingVertical: 5
   },
   filterTags: {
     width: "100%",
+    textAlign: "center"
   },
   input: {
     //width: "85%",
@@ -26,8 +26,10 @@ const styles = StyleSheet.create({
     marginLeft: "3%"
   },
   inputView2: {
-    marginHorizontal: "3%",
     marginBottom: 15,
+    paddingBottom: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: config.mainIconColor
   }
 });
 
