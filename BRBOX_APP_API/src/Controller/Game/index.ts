@@ -790,9 +790,14 @@ UserTop3 = async (req: Request) => {
 	            group by game.id
 	            order by userVotedCount desc, gameid asc
                 `)
+            const score = await AppDataSource.query(`
+                select * from score s 
+                where s."gameId" in (${games.map((i: any) => i.id).toString()})`
+                )
             games.map((i: any)=> {
                 i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
                 i.uservotedcount = Number(uservotedcount.filter((j:any) => j.gameid == i.id)[0].uservotedcount)
+                i.score = score.filter((j:any) => j.gameId == i.id)[0].value
                 return i
             });
                 return games;
