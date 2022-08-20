@@ -51,16 +51,13 @@ const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, childre
       visible={visible}
       animationType={animationType || "fade"}
     >
-      <Animated.View
-        style={[
-          styles.modalBackground,
-          {opacity: fadeAnim}
-        ]}
-      >
-        <View style={[styles.modalContent, style || {flex: 1}]}>
-          {loading ? <Loading styles={{borderRadius: 8}} /> : children}
-        </View>
-      </Animated.View>
+      <View style={styles.modalBackground}>
+        <Animated.View style={{opacity: fadeAnim}}>
+          <View style={[styles.modalContent, style || {flex: 1}]}>
+            {loading ? <Loading styles={{borderRadius: 8}} /> : children}
+          </View>
+        </Animated.View>
+      </View>
     </Modal>
   );
 }

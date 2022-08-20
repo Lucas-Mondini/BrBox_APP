@@ -20,12 +20,12 @@
   "placeholdersColor":"#7f7f7f",
   "subTitleMainColor":"#BFBFBF",
 
-  "apiUrl":"http://10.0.2.2:9512/", // Servidor
-  //"apiUrl":"https://brbox-app.herokuapp.com/",
+  //"apiUrl":"http://10.0.2.2:9512/",
+  "apiUrl":"https://brbox-app.herokuapp.com/",
 
   "isDarkModeDefault" : "true",
 
   "playStoreUrl":"https://play.google.com/store/apps/details?id=com.brbox_app&hl=pt-BR&ah=RHr4WgG7T5CWol2L_VMcyV1_voA",
 
-  "version": "0.1.3"
+  "version": "0.1.4"
 }
