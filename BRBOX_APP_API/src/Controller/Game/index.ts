@@ -77,7 +77,7 @@ export default class GameController extends Controller {
     
     Index = async (req: Request) => {
         try {
-            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = ""} = req.query
+            const {page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = "", tagsIds = null, modesIds = null, genresIds = null} = req.query
 
             //reccomend(req.user.id);
             
@@ -97,16 +97,43 @@ export default class GameController extends Controller {
             
             if(game_name) {
                 where = `lower(game.name) like lower($1)`;
-                wherename = `%${game_name}%`
+                wherename = `%${game_name}%`;
             }
             
-            const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0
+            const skip = Number(page) != 1 ? (Number(page) - 1)  * Number(ammount) : 0;
             
-            let games = await this.getGamesFormatted(req, where, orderBy, wherename, ammount, skip, 0)
+            let games;
+            if (!tagsIds && !modesIds && !genresIds ) {
+                games = await this.getGamesFormatted(req, where, orderBy, wherename, ammount, skip, 0, "");
 
-            return {status: 200, value: {
-                games
-            }};
+                return {status: 200, value: {
+                    games
+                }};
+            } else {
+                const where = `1 = $1`;
+                if(tagsIds)
+                    games = await this.getGamesFormatted(req, where, "", "1", 99999, 0, 0, `(${tagsIds.toString()})`);
+                else 
+                    games = await this.getGamesFormatted(req, where, "", "1", 99999, 0, 0, "");
+
+                if(modesIds) {
+                    const modes = (<string>modesIds).split(',').map((item: any) => parseInt(item));
+                    games = games.filter((g: any) => {
+                        const gameModes = g.modes.map((mode: any) => mode.id);
+                        return gameModes.filter((i: any) => modes.includes(i)) > 0
+                    })
+                }
+                if(genresIds) {
+                    const genres = (<string>genresIds).split(',').map((item: any) => parseInt(item));
+                    games = games.filter((g: any) => {
+                        const gameModes = g.genres.map((genre: any) => genre.id);
+                        return gameModes.filter((i: any) => genres.includes(i)) > 0
+                    })
+                }
+                return {status: 200, value: {
+                    games
+                }};
+            }
         }
         catch (e : any) {
             //XGH axioma 2
@@ -159,7 +186,7 @@ UserTop3 = async (req: Request) => {
             const where = `game.id in (${top5.toString()}) OR game.id = $1`;
             
             
-            let games = await this.getGamesFormatted(req, where, "", "-1", 5, 0, 0)
+            let games = await this.getGamesFormatted(req, where, "", "-1", 5, 0, 0, "")
             games.sort((i: any, j: any) => j.votecount - i.votecount)
                        
             return {status: 200, value: {
@@ -506,7 +533,7 @@ UserTop3 = async (req: Request) => {
             const {roll} = req.body
             
             const where = `1 = $1`;
-            let games = await this.getGamesFormatted(req, where, "", "1", 9999, 0, 0)
+            let games = await this.getGamesFormatted(req, where, "", "1", 9999, 0, 0, "")
             const rec = await reccomend(req.user.id);
             games = games.map((i: any) => {
                 let est = rec.filter((j: any) => j.game == i.id)[0];
@@ -620,7 +647,7 @@ UserTop3 = async (req: Request) => {
             });
     }
     getGamesFromUser =async (req: any, where: any, orderBy: any, wherename: any) => {
-        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, 1),
+        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, 1, ""),
                     [   
                         wherename,
                         9999999,
@@ -664,8 +691,8 @@ UserTop3 = async (req: Request) => {
             games = games.sort((i: any, j: any) => j.tags.length - i.tags.length)
             return games;
     }
-    getGamesFormatted = async (req: any, where: string, orderBy: string, wherename: string, ammount: any, skip: any, mode: number) => {
-        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, mode),
+    getGamesFormatted = async (req: any, where: string, orderBy: string, wherename: string, ammount: any, skip: any, mode: number, TagsFilter: string) => {
+        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, mode, TagsFilter),
                     [   
                         wherename,
                         ammount,
@@ -818,16 +845,42 @@ UserTop3 = async (req: Request) => {
                 select * from score s 
                 where s."gameId" in (${games.map((i: any) => i.id).toString()})`
                 )
+            const genres = await AppDataSource.query(`
+                    select g2.id as gameid, g.id as genreid, g.name from genre g 
+                    inner join game_genres_genre ggg on ggg."genreId" = g.id 
+                    inner join game g2 on g2.id = ggg."gameId"
+                    where g2.id in (${games.map((i: any) => i.id).toString()})`
+            )
+            const modes = await AppDataSource.query(`
+                    select g.id as gameid, m.id as modeid, m.name from "mode" m 
+                    inner join game_modes_mode gmm on gmm."modeId" = m.id 
+                    inner join game g on g.id = gmm."gameId" 
+                    where g.id in (${games.map((i: any) => i.id).toString()})`
+            )
+
             games.map((i: any)=> {
                 i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
                 i.uservotedcount = Number(uservotedcount.filter((j:any) => j.gameid == i.id)[0].uservotedcount)
                 i.score = score.filter((j:any) => j.gameId == i.id)[0].value
-                return i
+                i.genres = genres.filter((j: any) => j.gameid == i.id).map((j: any) => {
+                    j = {
+                        id: j.genreid,
+                        name: j.name
+                    }
+                    return j;
+                })
+                i.modes = modes.filter((j: any) => j.gameid == i.id).map((j: any) => {
+                    j = {
+                        id: j.modeid,
+                        name: j.name
+                    }
+                    return j
+                })
             });
                 return games;
     }
 
-    getIndexQuery = (req: any, where: string, orderBy: string, Mode: number) => {
+    getIndexQuery = (req: any, where: string, orderBy: string, Mode: number, TagsFilter: string) => {
         /**
          * 
          * modes : 
@@ -900,9 +953,11 @@ UserTop3 = async (req: Request) => {
                                 ${orderBy}
                                 limit $2
                                 offset $3
-                                ) ${(Mode == 1 ?
+                                )   ${(Mode == 1 ?
                                         `and userId = ${req.user.id}` :
                                         "")}
+                                    ${(TagsFilter?
+                                        `and tag_data.id in ${TagsFilter}` : "")}
                 )
             group by
                 game.id,
