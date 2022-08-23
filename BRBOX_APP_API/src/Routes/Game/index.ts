@@ -17,5 +17,6 @@ gameRouter.post("/removeMode",  view.RemoveMode)
 gameRouter.post("/userTop3",  Auth.user, view.UserTop3)
 gameRouter.post("/userRatings",  Auth.user, view.UserRatings)
 gameRouter.post("/top5",  Auth.user, view.top5Voted)
+gameRouter.post("/reccomended",  Auth.user, view.Reccomended)
 
 export default gameRouter;

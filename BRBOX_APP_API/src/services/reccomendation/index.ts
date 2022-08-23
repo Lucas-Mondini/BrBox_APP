@@ -44,9 +44,10 @@ const reccomend = async (userId: number) => {
         method: 'post',
         proxy: false
     })
-    console.log(ret.data)
+    return ret.data;
     } catch(e) {
         console.log(e);
+        return null;
     }
 }
 

@@ -500,6 +500,30 @@ UserTop3 = async (req: Request) => {
             return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
+
+    Reccomended = async (req: Request) => {
+        try {
+            const {roll} = req.body
+            
+            const where = `1 = $1`;
+            let games = await this.getGamesFormatted(req, where, "", "1", 9999, 0, 0)
+            const rec = await reccomend(req.user.id);
+            games = games.map((i: any) => {
+                let est = rec.filter((j: any) => j.game == i.id)[0];
+                i.est = est? est.est : 0;
+                return i;
+            });
+            games.sort((i : any, j: any) => j.est - i.est);
+            games = games.slice((roll || 0) * 10, ((roll || 0) * 10) + 10)
+            
+            return {status: 200, value: {
+                games
+            }};
+            
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
+    }
     
     
     linkFormatter = (game: Game) => {

@@ -76,4 +76,9 @@ export default class GameView extends View {
         const object = await controller.top5Voted(req);
         return res.status(object.status).json(object.value);
     }
+
+    Reccomended = async (req: Request, res: Response) => {
+        const object = await controller.Reccomended(req);
+        return res.status(object.status).json(object.value);
+    }
 }
