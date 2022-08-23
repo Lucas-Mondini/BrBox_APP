@@ -108,7 +108,7 @@ const GameInfo = () => {
       showTitle
       showBottom
       headerTitle={(`${name} ${isDlc ? "(DLC)" : ""}`) || ""}
-      headerAddButtonIcon="share-2"
+      headerAddButtonIcon="share-variant-outline"
       headerAddButtonAction={shareApp}
     >
       <MessageModal

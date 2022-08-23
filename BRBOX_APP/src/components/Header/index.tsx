@@ -4,7 +4,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
 import config from "../../../brbox.config.json";
-import Icon from "react-native-vector-icons/Feather";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import DropDownMenu from "../DropDownMenu";
 import { useTheme } from "../../Contexts/Theme";
 
@@ -22,6 +22,7 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
   const { darkMode } = useTheme();
 
   const [ dropDownMenu, setDropDownMenu ] = useState(false);
+  const [ hideMenu, setHideMenu ] = useState(false);
 
   const color = !darkMode ? config.darkGreen : config.mediumGreen;
 
@@ -40,8 +41,9 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
       }
 
       <DropDownMenu
-        visible={dropDownMenu}
+        visible={dropDownMenu && !hideMenu}
         setModal={setDropDownMenu}
+        setHideMenu={setHideMenu}
       />
 
       {customHeader ||

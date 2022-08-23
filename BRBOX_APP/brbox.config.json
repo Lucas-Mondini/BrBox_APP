@@ -20,8 +20,8 @@
   "placeholdersColor":"#7f7f7f",
   "subTitleMainColor":"#BFBFBF",
 
-  //"apiUrl":"http://10.0.2.2:9512/",
-  "apiUrl":"https://brbox-app.herokuapp.com/",
+  "apiUrl":"http://10.0.2.2:9512/",
+  //"apiUrl":"https://brbox-app.herokuapp.com/",
 
   "isDarkModeDefault" : "true",
 

@@ -18,6 +18,7 @@ import GameListAdmin from '../pages/GameListAdmin';
 import GenresModesList from '../pages/GenresModesList';
 import AddGenreMode from '../pages/AddGenreMode';
 import Search from '../pages/Search';
+import Recommended from '../pages/Reccomended';
 
 const App = createStackNavigator();
 
@@ -39,6 +40,10 @@ const AppRoutes: React.FC = () => {
         <App.Screen
           name="SearchGame"
           component={Search}
+        />
+        <App.Screen
+          name="Recommended"
+          component={Recommended}
         />
         <App.Screen
           name="Share"

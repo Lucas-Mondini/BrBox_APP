@@ -69,6 +69,7 @@ export default function PlatformsModal({visible, usedPlatforms, setModal, setPla
           ({item}: any) => {
             return (
               <PlatformCard
+                key={item.id}
                 id={item.id}
                 name={item.name}
                 setLoading={setLoading}

@@ -190,12 +190,11 @@ const Home = () => {
       customHeader={header()}
       hideMenuButton={hideButton}
       headerAddButtonAction={!params ? toggleSearch : undefined}
-      headerAddButtonIcon={hideButton ? "x" : "search"}
+      headerAddButtonIcon={hideButton ? "close" : "magnify"}
     >
       <View style={styles.container}>
         {renderGames()}
       </View>
-
     </MainView>
   );
 };
