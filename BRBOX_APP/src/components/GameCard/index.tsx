@@ -9,16 +9,20 @@ import { splitText } from "../../utils/functions";
 import { useTheme } from "../../Contexts/Theme";
 import { useAuth } from "../../Contexts/Auth";
 import TopTags from "../TopTags";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 interface GameCardProps {
   id: number;
   title: string;
+  score: number;
+  voteCount: number;
   tags: TagValue[];
   imgUri: string;
+  wishlist?: boolean;
   extraCallbackOnNavigate?: () => void;
 }
 
-export default function GameCard({id, title, tags, imgUri, extraCallbackOnNavigate}: GameCardProps)
+export default function GameCard({id, title, score, voteCount, tags, imgUri, wishlist, extraCallbackOnNavigate}: GameCardProps)
 {
   const { darkMode } = useTheme();
   const { user } = useAuth();
@@ -43,6 +47,7 @@ export default function GameCard({id, title, tags, imgUri, extraCallbackOnNaviga
     >
       <View style={styles.container}>
         <View>
+          <Icon style={styles.icon} name={wishlist ? "star" : "star-outline"} color="yellow" size={30} />
           <Image style={styles.img} source={{uri: imgUri}} />
         </View>
         <View style={styles.info}>
@@ -52,10 +57,11 @@ export default function GameCard({id, title, tags, imgUri, extraCallbackOnNaviga
             <TopTags
               tags={tags}
               home
+              voteCount={voteCount}
             />
 
             {tags.length > 0 &&
-              <Text style={[styles.rate]}><Text style={[styles.rateBig]}>7</Text>/10</Text>
+              <Text style={[styles.rate]}><Text style={[styles.rateBig]}>{score || 0}</Text>/10</Text>
             }
           </View>
         </View>

@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React from "react";
-import { TouchableOpacity, View } from "react-native";
+import { Alert, TouchableOpacity, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome5";
 import styles from "./styles";
 
@@ -39,7 +39,7 @@ export default function BottomMenu()
       <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {filterUser: true})}}>
         <Icon name="check-square" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {})}}>
+      <TouchableOpacity style={styles.button} onPress={() => {Alert.alert("Não implementado")}}>
         <Icon name="star" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={shareApp}>

@@ -49,6 +49,7 @@ const Home = () => {
   {
     if (params) {
       if (params.top3) return 100171;
+      else if (params.top5) return 100172;
       else if (params.filterUser) return 100001;
     }
   }
@@ -64,9 +65,9 @@ const Home = () => {
         return;
       };
 
-      if (params && (params.filterUser || params.top3)) {
+      if (params && (params.filterUser || params.top3 || params.top5)) {
         response = await post(
-          `/game/${params.top3 ? "userTop3" : `userRatings?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`}`,
+          `/game/${params.top3 ? "userTop3" : (params.top5 ? "top5" : "userRatings")}?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`,
           loadingMoreGames ? setLoadingMore : setLoading,
           {}
         );
@@ -86,7 +87,7 @@ const Home = () => {
       setGames([...gamesList, ...response.games]);
       setPage(page+1);
     } catch (err) {
-      return;
+      params && navigation.reset({index: 0, routes: [{name: "Home"}]});
     }
 
     setLoading(false);
@@ -118,6 +119,8 @@ const Home = () => {
                 title={item.name}
                 tags={item.tags}
                 imgUri={item.image}
+                score={Number(item.score)}
+                voteCount={item.votecount}
                 extraCallbackOnNavigate={!params ? resetGameList : undefined}
               />
             )

@@ -3,6 +3,10 @@ export type Game = {
   name: string;
   image: string;
   tags: any[];
+  score: number;
+  votecount: number;
+  uservotedcount: number;
+  isDlc: boolean;
 }
 
 export type User = {
@@ -17,6 +21,7 @@ export type Params = {
   id?: number;
   new?: boolean;
   top3?: boolean;
+  top5?: boolean;
   tags?: TagValue[];
   email?: string;
   search?: boolean;

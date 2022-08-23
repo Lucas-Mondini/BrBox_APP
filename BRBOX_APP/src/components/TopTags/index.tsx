@@ -10,24 +10,12 @@ interface TopTagsProps {
   tags?: TagValue[];
   home?: boolean;
   large?: boolean;
+  voteCount: number;
 }
 
-export default function TopTags({tags, home, large}: TopTagsProps)
+export default function TopTags({tags, home, large, voteCount}: TopTagsProps)
 {
-  const {width} = Dimensions.get('window');
-
   if (!tags) return null;
-
-  function sum() {
-    if (tags) {
-      const one = tags[0] ? tags[0].total : 0;
-      const two = tags[1] ? tags[1].total : 0;
-      const three = tags[2] ? tags[2].total : 0;
-      return one+two+three;
-    }
-
-    return 0;
-  }
 
   function returnTags(tag?: TagValue)
   {
@@ -60,9 +48,9 @@ export default function TopTags({tags, home, large}: TopTagsProps)
       {returnTags(tags[0])}
       {returnTags(tags[1])}
       {returnTags(tags[2])}
-      {(sum() > 0) && <>
+      {(voteCount > 0) && <>
         { /*@ts-ignore*/}
-        {returnTags({total: sum(), value: "user", icon: 100})}</>
+        {returnTags({total: voteCount, value: "user", icon: 100})}</>
       }
     </View>
   );

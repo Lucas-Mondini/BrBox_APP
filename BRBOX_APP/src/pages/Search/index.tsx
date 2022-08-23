@@ -144,9 +144,11 @@ const Search = () => {
       <GameCard
         id={game.id}
         key={game.id}
-        title={game.name}
         tags={game.tags}
+        title={game.name}
+        score={game.score}
         imgUri={game.image}
+        voteCount={game.votecount}
       />
     ));
   }
