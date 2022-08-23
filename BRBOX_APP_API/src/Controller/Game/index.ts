@@ -104,7 +104,7 @@ export default class GameController extends Controller {
             
             let games;
             if (!tagsIds && !modesIds && !genresIds ) {
-                games = await this.getGamesFormatted(req, where, orderBy, wherename, ammount, skip, 0, "");
+                games = await GameController.getGamesFormatted(req, where, orderBy, wherename, ammount, skip, 0, "");
 
                 return {status: 200, value: {
                     games
@@ -112,9 +112,9 @@ export default class GameController extends Controller {
             } else {
                 const where = `1 = $1`;
                 if(tagsIds)
-                    games = await this.getGamesFormatted(req, where, "", "1", 99999, 0, 0, `(${tagsIds.toString()})`);
+                    games = await GameController.getGamesFormatted(req, where, "", "1", 99999, 0, 0, `(${tagsIds.toString()})`);
                 else 
-                    games = await this.getGamesFormatted(req, where, "", "1", 99999, 0, 0, "");
+                    games = await GameController.getGamesFormatted(req, where, "", "1", 99999, 0, 0, "");
 
                 if(modesIds) {
                     const modes = (<string>modesIds).split(',').map((item: any) => parseInt(item));
@@ -147,7 +147,7 @@ UserTop3 = async (req: Request) => {
     try {
         var where = "1 = $1";
         let wherename = "1"
-        let games = await this.getGamesFromUserFormated(req, where, wherename);
+        let games = await GameController.getGamesFromUserFormated(req, where, wherename);
         let top3 = games.slice(0, 3)
                    
         return {status: 200, value: {
@@ -162,7 +162,7 @@ UserTop3 = async (req: Request) => {
         try {
             var where = "1 = $1";
             let wherename = "1"
-            let games = await this.getGamesFromUserFormated(req, where, wherename);
+            let games = await GameController.getGamesFromUserFormated(req, where, wherename);
                        
             return {status: 200, value: {
                 games
@@ -186,7 +186,7 @@ UserTop3 = async (req: Request) => {
             const where = `game.id in (${top5.toString()}) OR game.id = $1`;
             
             
-            let games = await this.getGamesFormatted(req, where, "", "-1", 5, 0, 0, "")
+            let games = await GameController.getGamesFormatted(req, where, "", "-1", 5, 0, 0, "")
             games.sort((i: any, j: any) => j.votecount - i.votecount)
                        
             return {status: 200, value: {
@@ -533,7 +533,7 @@ UserTop3 = async (req: Request) => {
             const {roll} = req.body
             
             const where = `1 = $1`;
-            let games = await this.getGamesFormatted(req, where, "", "1", 9999, 0, 0, "")
+            let games = await GameController.getGamesFormatted(req, where, "", "1", 9999, 0, 0, "")
             const rec = await reccomend(req.user.id);
             games = games.map((i: any) => {
                 let est = rec.filter((j: any) => j.game == i.id)[0];
@@ -565,8 +565,8 @@ UserTop3 = async (req: Request) => {
         return game;
     }
 
-    getGamesFromUserFormated = async (req: any, where: any, wherename: any) => {
-        let games = await this.getGamesFromUser(req, where, "", wherename);
+    static getGamesFromUserFormated = async (req: any, where: any, wherename: any) => {
+        let games = await GameController.getGamesFromUser(req, where, "", wherename);
         return games.map((game: any) => {
 
             game.tags = game.tags.filter( (i:any) => i != undefined)
@@ -646,8 +646,8 @@ UserTop3 = async (req: Request) => {
                 return game
             });
     }
-    getGamesFromUser =async (req: any, where: any, orderBy: any, wherename: any) => {
-        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, 1, ""),
+    static getGamesFromUser = async (req: any, where: any, orderBy: any, wherename: any) => {
+        let games = await AppDataSource.query(GameController.getIndexQuery(req, where, orderBy, 1, ""),
                     [   
                         wherename,
                         9999999,
@@ -691,8 +691,8 @@ UserTop3 = async (req: Request) => {
             games = games.sort((i: any, j: any) => j.tags.length - i.tags.length)
             return games;
     }
-    getGamesFormatted = async (req: any, where: string, orderBy: string, wherename: string, ammount: any, skip: any, mode: number, TagsFilter: string) => {
-        let games = await AppDataSource.query(this.getIndexQuery(req, where, orderBy, mode, TagsFilter),
+    static getGamesFormatted = async (req: any, where: string, orderBy: string, wherename: string, ammount: any, skip: any, mode: number, TagsFilter: string) => {
+        let games = await AppDataSource.query(GameController.getIndexQuery(req, where, orderBy, mode, TagsFilter),
                     [   
                         wherename,
                         ammount,
@@ -880,7 +880,7 @@ UserTop3 = async (req: Request) => {
                 return games;
     }
 
-    getIndexQuery = (req: any, where: string, orderBy: string, Mode: number, TagsFilter: string) => {
+    static getIndexQuery = (req: any, where: string, orderBy: string, Mode: number, TagsFilter: string) => {
         /**
          * 
          * modes : 
