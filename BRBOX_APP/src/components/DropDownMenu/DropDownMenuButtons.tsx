@@ -13,10 +13,10 @@ import useDelay from "../../hooks/Delay";
 
 interface DropDownMenuButtonsProps {
   visible: boolean;
-  setModal: (value: any) => void;
+  setHideMenu: (value: any) => void;
 }
 
-export default function DropDownMenuButtons({visible, setModal}: DropDownMenuButtonsProps)
+export default function DropDownMenuButtons({visible, setHideMenu}: DropDownMenuButtonsProps)
 {
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const [show, setShow] = useState(false);
@@ -25,7 +25,15 @@ export default function DropDownMenuButtons({visible, setModal}: DropDownMenuBut
     Animated.timing(fadeAnim, {
       useNativeDriver: false,
       toValue: 1,
-      duration: 800
+      duration: 1500
+    }).start();
+  };
+
+  const fadeOut = () => {
+    Animated.timing(fadeAnim, {
+      useNativeDriver: false,
+      toValue: 0,
+      duration: 0
     }).start();
   };
 
@@ -41,11 +49,13 @@ export default function DropDownMenuButtons({visible, setModal}: DropDownMenuBut
 
   function callNavigationFunction(route: string, specificFunction?: Function)
   {
-    setModal(false);
+    setHideMenu(true);
 
     if (specificFunction) return specificFunction();
 
-    return navigation.reset({index: 0, routes: [{name: "Home"}, {name: route}]});
+    setTimeout(() => {
+      return navigation.reset({index: 0, routes: [{name: "Home"}, {name: route}]});
+    }, 500);
   }
 
   async function shareApp()
@@ -60,10 +70,11 @@ export default function DropDownMenuButtons({visible, setModal}: DropDownMenuBut
 
   useEffect(() => {
     if (show) fadeIn();
+    else fadeOut();
   }, [show]);
 
   useEffect(() => {
-    useDelay(visible, setShow, 400);
+    setShow(visible);
   }, [visible]);
 
   return (
@@ -99,7 +110,7 @@ export default function DropDownMenuButtons({visible, setModal}: DropDownMenuBut
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-        callNavigationFunction("Home");
+        callNavigationFunction("Recommended");
       }}>
         <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100003).toUpperCase()}</Text>
       </TouchableOpacity>

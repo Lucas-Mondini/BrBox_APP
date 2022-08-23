@@ -1,20 +1,22 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Animated, Modal, Text, TouchableOpacity } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
-import Icon from "react-native-vector-icons/AntDesign";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useTheme } from "../../Contexts/Theme";
 import DropDownMenuButtons from "./DropDownMenuButtons";
 
 interface DropDownMenuProps {
   visible: boolean;
   setModal: (value: any) => void;
+  setHideMenu: (value: any) => void;
 }
 
-export default function DropDownMenu({visible, setModal}: DropDownMenuProps)
+export default function DropDownMenu({visible, setModal, setHideMenu}: DropDownMenuProps)
 {
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const [show, setShow] = useState(visible);
 
   const grow = () => {
     Animated.timing(fadeAnim, {
@@ -27,7 +29,8 @@ export default function DropDownMenu({visible, setModal}: DropDownMenuProps)
   const fadeOut = () => {
     Animated.timing(fadeAnim, {
       useNativeDriver: false,
-      toValue: 0
+      toValue: 0,
+      duration: 300
     }).start();
   };
 
@@ -36,18 +39,30 @@ export default function DropDownMenu({visible, setModal}: DropDownMenuProps)
   const backgroundColor = !darkMode ? "#fff" : config.darkGray;
 
   useEffect(() => {
-    if (visible) grow();
+    if (show) grow();
     else fadeOut();
+  }, [show]);
+
+  useEffect(() => {
+    setShow(visible);
   }, [visible]);
+
+  useEffect(() => {
+    if (!show) {
+      setTimeout(() => {
+        setModal(false);
+      }, 350);
+    }
+  }, [show]);
 
   return (
     <Modal
-      transparent onRequestClose={() => setModal(false)}
+      transparent onRequestClose={() => setShow(false)}
       visible={visible}
       animationType="fade"
     >
-      <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setModal(null)}}>
-        <Icon name="close" color={darkMode ? config.mediumGreen : config.darkGreen} size={35}/>
+      <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setShow(false)}}>
+        <Icon name={show ? "close" : "menu"} color={darkMode ? config.mediumGreen : config.darkGreen} size={35}/>
       </TouchableOpacity>
 
       <Animated.View
@@ -59,12 +74,12 @@ export default function DropDownMenu({visible, setModal}: DropDownMenuProps)
           }
       ]}>
         <DropDownMenuButtons
-          visible={visible}
-          setModal={setModal}
+          visible={show}
+          setHideMenu={setHideMenu}
         />
         <Text style={[styles.menuButtonText, {color: "#686868", textAlign: "center", marginVertical: 5}]}>V {config.version}</Text>
       </Animated.View>
-      <TouchableOpacity style={styles.closeModal} onPress={()=>{setModal(null)}} />
+      <TouchableOpacity style={styles.closeModal} onPress={()=>{setShow(false)}} />
     </Modal>
   );
 }

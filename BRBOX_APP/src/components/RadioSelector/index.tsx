@@ -23,8 +23,9 @@ export default function RadioSelector({options, selectedOption, setOption}: Radi
 
   function renderOptions()
   {
-    return options.map(option => (
+    return options.map((option, index) => (
       <TouchableOpacity
+        key={index}
         style={styles.option}
         onPress={() => setOption(option.value)}
       >

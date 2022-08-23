@@ -112,6 +112,7 @@ const Search = () => {
           extraStyles={styles.input}
           value={gameName}
           onChangeText={setGameName}
+          onSubmitEditing={() => getGames()}
         />
 
         <View>
