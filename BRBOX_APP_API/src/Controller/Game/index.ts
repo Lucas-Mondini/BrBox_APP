@@ -514,7 +514,7 @@ UserTop3 = async (req: Request) => {
                 return i;
             });
             games.sort((i : any, j: any) => j.est - i.est);
-            games = games.slice((roll || 0) * 10, ((roll || 0) * 10) + 10)
+            games = games.slice((Number(roll) || 0) * 10, ((Number(roll) || 0) * 10) + 10)
             
             return {status: 200, value: {
                 games
