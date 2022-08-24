@@ -567,7 +567,7 @@ UserTop3 = async (req: Request) => {
 
     static getGamesFromUserFormated = async (req: any, where: any, wherename: any) => {
         let games = await GameController.getGamesFromUser(req, where, "", wherename);
-        return games.map((game: any) => {
+        games = games.map((game: any) => {
 
             game.tags = game.tags.filter( (i:any) => i != undefined)
             if(game.tags) {
@@ -645,6 +645,68 @@ UserTop3 = async (req: Request) => {
             }
                 return game
             });
+
+            const votecount = await AppDataSource.query(`
+            select game.id gameid, count(tv."userId") voteCount from game
+            left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
+            left join tag_value tv on tv.id  = tvl."tagValueId" 
+            where game.id in (${games.map((i: any) => i.id).toString()})
+            group by game.id
+            order by voteCount desc, gameid asc
+            `)
+        const uservotedcount = await AppDataSource.query(`
+            select game.id gameid, count(distinct tv."userId") userVotedCount from game
+            left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
+            left join tag_value tv on tv.id  = tvl."tagValueId" 
+            where game.id in (${games.map((i: any) => i.id).toString()})
+            group by game.id
+            order by userVotedCount desc, gameid asc
+            `)
+        const score = await AppDataSource.query(`
+            select * from score s 
+            where s."gameId" in (${games.map((i: any) => i.id).toString()})`
+            )
+        const genres = await AppDataSource.query(`
+                select g2.id as gameid, g.id as genreid, g.name from genre g 
+                inner join game_genres_genre ggg on ggg."genreId" = g.id 
+                inner join game g2 on g2.id = ggg."gameId"
+                where g2.id in (${games.map((i: any) => i.id).toString()})`
+        )
+        const modes = await AppDataSource.query(`
+                select g.id as gameid, m.id as modeid, m.name from "mode" m 
+                inner join game_modes_mode gmm on gmm."modeId" = m.id 
+                inner join game g on g.id = gmm."gameId" 
+                where g.id in (${games.map((i: any) => i.id).toString()})`
+        )
+        const watchlist = await AppDataSource.query(`
+            select g.id as gameid from watchlist w
+            inner join watchlist_games_game wgg on wgg."watchlistId" = w.id 
+            inner join game g on g.id = wgg."gameId"
+            where "userId" = ${req.user.id} and g.id in (${games.map((i: any) => i.id).toString()})`
+        )
+        
+
+        games.map((i: any)=> {
+            i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
+            i.uservotedcount = Number(uservotedcount.filter((j:any) => j.gameid == i.id)[0].uservotedcount)
+            i.score = score.filter((j:any) => j.gameId == i.id)[0].value
+            i.genres = genres.filter((j: any) => j.gameid == i.id).map((j: any) => {
+                j = {
+                    id: j.genreid,
+                    name: j.name
+                }
+                return j;
+            })
+            i.modes = modes.filter((j: any) => j.gameid == i.id).map((j: any) => {
+                j = {
+                    id: j.modeid,
+                    name: j.name
+                }
+                return j
+            })
+            i.watchlist = watchlist.filter((j: any) => j.gameid == i.id).length > 0
+        });
+            return games
     }
     static getGamesFromUser = async (req: any, where: any, orderBy: any, wherename: any) => {
         let games = await AppDataSource.query(GameController.getIndexQuery(req, where, orderBy, 1, ""),
