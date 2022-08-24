@@ -62,6 +62,7 @@ const GenresModesList = () => {
                 id={item.id}
                 name={item.name}
                 genre={params && params.genres}
+                description={item.description}
                 setLoading={setLoading}
                 onDelete={fetchData}
               />

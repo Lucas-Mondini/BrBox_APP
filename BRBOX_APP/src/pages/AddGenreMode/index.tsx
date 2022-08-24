@@ -68,12 +68,14 @@ const AddGenreMode = () => {
 
       if (!data.id) {
         response = await post(`/${route}/create`, setLoadingRequest, {
-          name: data.name
+          name: data.name,
+          description: data.description
         });
       } else {
         response = await put(`/${route}/update`, setLoadingRequest, {
           id: data.id,
-          new_name: data.name
+          new_name: data.name,
+          new_description: data.description
         });
       }
 
@@ -110,6 +112,17 @@ const AddGenreMode = () => {
           value={data?.name}
           onChangeText={name => setData({...data, name})}
         />
+
+        {isGenre &&
+          <Input
+            placeholderText={100029}
+            value={data.description}
+            multiline
+            numberOfLines={10}
+            extraStyles={styles.description}
+            onChangeText={description => setData({...data, description})}
+          />
+        }
 
         <View style={styles.buttonView}>
           <Button

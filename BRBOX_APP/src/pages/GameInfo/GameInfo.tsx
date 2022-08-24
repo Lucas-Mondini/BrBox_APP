@@ -27,9 +27,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useLinking } from '../../Contexts/LinkingProvider';
 import GameAssocInfoModal from '../../components/GameAssocInfoModal';
 import MessageModal from '../../components/MessageModal';
+import Button from '../../components/Button';
+import { useRequest } from '../../Contexts/Request';
 
 const GameInfo = () => {
   const route = useRoute();
+  const { post, destroy } = useRequest();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
@@ -38,7 +41,7 @@ const GameInfo = () => {
   const { darkMode } = useTheme();
   const {
     name, loading, id, businessModelList, genreList, modeList, isDlc,
-    loadGame, renderLinks, renderImages,
+    watchList, setWatchList, loadGame, renderLinks, renderImages,
   } = useGame();
 
   const [modal, setModal] = useState(false);
@@ -53,12 +56,23 @@ const GameInfo = () => {
 
   const color = darkMode ? "#fff" : config.mainIconColor;
 
-  async function shareApp()
+  async function shareGame()
   {
     try {
       const message = getTerm(100141).replace("%1", name);
 
       await share(message, "api", `gameUtils/gameInfoOpenApp?gameId=${id}`);
+    } catch (error) {
+      Alert.alert(getTerm(100108), getTerm(100109))
+    }
+  }
+
+  async function saveWatchList()
+  {
+    try {
+      const response = await post(`/watchlist/${!watchList ? "addGame" : "removeGame"}`, () => {}, {gameid: id});
+
+      setWatchList(response);
     } catch (error) {
       Alert.alert(getTerm(100108), getTerm(100109))
     }
@@ -108,8 +122,9 @@ const GameInfo = () => {
       showTitle
       showBottom
       headerTitle={(`${name} ${isDlc ? "(DLC)" : ""}`) || ""}
-      headerAddButtonIcon="share-variant-outline"
-      headerAddButtonAction={shareApp}
+      headerAddButtonIcon={watchList ? "star" : "star-outline"}
+      headerAddButtonAction={saveWatchList}
+      menuButtonColor={config.yellowBright}
     >
       <MessageModal
         visible={!!message}
@@ -164,6 +179,16 @@ const GameInfo = () => {
         {!!id && <GameTimeCard onPress={() => setModal(!modal)}/>}
 
         {(tagsContainer && !!id) && tagsContainer}
+
+        {!!id &&
+          <Button
+            text={100004}
+            onPress={shareGame}
+            buttonColor="transparent"
+            extraStyle={{marginBottom: 70}}
+            extraTextStyle={{textDecorationLine: "underline", color: darkMode ? "#fff" : config.dark}}
+          />
+        }
       </ScrollView>
     </MainView>
   );

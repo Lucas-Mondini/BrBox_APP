@@ -92,6 +92,12 @@ export default function DropDownMenuButtons({visible, setHideMenu}: DropDownMenu
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+        callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home", params: {watchlist: true}}]}));
+      }}>
+        <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100173).toUpperCase()}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
         callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home", params: {top3: true}}]}));
       }}>
         <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100171).toUpperCase()}</Text>

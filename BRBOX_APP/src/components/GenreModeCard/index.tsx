@@ -12,6 +12,7 @@ import { useTheme } from "../../Contexts/Theme";
 interface GenreModeCardProps {
   id: number;
   name: string;
+  description?: string;
   genre?: boolean;
   disabled?: boolean;
   hideBottom?: boolean;
@@ -22,7 +23,7 @@ interface GenreModeCardProps {
   deleteCustomFunction?: () => void;
 }
 
-export default function GenreModeCard({id, name, genre, disabled, hideBottom, setLoading, onPress, onDelete, deleteCustomFunction}: GenreModeCardProps)
+export default function GenreModeCard({id, name, description, genre, disabled, hideBottom, setLoading, onPress, onDelete, deleteCustomFunction}: GenreModeCardProps)
 {
   const navigation = useNavigation<any>();
 
@@ -31,6 +32,7 @@ export default function GenreModeCard({id, name, genre, disabled, hideBottom, se
   const {getTerm} = useTerm();
 
   const textColor = {color: darkMode ? "#fff" : config.dark};
+  const descriptionColor = {color: darkMode ? config.subTitleMainColor : config.dark};
 
   function navigateToInfo() {
     return navigation.navigate("AddGenreMode", {id, genres: genre});
@@ -61,6 +63,12 @@ export default function GenreModeCard({id, name, genre, disabled, hideBottom, se
     >
       <View style={{width: "85%"}}>
         <Text style={[styles.title, textColor]}>{name}</Text>
+
+        {genre &&
+          <View style={{width: (onDelete || deleteCustomFunction) && !disabled && description && description.length > 40 ? "93%" : "100%"}}>
+            <Text style={[styles.description, descriptionColor]}>{description}</Text>
+          </View>
+        }
       </View>
 
       {

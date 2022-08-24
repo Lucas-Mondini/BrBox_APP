@@ -177,7 +177,7 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   }, [tagValueList]);
 
   return (
-    <View style={{marginBottom: 100}}>
+    <View style={{marginBottom: 25}}>
       {modal && modal}
       <ToggleContent
         title={100088}

@@ -130,6 +130,7 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
       setModal={setModal}
       visible={true}
       loading={false}
+      style={{}}
     >
       <ScrollView style={[styles.container, {backgroundColor: color}]}>
         <View style={[styles.titleContainer]}>

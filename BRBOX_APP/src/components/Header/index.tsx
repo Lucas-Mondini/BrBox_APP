@@ -13,10 +13,11 @@ interface HeaderProps {
   buttonIcon?: string;
   customHeader?: React.ReactElement | React.ReactElement[];
   hideMenuButton?: boolean;
+  menuButtonColor?: string;
   addAction?: () => void;
 }
 
-export default function Header({title, buttonIcon, customHeader, hideMenuButton, addAction}: HeaderProps)
+export default function Header({title, buttonIcon, customHeader, hideMenuButton, menuButtonColor, addAction}: HeaderProps)
 {
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
@@ -57,7 +58,7 @@ export default function Header({title, buttonIcon, customHeader, hideMenuButton,
           <Icon
             name={buttonIcon || "plus"}
             size={35}
-            color={color}
+            color={menuButtonColor || color}
           />
         </TouchableOpacity>
       }

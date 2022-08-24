@@ -27,6 +27,7 @@ export type Params = {
   search?: boolean;
   genres?: boolean;
   filterUser?: boolean;
+  watchlist?: boolean;
 }
 
 export type Evaluation = {
@@ -91,6 +92,7 @@ export type Platform = {
 export type GenreMode = {
   id: number;
   name: string;
+  description?: string;
 }
 
 export type BusinessModel = {

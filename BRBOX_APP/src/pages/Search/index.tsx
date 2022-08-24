@@ -60,7 +60,7 @@ const Search = () => {
       };
 
       const response = await get(
-        `/game?page=${newSearch || gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&tagsIds=${tagsFilterList}&modesIds=${modesFilterList}&genresIds=${genresFilterList}`,
+        `/game?page=${newSearch || gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&tagsIds=${tagsFilterList.join(",")}&modesIds=${modesFilterList.join(",")}&genresIds=${genresFilterList.join(",")}`,
         setLoading
       );
 

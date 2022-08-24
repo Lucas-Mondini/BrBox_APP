@@ -5,6 +5,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: "3%",
     height: "100%",
+    borderRadius: 8
   },
   evaluationContainer: {
     flexDirection: "row",

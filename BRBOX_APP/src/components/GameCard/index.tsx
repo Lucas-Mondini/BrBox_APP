@@ -18,11 +18,12 @@ interface GameCardProps {
   voteCount: number;
   tags: TagValue[];
   imgUri: string;
-  wishlist?: boolean;
+  watchlist?: boolean;
+  showWatchlist?: boolean;
   extraCallbackOnNavigate?: () => void;
 }
 
-export default function GameCard({id, title, score, voteCount, tags, imgUri, wishlist, extraCallbackOnNavigate}: GameCardProps)
+export default function GameCard({id, title, score, voteCount, tags, imgUri, watchlist, showWatchlist, extraCallbackOnNavigate}: GameCardProps)
 {
   const { darkMode } = useTheme();
   const { user } = useAuth();
@@ -47,7 +48,9 @@ export default function GameCard({id, title, score, voteCount, tags, imgUri, wis
     >
       <View style={styles.container}>
         <View>
-          <Icon style={styles.icon} name={wishlist ? "star" : "star-outline"} color="yellow" size={30} />
+          {showWatchlist &&
+            <Icon style={styles.icon} name={watchlist ? "star" : "star-outline"} color="yellow" size={30} />
+          }
           <Image style={styles.img} source={{uri: imgUri}} />
         </View>
         <View style={styles.info}>

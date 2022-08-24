@@ -39,7 +39,7 @@ export default function BottomMenu()
       <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {filterUser: true})}}>
         <Icon name="check-square" size={35} color={iconColor}/>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.button} onPress={() => {Alert.alert("Não implementado")}}>
+      <TouchableOpacity style={styles.button} onPress={() => {goTo("Home", {watchlist: true})}}>
         <Icon name="star" size={35} color={iconColor}/>
       </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={shareApp}>

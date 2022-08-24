@@ -17,7 +17,10 @@ const styles = StyleSheet.create({
   buttonView: {
     marginTop: 25,
     paddingBottom: 25
-  }
+  },
+  description: {
+    textAlignVertical: "top"
+  },
 });
 
 export default styles

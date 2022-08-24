@@ -29,6 +29,7 @@ type GameData = {
   genreList: GenreMode[];
   imageName: string;
   imageLink: string;
+  watchList: boolean | null;
   tagValueList: number;
   businessModel: BusinessModel | null;
   businessModelId: number;
@@ -49,6 +50,7 @@ type GameData = {
   setTagValueList: (value: number) => void;
   setBusinessModel: (value: BusinessModel | null) => void;
   setBusinessModelList: (value: BusinessModel[]) => void;
+  setWatchList: (value: boolean | null) => void;
 
   addLink: () => void;
   addImage: () => void;
@@ -94,6 +96,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const [businessModel, setBusinessModel] = useState<BusinessModel | null>(null);
   const [businessModelId, setBusinessModelId] = useState(0);
   const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
+  const [watchList, setWatchList] = useState<boolean | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -227,6 +230,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
           id={item.id}
           key={item.id}
           name={item.name}
+          genre={isGenre}
+          description={item.description}
           disabled={true}
           setLoading={setLoading}
           deleteCustomFunction={() => removeObjectFromArray(item.id, isGenre ? genreList : modeList, isGenre ? setGenreList : setModeList)}
@@ -249,6 +254,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       const response = await get(`/game/${id}`);
 
       setRate(Number(response.score) || 0);
+      setWatchList(response.watchlist);
       setId(response.id);
       setIsDlc(response.DLC);
       setName(response.name);
@@ -377,8 +383,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   return (
     <GameContext.Provider value={{
       id, name, link, imageName, imageLink, loading, images, linkList, platform, genreList, isDlc,
-      tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList, rate,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime,
+      tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList, rate, watchList,
+      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime, setWatchList,
       setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList, setGenreList,
       addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, renderGenreMode,
       createGame, updateGame, deleteGame, clearGameContext, addBusinessModel, setModeList

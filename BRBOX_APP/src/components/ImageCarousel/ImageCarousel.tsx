@@ -14,7 +14,7 @@ const {width} = Dimensions.get('window');
 const SPACING = 5;
 const ITEM_LENGTH = width * 0.75;
 const EMPTY_ITEM_LENGTH = (width - ITEM_LENGTH) / 2;
-const BORDER_RADIUS = 10;
+const BORDER_RADIUS = 5;
 const CURRENT_ITEM_TRANSLATE_Y = 0;//15;
 
 interface ImageCarouselProps {
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   itemContent: {
-    marginHorizontal: SPACING * 2,
+    marginHorizontal: SPACING * 1.5,
     alignItems: 'center',
     borderRadius: BORDER_RADIUS + SPACING,
   },

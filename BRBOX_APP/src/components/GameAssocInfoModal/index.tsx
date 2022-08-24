@@ -17,12 +17,12 @@ import DefaultModal from '../DefaultModal';
 import ToggleContent from '../ToggleContent';
 import GenreModeCard from '../GenreModeCard';
 
-interface PlatformsModalProps {
+interface GameAssocInfoModalProps {
   visible: boolean;
   setModal: () => void;
 }
 
-export default function PlatformsModal({visible, setModal}: PlatformsModalProps) {
+export default function GameAssocInfoModal({visible, setModal}: GameAssocInfoModalProps) {
   const { getTerm } = useTerm();
   const { darkMode } = useTheme();
   const { businessModelList, renderBusinessModel, genreList, modeList } = useGame();
@@ -49,7 +49,11 @@ export default function PlatformsModal({visible, setModal}: PlatformsModalProps)
           hideBottom
           setLoading={() => {}}
           id={item.id}
+          key={item.id}
           name={item.name}
+          disabled
+          genre={isGenre}
+          description={item.description}
         />
       ));
     }
@@ -68,8 +72,9 @@ export default function PlatformsModal({visible, setModal}: PlatformsModalProps)
       setModal={setModal}
       visible={visible}
       loading={false}
+      style={styles.container}
     >
-      <ScrollView style={[styles.container, {backgroundColor: color}]}>
+      <ScrollView style={[{backgroundColor: color, borderRadius: 8, height: "100%"}]}>
         <View style={[styles.evaluations]}>
           {renderGenreMode(true)}
           {renderGenreMode()}

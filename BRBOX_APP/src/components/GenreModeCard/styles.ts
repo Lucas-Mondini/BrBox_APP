@@ -13,6 +13,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2,
     borderBottomColor: config.yellow
   },
+  description: {
+    fontFamily: config.fontFamilyBold,
+    fontSize: 15,
+    paddingTop: 3
+  },
   title: {
     fontFamily: config.fontFamilyBold,
     fontSize: 22,

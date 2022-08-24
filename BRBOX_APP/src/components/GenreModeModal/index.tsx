@@ -69,7 +69,9 @@ export default function GenreModeModal({visible, isGenre, usedData, setModal, se
             return (
               <GenreModeCard
                 id={item.id}
+                genre={isGenre}
                 name={item.name}
+                description={item.description}
                 setLoading={setLoading}
                 onPress={() => {
                   setGenreMode([...usedData, item]);

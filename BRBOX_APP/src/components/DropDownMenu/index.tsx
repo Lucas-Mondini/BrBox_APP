@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Modal, Text, TouchableOpacity } from "react-native";
+import { Animated, Dimensions, Modal, Text, TouchableOpacity } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
@@ -13,6 +13,9 @@ interface DropDownMenuProps {
   setHideMenu: (value: any) => void;
 }
 
+const { width } = Dimensions.get('window');
+const sixtyPercentWindowWidth = (width * 0.6);
+
 export default function DropDownMenu({visible, setModal, setHideMenu}: DropDownMenuProps)
 {
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -21,7 +24,7 @@ export default function DropDownMenu({visible, setModal, setHideMenu}: DropDownM
   const grow = () => {
     Animated.timing(fadeAnim, {
       useNativeDriver: false,
-      toValue: 270,
+      toValue: sixtyPercentWindowWidth,
       duration: 500
     }).start();
   };
@@ -57,9 +60,10 @@ export default function DropDownMenu({visible, setModal, setHideMenu}: DropDownM
 
   return (
     <Modal
-      transparent onRequestClose={() => setShow(false)}
+      transparent
       visible={visible}
       animationType="fade"
+      onRequestClose={() => setShow(false)}
     >
       <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setShow(false)}}>
         <Icon name={show ? "close" : "menu"} color={darkMode ? config.mediumGreen : config.darkGreen} size={35}/>
