@@ -13,6 +13,7 @@ import Score from "../../Model/Game/Score";
 import TagValue from "../../Model/Game/tag/tagValue";
 import TagValueList from "../../Model/Game/tag/tagValueList";
 import Value from "../../Model/Game/tag/value";
+import Watchlist from "../../Model/Game/watchlist";
 import { reccomend } from "../../services/reccomendation";
 import BusinessModelListController from "./businessModel/businessModelList";
 import GenreController from "./classification/genre";
@@ -143,20 +144,20 @@ export default class GameController extends Controller {
         }
     }
                 
-UserTop3 = async (req: Request) => {
-    try {
-        var where = "1 = $1";
-        let wherename = "1"
-        let games = await GameController.getGamesFromUserFormated(req, where, wherename);
-        let top3 = games.slice(0, 3)
-                   
-        return {status: 200, value: {
-            games: top3
-        }};
-    } catch (e : any) {
-        return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+    UserTop3 = async (req: Request) => {
+        try {
+            var where = "1 = $1";
+            let wherename = "1"
+            let games = await GameController.getGamesFromUserFormated(req, where, wherename);
+            let top3 = games.slice(0, 3)
+                    
+            return {status: 200, value: {
+                games: top3
+            }};
+        } catch (e : any) {
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
+        }
     }
-}
 
     UserRatings = async (req: Request) => {
         try {
@@ -223,10 +224,22 @@ UserTop3 = async (req: Request) => {
                 }
             })
 
+            const watchlist = await AppDataSource.getRepository(Watchlist).findOne({
+                where: {
+                    games: {
+                        id: Number(id)
+                    },
+                    user: {
+                        id: req.user.id
+                    }
+                }
+            })
+
             const returnObj = {
                 ...this.linkFormatter(game),
                 score: score?.value,
-                gameTime: gameTime? gameTime.time : null
+                gameTime: gameTime? gameTime.time : null,
+                watchlist: watchlist? true : false
             }
             
             return {status: 200, value: {
