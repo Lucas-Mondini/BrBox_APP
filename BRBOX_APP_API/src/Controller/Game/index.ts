@@ -39,10 +39,11 @@ export default class GameController extends Controller {
     //@ts-ignore
     Create = async (req: Request) => {
         try {
-            const {name, genres, modes} = req.body;
+            const {name, genres, modes, DLC} = req.body;
             
             const game = new Game();
             game.name = name;
+            game.DLC = DLC;
             
             
             const linkList = await new ExternalLinkListController().Create(req);;
@@ -254,7 +255,7 @@ export default class GameController extends Controller {
     //@ts-ignore
     Update = async (req: Request) => {
         try {
-            const {id, new_name, genres, modes} = req.body
+            const {id, new_name, genres, modes, DLC} = req.body
             const game = await AppDataSource.getRepository(Game).findOneBy({id: Number(id)});
             
             if(!game)
@@ -266,6 +267,7 @@ export default class GameController extends Controller {
             const businessModelList = await new BusinessModelListController().Update(req, game.businessModelList.id);
             
             game.name = new_name || game.name;
+            game.DLC = DLC || game.DLC;
             game.linkList = externalLinkList;
             game.imageList = imageList;
             game.businessModelList = businessModelList;
