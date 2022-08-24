@@ -857,6 +857,13 @@ UserTop3 = async (req: Request) => {
                     inner join game g on g.id = gmm."gameId" 
                     where g.id in (${games.map((i: any) => i.id).toString()})`
             )
+            const watchlist = await AppDataSource.query(`
+                select g.id as gameid from watchlist w
+                inner join watchlist_games_game wgg on wgg."watchlistId" = w.id 
+                inner join game g on g.id = wgg."gameId"
+                where "userId" = ${req.user.id} and g.id in (${games.map((i: any) => i.id).toString()})`
+            )
+            
 
             games.map((i: any)=> {
                 i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
@@ -876,6 +883,7 @@ UserTop3 = async (req: Request) => {
                     }
                     return j
                 })
+                i.watchlist = watchlist.filter((j: any) => j.gameid == i.id).length > 0
             });
                 return games;
     }

@@ -34,7 +34,7 @@ export default class WatchlistController extends Controller {
                 watchlist.games.push(game);
             await AppDataSource.getRepository(Watchlist).save(watchlist);
             
-            return this.Index(req);
+            return {status: 200, value: true};
         }
          catch (e : any) {
             return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
@@ -54,7 +54,7 @@ export default class WatchlistController extends Controller {
                 watchlist.games = watchlist.games.filter((i: any) => i.id != gameid)
 
                 await AppDataSource.getRepository(Watchlist).save(watchlist);
-                return this.Index(req)
+                return {status: 200, value: false};
             }
              catch (e : any) {
                 return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
