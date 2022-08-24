@@ -16,6 +16,7 @@ import GameUtilsRouter from './Game/GameUtils';
 import suggestionRouter from './Sugestion';
 import gameGenreRouter from './Game/classification/genre';
 import gameModeRouter from './Game/classification/mode';
+import watchlistRouter from './Game/Watchlist';
 
 const mainRouter = Router();
 
@@ -40,5 +41,7 @@ mainRouter.use('/gameUtils', GameUtilsRouter);
 
 mainRouter.use('/genre', Auth.user, gameGenreRouter);
 mainRouter.use('/mode', Auth.user, gameModeRouter);
+
+mainRouter.use('/watchlist', Auth.user, watchlistRouter);
 
 export default mainRouter;
