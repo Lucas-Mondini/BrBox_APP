@@ -9,6 +9,6 @@ export default class Genre {
     @Column({unique: true})
     name: string;
 
-    @Column()
+    @Column({nullable: true})
     description: string;
 }
