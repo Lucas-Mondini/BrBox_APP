@@ -130,7 +130,7 @@ const Home = () => {
                 score={Number(item.score)}
                 voteCount={item.votecount}
                 watchlist={item.watchlist}
-                showWatchlist
+                showWatchlist={!params || !params.watchlist}
                 extraCallbackOnNavigate={!params ? resetGameList : undefined}
               />
             )
@@ -157,6 +157,7 @@ const Home = () => {
     return (
       <View style={[styles.inputView]}>
         <Input
+          autoFocus
           placeholder={getTerm(100110)}
           extraStyles={styles.input}
           value={gameName}

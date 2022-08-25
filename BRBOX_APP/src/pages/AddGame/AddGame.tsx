@@ -28,13 +28,14 @@ import BusinessModelModal from '../../components/BusinessModelModal';
 import ToggleContent from '../../components/ToggleContent';
 import { useLinking } from '../../Contexts/LinkingProvider';
 import GenreModeModal from '../../components/GenreModeModal';
+import Checkbox from '../../components/Checkbox';
 
 const AddGame = () => {
   const {
     id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList, genreList, modeList,
     setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel, setGenreList,
     addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel, setModeList,
-    renderGenreMode
+    renderGenreMode, isDlc, setIsDlc
   } = useGame();
 
   const route = useRoute();
@@ -268,10 +269,17 @@ const AddGame = () => {
           }
         />
 
+        <Checkbox
+          text={100174}
+          handleCheckbox={() => setIsDlc(!isDlc)}
+          checked={isDlc}
+          extraText={isDlc ? "!" : "?"}
+        />
+
         <Button
           text={id ? 100015 : 100026}
           onPress={id ? updateGame : createGame}
-          extraStyle={{marginVertical: 15}}
+          extraStyle={{marginVertical: 15, marginTop: 25}}
         />
 
         {Boolean(id) ? <>

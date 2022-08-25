@@ -25,13 +25,12 @@ const Recommended = () => {
   const [loading, setLoading] = useState(true);
 
   const [games, setGames] = useState<Game[]>([]);
-  const [roll, setRoll] = useState(Math.round(Math.random() * 10));
 
   const { post } = useRequest();
-  const { deepLinking } = useLinking();
+  const { deepLinking, recommendIndex, setRecommendIndex } = useLinking();
 
   function rollDice() {
-    setRoll(Math.round(Math.random() * 10));
+    setRecommendIndex(recommendIndex+1);
   }
 
   async function getGames()
@@ -40,7 +39,7 @@ const Recommended = () => {
       const response = await post(
         `/game/reccomended`,
         setLoading,
-        {roll}
+        {roll: recommendIndex}
       );
 
       setGames(response.games);
@@ -70,6 +69,8 @@ const Recommended = () => {
                 imgUri={item.image}
                 score={Number(item.score)}
                 voteCount={item.votecount}
+                watchlist={item.watchlist}
+                showWatchlist
               />
             )
           }
@@ -83,7 +84,7 @@ const Recommended = () => {
 
   useEffect(() => {
     getGames();
-  }, [roll]);
+  }, [recommendIndex]);
 
   useEffect(() => {
     deepLinking(navigation);

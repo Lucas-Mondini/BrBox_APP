@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-community/async-storage';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 import { Linking, Share } from 'react-native';
 
@@ -5,9 +6,11 @@ import config from "../../brbox.config.json";
 
 type LinkingData = {
   gameId: number | null;
+  recommendIndex: number;
   share: (message: string, endpoint: "playStore" | "api", extraUrl?: string) => Promise<void>;
   openUrl: (url: string) => Promise<void>;
   deepLinking: (navigation?: any) => void;
+  setRecommendIndex: (value: number) => void;
   removeLinkingListener: () => void;
 }
 
@@ -20,6 +23,7 @@ const LinkingContext = createContext({} as LinkingData);
 export const LinkingProvider: React.FC<LinkingProviderProps> = ({children}) =>
 {
   const [gameId, setGameId] = useState<number|null>(null);
+  const [recommendIndex, setRecommendIndex] = useState(0);
 
   /**
    * Extract info from the provide url
@@ -102,16 +106,43 @@ export const LinkingProvider: React.FC<LinkingProviderProps> = ({children}) =>
     if (id) setGameId(id);
   }
 
+  /**
+   * Saves recommend index
+   * @return void
+   */
+  async function saveRecommendedIndex()
+  {
+    AsyncStorage.setItem('recommendedIndex', String(recommendIndex));
+  }
+
+  /**
+   * Loads recommended index
+   * @return void
+   */
+  async function getRecommendedIndex()
+  {
+    const recommendedIndexSaved = await AsyncStorage.getItem('recommendedIndex');
+
+    setRecommendIndex(Number(recommendedIndexSaved) || 0);
+  }
+
   useEffect(() => {
     onLoad();
+    getRecommendedIndex();
   }, []);
+
+  useEffect(() => {
+    saveRecommendedIndex();
+  }, [recommendIndex]);
 
   return (
     <LinkingContext.Provider value={{
       gameId,
+      recommendIndex,
       share,
       openUrl,
       deepLinking,
+      setRecommendIndex,
       removeLinkingListener
     }}>
       {children}

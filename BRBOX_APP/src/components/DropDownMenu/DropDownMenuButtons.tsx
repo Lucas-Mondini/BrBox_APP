@@ -9,7 +9,6 @@ import { useAuth } from "../../Contexts/Auth";
 import { useTheme } from "../../Contexts/Theme";
 import { Params } from "../../utils/types";
 import { useLinking } from "../../Contexts/LinkingProvider";
-import useDelay from "../../hooks/Delay";
 
 interface DropDownMenuButtonsProps {
   visible: boolean;
@@ -110,12 +109,6 @@ export default function DropDownMenuButtons({visible, setHideMenu}: DropDownMenu
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-        callNavigationFunction("Home");
-      }}>
-        <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100002).toUpperCase()}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
         callNavigationFunction("Recommended");
       }}>
         <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100003).toUpperCase()}</Text>
@@ -123,6 +116,12 @@ export default function DropDownMenuButtons({visible, setHideMenu}: DropDownMenu
 
       <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={shareApp}>
         <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100004).toUpperCase()}</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
+        callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "SearchGame"}]}));
+      }}>
+        <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100000).toUpperCase()}</Text>
       </TouchableOpacity>
 
       {user?.admin && <>

@@ -36,6 +36,7 @@ type GameData = {
   businessModelList: BusinessModel[];
 
   setId: (value: number) => void;
+  setIsDlc: (value: boolean) => void;
   setName: (value: string) => void;
   setLink: (value: string) => void;
   setImages: (value: ImageType[]) => void;
@@ -298,7 +299,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         const businessModel = businessModelList.map(businessModel => businessModel.id);
 
         const response = await put(`/game/update`, setLoading, {
-          id, new_name: name, new_description: name, externalLinks,
+          id, new_name: name, new_description: name, externalLinks, DLC: isDlc,
           images: imageList, businessModel, genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
         });
 
@@ -328,7 +329,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         const businessModel = businessModelList.map(businessModel => businessModel.id);
 
         const response = await post(`/game/create`, setLoading, {
-          name, externalLinks, images: imageList, businessModel, genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
+          name, externalLinks, images: imageList, businessModel, DLC: isDlc,
+          genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
         });
 
         setId(response.id);
@@ -387,7 +389,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime, setWatchList,
       setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList, setGenreList,
       addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, renderGenreMode,
-      createGame, updateGame, deleteGame, clearGameContext, addBusinessModel, setModeList
+      createGame, updateGame, deleteGame, clearGameContext, addBusinessModel, setModeList, setIsDlc
     }}>
       {children}
     </GameContext.Provider>
