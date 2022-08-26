@@ -4,7 +4,6 @@ import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 
 import styles from "./styles";
 import config from "../../../brbox.config.json";
-import { splitText } from "../../utils/functions";
 import { useRequest } from "../../Contexts/Request";
 import { useTerm } from "../../Contexts/TermProvider";
 import CardsButton from "../CardsButton";
@@ -41,7 +40,7 @@ export default function PlatformCard({id, name, setLoading, onDelete, onPress}: 
         try {
           await destroy(`/platform/destroy/${id}`, onDelete, setLoading);
         } catch (error) {
-          return navigation.reset({index: 0, routes: [{name: "Home"}]});
+          return Alert.alert(getTerm(100073), getTerm(100074));
         }
       }},
       {text: getTerm(100041)}

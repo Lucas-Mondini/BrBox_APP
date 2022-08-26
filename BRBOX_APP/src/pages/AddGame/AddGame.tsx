@@ -56,7 +56,7 @@ const AddGame = () => {
 
   function deleteGameCallback()
   {
-    deleteGame(navigation.reset({index: 0, routes: [{name: "Home"}]}));
+    deleteGame(() => navigation.goBack());
   }
 
   function errorMessage()

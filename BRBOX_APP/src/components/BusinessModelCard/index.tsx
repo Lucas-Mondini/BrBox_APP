@@ -48,7 +48,7 @@ export default function BusinessModelCard({id, name, disabled, description, hide
         try {
           await destroy(`/businessModel/destroy/${id}`, onDelete, setLoading);
         } catch (error) {
-          return navigation.reset({index: 0, routes: [{name: "Home"}]});
+          return Alert.alert(getTerm(100073), getTerm(100074));
         }
       }},
       {text: getTerm(100041)}

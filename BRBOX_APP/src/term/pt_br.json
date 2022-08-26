@@ -1,7 +1,7 @@
 {
   "100000": "Pesquisa",
   "100001": "Suas avaliações",
-  "100002": "Mais avaliado",
+  "100002": "Mais avaliados",
   "100003": "Recomendado",
   "100004": "Compartilhar",
   "100005": "Adicionar Tag",
@@ -170,8 +170,8 @@
   "100168": "Horas",
   "100169": "Escolha seu tempo de jogo",
   "100170": "OK",
-  "100171": "Top 3",
-  "100172": "Top 5",
+  "100171": "Top 3 avaliados por você",
+  "100172": "Top 5 mais avaliados",
   "100173": "WATCHLIST",
   "100174": "É uma DLC"
 }

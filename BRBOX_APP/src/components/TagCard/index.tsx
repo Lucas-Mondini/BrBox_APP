@@ -41,7 +41,7 @@ export default function TagCard({id, icon, title, description, setLoading, onDel
         try {
           await destroy(`/tag/destroy/${id}`, onDelete, setLoading);
         } catch (error) {
-          return navigation.reset({index: 0, routes: [{name: "Home"}]});
+          return Alert.alert(getTerm(100073), getTerm(100074));
         }
       }},
       {text: getTerm(100041)}

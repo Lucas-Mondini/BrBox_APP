@@ -19,6 +19,7 @@ import GenresModesList from '../pages/GenresModesList';
 import AddGenreMode from '../pages/AddGenreMode';
 import Search from '../pages/Search';
 import Recommended from '../pages/Reccomended';
+import MostRated from '../pages/MostRated';
 
 const App = createStackNavigator();
 
@@ -36,6 +37,10 @@ const AppRoutes: React.FC = () => {
         <App.Screen
           name="GameInfo"
           component={GameInfo}
+        />
+        <App.Screen
+          name="MostRated"
+          component={MostRated}
         />
         <App.Screen
           name="SearchGame"

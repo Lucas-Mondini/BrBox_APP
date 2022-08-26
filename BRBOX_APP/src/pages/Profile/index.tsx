@@ -82,6 +82,7 @@ const Profile = () => {
         navigation.goBack();
       }
     } catch (error) {
+      setMessage({title: 100073, message: 100074});
     }
   }
 
@@ -105,7 +106,7 @@ const Profile = () => {
         }
       }
     } catch (error) {
-      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+      setMessage({title: 100075, message: 100076});
     }
   }
 
@@ -124,16 +125,16 @@ const Profile = () => {
         setConfirmPassword("");
       }
     } catch (error) {
-      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+      setMessage({title: 100077, message: 100078});
     }
   }
 
   function validateUser(action: "SAVE" | "UPDATE" | "DELETE")
   {
     const messages: any = {
-      "SAVE": {title: getTerm(100095), message: getTerm(100087)},
-      "UPDATE": {title: getTerm(100095), message: getTerm(100100)},
-      "DELETE": {title: getTerm(100098), message: getTerm(100099)},
+      "SAVE": {title: 100095, message: 100087},
+      "UPDATE": {title: 100095, message: 100100},
+      "DELETE": {title: 100098, message: 100099},
     }
 
     if (action === "SAVE" || action === "UPDATE") {

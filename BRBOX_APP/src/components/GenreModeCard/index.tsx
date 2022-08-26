@@ -48,7 +48,7 @@ export default function GenreModeCard({id, name, description, genre, disabled, h
         try {
           await destroy(`/${genre ? "genre" : "mode"}/destroy/${id}`, onDelete, setLoading);
         } catch (error) {
-          return navigation.reset({index: 0, routes: [{name: "Home"}]});
+          return Alert.alert(getTerm(100073), getTerm(100074));
         }
       }},
       {text: getTerm(100041)}

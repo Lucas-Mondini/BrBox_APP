@@ -97,15 +97,9 @@ export default function DropDownMenuButtons({visible, setHideMenu}: DropDownMenu
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-        callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home", params: {top3: true}}]}));
+        callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "MostRated"}]}));
       }}>
-        <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100171).toUpperCase()}</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {
-        callNavigationFunction("", () => navigation.reset({index: 0, routes: [{name: "Home", params: {top5: true}}]}));
-      }}>
-        <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100172).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, {color: textColor}]}>{getTerm(100002).toUpperCase()}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity style={[styles.menuButton, {backgroundColor: backgroundColorOption}]} onPress={() => {

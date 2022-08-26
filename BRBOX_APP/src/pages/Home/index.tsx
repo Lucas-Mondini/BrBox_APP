@@ -48,10 +48,8 @@ const Home = () => {
   function getTitle()
   {
     if (params) {
-      if (params.top3) return 100171;
-      else if (params.top5) return 100172;
+      if (params.watchlist) return 100173;
       else if (params.filterUser) return 100001;
-      else if (params.watchlist) return 100173;
     }
   }
 
@@ -66,22 +64,20 @@ const Home = () => {
         return;
       };
 
-      if (params && (params.filterUser || params.top3 || params.top5 || params.watchlist)) {
-        if (params.watchlist) {
-          response = await get(
-            `/watchlist?page=${page}&ammount=${amount}&order=${order}}`,
-            loadingMoreGames ? setLoadingMore : setLoading
-          );
-        } else {
-          response = await post(
-            `/game/${params.top3 ? "userTop3" : (params.top5 ? "top5" : "userRatings")}?page=${page}&name=${gameName}&ammount=${amount}&order=${order}`,
-            loadingMoreGames ? setLoadingMore : setLoading,
-            {}
-          );
-        }
+      if (params && params.filterUser) {
+        response = await post(
+          `/game/userRatings?page=${page}&name=${gameName}&ammount=${amount}&order=${order}`,
+          loadingMoreGames ? setLoadingMore : setLoading,
+          {}
+        );
+      } else if (params && params.watchlist) {
+        response = await get(
+          `/watchlist?page=${page}&ammount=${amount}&order=${order}`,
+          loadingMoreGames ? setLoadingMore : setLoading
+        );
       } else {
         response = await get(
-          `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}}`,
+          `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}`,
           loadingMoreGames ? setLoadingMore : setLoading
         );
       }
