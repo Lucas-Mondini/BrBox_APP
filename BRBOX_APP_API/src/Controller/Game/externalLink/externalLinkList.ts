@@ -33,6 +33,8 @@ export default class ExternalLinkListController extends Controller {
             throw "invalid platform id"
             
             externalLinkObj.link = element.link;
+            externalLinkObj.imageURL = element.imageURL;
+            externalLinkObj.promotion = element.promotion;
             externalLinkObj.platform = platform;
             
             externalLinksArray.push(externalLinkObj);
@@ -75,6 +77,8 @@ export default class ExternalLinkListController extends Controller {
             throw "invalid platform id"
             
             externalLinkObj.link = element.link;
+            externalLinkObj.imageURL = element.imageURL;
+            externalLinkObj.promotion = element.promotion;
             externalLinkObj.platform = platform;
             
             externalLinksArray.push(externalLinkObj);
@@ -119,6 +123,8 @@ export default class ExternalLinkListController extends Controller {
             throw "invalid platform id"
             
             externalLinkObj.link = element.link;
+            externalLinkObj.imageURL = element.imageURL;
+            externalLinkObj.promotion = element.promotion;
             externalLinkObj.platform = platform;
             
             externalLinkList.externalLinks.push(externalLinkObj);
