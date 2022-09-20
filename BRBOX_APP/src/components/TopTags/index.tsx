@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Dimensions, View } from "react-native";
+import React from 'react';
+import {View} from 'react-native';
 
-import styles from "./styles";
-import { Tag as TagType, TagValue } from "../../utils/types";
-import Tag from "../Tag";
-import TagInfoModal from "../TagInfoModal";
+import styles from './styles';
+import {Tag as TagType, TagValue} from '../../utils/types';
+import Tag from '../Tag';
 
 interface TopTagsProps {
   tags?: TagValue[];
@@ -13,20 +12,18 @@ interface TopTagsProps {
   voteCount: number;
 }
 
-export default function TopTags({tags, home, large, voteCount}: TopTagsProps)
-{
+export default function TopTags({tags, home, large, voteCount}: TopTagsProps) {
   if (!tags) return null;
 
-  function returnTags(tag?: TagValue)
-  {
+  function returnTags(tag?: TagValue) {
     if (!tag) return null;
 
     const style: any = {
-      "up": "greenBar",
-      "neutral": "yellow",
-      "down": "lightRed",
-      "user": "orange",
-    }
+      up: 'greenBar',
+      neutral: 'yellow',
+      down: 'lightRed',
+      user: 'orange',
+    };
 
     return (
       <View style={{marginHorizontal: 5}}>
@@ -44,14 +41,17 @@ export default function TopTags({tags, home, large, voteCount}: TopTagsProps)
   }
 
   return (
-    <View style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall]}>
+    <View
+      style={[large ? styles.tagsContainerLarge : styles.tagsContainerSmall]}>
       {returnTags(tags[0])}
       {returnTags(tags[1])}
       {returnTags(tags[2])}
-      {(voteCount > 0) && <>
-        { /*@ts-ignore*/}
-        {returnTags({total: voteCount, value: "user", icon: 100})}</>
-      }
+      {voteCount > 0 && (
+        <>
+          {/*@ts-ignore*/}
+          {returnTags({total: voteCount, value: 'user', icon: 100})}
+        </>
+      )}
     </View>
   );
 }

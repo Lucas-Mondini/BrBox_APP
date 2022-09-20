@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import Main from '../pages/Main';
@@ -10,25 +10,11 @@ const App = createStackNavigator();
 
 const AuthRoutes: React.FC = () => {
   return (
-    <App.Navigator
-      screenOptions={{headerShown: false}}
-    >
-      <App.Screen
-        name="Main"
-        component={Main}
-      />
-      <App.Screen
-        name="Login"
-        component={Login}
-      />
-      <App.Screen
-        name="Register"
-        component={Register}
-      />
-      <App.Screen
-        name="ChangePassword"
-        component={ChangePassword}
-      />
+    <App.Navigator screenOptions={{headerShown: false}}>
+      <App.Screen name="Main" component={Main} />
+      <App.Screen name="Login" component={Login} />
+      <App.Screen name="Register" component={Register} />
+      <App.Screen name="ChangePassword" component={ChangePassword} />
     </App.Navigator>
   );
 };
