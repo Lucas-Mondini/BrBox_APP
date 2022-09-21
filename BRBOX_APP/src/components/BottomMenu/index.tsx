@@ -7,10 +7,14 @@ import styles from './styles';
 import config from '../../../brbox.config.json';
 import {Params} from '../../utils/types';
 import {useTheme} from '../../Contexts/Theme';
+import {useLinking} from '../../Contexts/LinkingProvider';
+import {useTerm} from '../../Contexts/TermProvider';
 
 export default function BottomMenu() {
   const navigation = useNavigation<any>();
 
+  const {share} = useLinking();
+  const {getTerm} = useTerm();
   const {darkMode} = useTheme();
 
   const iconColor = darkMode ? '#fff' : config.mainIconColor;
@@ -21,6 +25,9 @@ export default function BottomMenu() {
       index: 0,
       routes: [{name: 'Home'}, {name: route, params}],
     });
+  }
+  async function shareApp() {
+    await share(getTerm(100107), 'playStore');
   }
 
   return (
@@ -51,11 +58,7 @@ export default function BottomMenu() {
         }}>
         <Icon name="thumb-up-outline" size={35} color={iconColor} />
       </TouchableOpacity>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => {
-          goTo('Share');
-        }}>
+      <TouchableOpacity style={styles.button} onPress={shareApp}>
         <Icon name="export" size={35} color={iconColor} />
       </TouchableOpacity>
     </View>
