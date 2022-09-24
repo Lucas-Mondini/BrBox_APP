@@ -18,4 +18,7 @@ export default class ExternalLink {
     @Column({nullable: true})
     promotion: Boolean = false;
 
+    @Column({nullable: true})
+    order: Number = 0;
+
 }
