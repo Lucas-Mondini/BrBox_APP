@@ -8,4 +8,7 @@ export default class Platform {
     @Column({unique: true})
     name: string;
 
+    @Column({nullable: true})
+    imageURL: string = ""
+
 }

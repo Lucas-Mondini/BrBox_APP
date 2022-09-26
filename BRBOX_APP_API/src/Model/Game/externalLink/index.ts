@@ -7,9 +7,18 @@ export default class ExternalLink {
     id: number
 
     @ManyToOne(()=>Platform, {nullable: false})
-    platform: Platform
+    platform: Platform = new Platform();
 
     @Column()
     link: string
+
+    @Column({nullable: true})
+    imageURL: string = this.platform.imageURL;
+
+    @Column({nullable: true})
+    promotion: Boolean = false;
+
+    @Column({nullable: true})
+    order: Number = 0;
 
 }

@@ -236,11 +236,22 @@ export default class GameController extends Controller {
                 }
             })
 
+            
+            const votecount = await AppDataSource.query(`
+            select game.id gameid, count(tv."userId") voteCount from game
+            left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
+            left join tag_value tv on tv.id  = tvl."tagValueId" 
+            where game.id in (${(game.id).toString()})
+            group by game.id
+            order by voteCount desc, gameid asc
+            `)
+
             const returnObj = {
                 ...this.linkFormatter(game),
                 score: score?.value,
                 gameTime: gameTime? gameTime.time : null,
-                watchlist: watchlist? true : false
+                watchlist: watchlist? true : false,
+                votecount: votecount[0].votecount
             }
             
             return {status: 200, value: {
@@ -321,7 +332,7 @@ export default class GameController extends Controller {
                     id: Number(id)
                 }
             }})
-            AppDataSource.getRepository(Score).delete(gameScore);
+            AppDataSource.getRepository(Score).remove(gameScore);
             
             
             await new ExternalLinkListController().Delete(reqExternalLinkList);
@@ -556,7 +567,7 @@ export default class GameController extends Controller {
                 return i;
             });
             games.sort((i : any, j: any) => j.est - i.est);
-            games = games.slice((Number(roll) || 0) * 10, ((Number(roll) || 0) * 10) + 10)
+            games = games.slice((Number(roll) || 0) * 30, ((Number(roll) || 0) * 30) + 30)
             
             return {status: 200, value: {
                 games
@@ -574,7 +585,10 @@ export default class GameController extends Controller {
                 id: item.id,
                 platform: item.platform.id,
                 platformName: item.platform.name,
-                link: item.link
+                link: item.link,
+                imageURL: item.imageURL,
+                promotion: item.promotion,
+                order: item.order
             }
         })
         return game;
