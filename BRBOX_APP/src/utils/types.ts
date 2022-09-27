@@ -50,6 +50,16 @@ export type LinkType = {
   platformName: string;
 }
 
+export type NewLinkType = {
+  id: number,
+  platform: number,
+  platformName: string,
+  link: string,
+  imageURL: string,
+  promotion: boolean,
+  order: number
+}
+
 export type Tag = {
   id: number;
   icon: number;

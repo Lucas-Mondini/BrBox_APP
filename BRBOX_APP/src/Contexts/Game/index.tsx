@@ -9,6 +9,7 @@ import {
   GenreMode,
   ImageType,
   LinkType,
+  NewLinkType,
   Platform,
 } from '../../utils/types';
 
@@ -26,9 +27,12 @@ type GameData = {
   name: string;
   link: string;
   isDlc: boolean | null;
+  promotion: boolean | null;
+  imageURL: string;
+  order: number;
   images: ImageType[];
   loading: boolean;
-  linkList: LinkType[];
+  linkList: NewLinkType[];
   gameTime: number | null;
   modeList: GenreMode[];
   platform: Platform | null;
@@ -51,7 +55,10 @@ type GameData = {
   setGameTime: (value: number | null) => void;
   setPlatform: (value: Platform | null) => void;
   setModeList: (value: GenreMode[]) => void;
-  setLinkList: (value: LinkType[]) => void;
+  setLinkList: (value: NewLinkType[]) => void;
+  setOrder: (value: number) => void;
+  setPromotion: (value: boolean) => void;
+  setImageURL: (value: string) => void;
   setGenreList: (value: GenreMode[]) => void;
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
@@ -93,10 +100,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   const [id, setId] = useState(0);
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
+  const [imageURL, setImageURL] = useState('');
+  const [promotion, setPromotion] = useState(false);
+  const [order, setOrder] = useState(0);
   const [isDlc, setIsDlc] = useState<boolean | null>(null);
   const [images, setImages] = useState([] as ImageType[]);
   const [gameTime, setGameTime] = useState<number | null>(null);
-  const [linkList, setLinkList] = useState([] as LinkType[]);
+  const [linkList, setLinkList] = useState([] as NewLinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [modeList, setModeList] = useState<GenreMode[]>([]);
   const [genreList, setGenreList] = useState<GenreMode[]>([]);
@@ -130,6 +140,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
       return Alert.alert(getTerm(100065), getTerm(100066));
     }
 
+    if (!imageURL.trim()) {
+      return Alert.alert(getTerm(100065), getTerm(100066));
+    }
+
     setLinkList([
       ...linkList,
       {
@@ -137,6 +151,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         platform: platform.id,
         platformName: platform.name,
         link: link,
+        imageURL: imageURL,
+        promotion: promotion,
+        order: order
       },
     ]);
     setLink('');
@@ -425,6 +442,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         id,
         name,
         link,
+        imageURL,
+        order,
+        promotion,
         imageName,
         imageLink,
         loading,
@@ -453,6 +473,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         setWatchList,
         setLinkList,
         setPlatform,
+        setImageURL,
+        setPromotion,
+        setOrder,
         setBusinessModel,
         setTagValueList,
         setBusinessModelList,

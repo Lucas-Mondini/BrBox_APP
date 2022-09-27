@@ -32,8 +32,8 @@ import Checkbox from '../../components/Checkbox';
 
 const AddGame = () => {
   const {
-    id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList, genreList, modeList,
-    setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel, setGenreList,
+    id, name, link, imageURL, order, promotion, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList, genreList, modeList,
+    setName, setLink, setPlatform, setImageName, setImageURL, setPromotion, setOrder, setImageLink, setLoading, renderBusinessModel, addBusinessModel, setGenreList,
     addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel, setModeList,
     renderGenreMode, isDlc, setIsDlc
   } = useGame();
@@ -163,6 +163,24 @@ const AddGame = () => {
                 placeholderText={100049}
                 value={link}
                 onChangeText={setLink}
+                onSubmitEditing={addLink}
+              />
+               <Input
+                placeholderText={100175}
+                value={imageURL}
+                onChangeText={setImageURL}
+                onSubmitEditing={addLink}
+              />
+            <Checkbox
+                      text={100176}
+                      handleCheckbox={() => setPromotion(!promotion)}
+                      checked={promotion}
+                      extraText={promotion ? "!" : "?"}
+                    />
+               <Input
+                placeholderText={100177}
+                value={String(order)}
+                onChangeText={setOrder}
                 onSubmitEditing={addLink}
               />
 
