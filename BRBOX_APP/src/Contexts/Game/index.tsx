@@ -40,6 +40,7 @@ type GameData = {
   businessModel: BusinessModel | null;
   businessModelId: number;
   businessModelList: BusinessModel[];
+  voteCount: number;
 
   setId: (value: number) => void;
   setIsDlc: (value: boolean) => void;
@@ -101,6 +102,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   const [genreList, setGenreList] = useState<GenreMode[]>([]);
   const [imageName, setImageName] = useState('');
   const [imageLink, setImageLink] = useState('');
+  const [voteCount, setVoteCount] = useState(0);
   const [tagValueList, setTagValueList] = useState(0);
   const [businessModel, setBusinessModel] = useState<BusinessModel | null>(
     null,
@@ -283,6 +285,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
       setTagValueList(response.tagList.id);
       setBusinessModelId(response.businessModelList.id);
       setBusinessModelList(response.businessModelList.businessModels);
+      setVoteCount(response.votecount);
     } catch (error) {
       errorCallback();
     }
@@ -438,6 +441,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         modeList,
         rate,
         watchList,
+        voteCount,
         setId,
         setName,
         setLink,
@@ -466,7 +470,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         clearGameContext,
         addBusinessModel,
         setModeList,
-        setIsDlc,
+        setIsDlc
       }}>
       {children}
     </GameContext.Provider>

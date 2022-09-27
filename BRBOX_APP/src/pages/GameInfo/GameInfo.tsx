@@ -52,6 +52,7 @@ const GameInfo = () => {
     loadGame,
     renderLinks,
     renderImages,
+    voteCount,
   } = useGame();
 
   const [modal, setModal] = useState(false);
@@ -185,7 +186,7 @@ const GameInfo = () => {
 
         <View style={style.voteCount}>
           <Icon name="account" size={32} color={color} />
-          <Text style={style.text}>{}</Text>
+          <Text style={style.text}>{voteCount}</Text>
         </View>
 
         {!!id && <GameTimeCard onPress={() => setModal(!modal)} />}
