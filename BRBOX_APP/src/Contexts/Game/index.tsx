@@ -20,6 +20,7 @@ import ImageCarousel from '../../components/ImageCarousel';
 import BusinessModelCard from '../../components/BusinessModelCard';
 import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
 import GenreModeCard from '../../components/GenreModeCard';
+import NewPlatformLinkList from '../../components/NewPlatformLink/NewPlatformLinkList'
 
 type GameData = {
   id: number;
@@ -56,7 +57,7 @@ type GameData = {
   setPlatform: (value: Platform | null) => void;
   setModeList: (value: GenreMode[]) => void;
   setLinkList: (value: NewLinkType[]) => void;
-  setOrder: (value: number) => void;
+  setOrder: (value: any) => void;
   setPromotion: (value: boolean) => void;
   setImageURL: (value: string) => void;
   setGenreList: (value: GenreMode[]) => void;
@@ -140,10 +141,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
       return Alert.alert(getTerm(100065), getTerm(100066));
     }
 
-    if (!imageURL.trim()) {
-      return Alert.alert(getTerm(100065), getTerm(100066));
-    }
-
     setLinkList([
       ...linkList,
       {
@@ -151,7 +148,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         platform: platform.id,
         platformName: platform.name,
         link: link,
-        imageURL: imageURL,
+        imageURL: platform.imageURL,
         promotion: promotion,
         order: order
       },
@@ -187,12 +184,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   }
 
   function renderLinks(allowRemove = false) {
+    const s = <NewPlatformLinkList
+    linkList={linkList}
+    setLinkList={setLinkList}
+    allowRemove={allowRemove}
+  />
     return (
-      <PlatformLinkList
-        linkList={linkList}
-        setLinkList={setLinkList}
-        allowRemove={allowRemove}
-      />
+      s  
     );
   }
 

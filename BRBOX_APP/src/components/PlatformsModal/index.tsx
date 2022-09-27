@@ -74,7 +74,7 @@ export default function PlatformsModal({visible, usedPlatforms, setModal, setPla
                 name={item.name}
                 setLoading={setLoading}
                 onPress={() => {
-                  setPlatform({id: item.id, platform: item.id, name: item.name});
+                  setPlatform({id: item.id, platform: item.id, name: item.name, imageURL: item.imageURL});
                   setModal();
                 }}
               />

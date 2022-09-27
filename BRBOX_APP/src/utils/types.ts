@@ -97,6 +97,7 @@ export type Platform = {
   id: number;
   platform: number;
   name: string;
+  imageURL: string;
 }
 
 export type GenreMode = {
