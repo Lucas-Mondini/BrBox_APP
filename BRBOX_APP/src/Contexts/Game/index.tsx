@@ -18,9 +18,8 @@ import {useRequest} from '../Request';
 import {useTheme} from '../Theme';
 import ImageCarousel from '../../components/ImageCarousel';
 import BusinessModelCard from '../../components/BusinessModelCard';
-import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
 import GenreModeCard from '../../components/GenreModeCard';
-import NewPlatformLinkList from '../../components/NewPlatformLink/NewPlatformLinkList'
+import NewPlatformLinkList from '../../components/NewPlatformLink/NewPlatformLinkList';
 
 type GameData = {
   id: number;
@@ -150,7 +149,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         link: link,
         imageURL: platform.imageURL,
         promotion: promotion,
-        order: order
+        order: order,
       },
     ]);
     setLink('');
@@ -184,14 +183,14 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   }
 
   function renderLinks(allowRemove = false) {
-    const s = <NewPlatformLinkList
-    linkList={linkList}
-    setLinkList={setLinkList}
-    allowRemove={allowRemove}
-  />
-    return (
-      s  
+    const s = (
+      <NewPlatformLinkList
+        linkList={linkList}
+        setLinkList={setLinkList}
+        allowRemove={allowRemove}
+      />
     );
+    return s;
   }
 
   function renderImages(isEdit?: boolean) {
@@ -491,7 +490,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         clearGameContext,
         addBusinessModel,
         setModeList,
-        setIsDlc
+        setIsDlc,
       }}>
       {children}
     </GameContext.Provider>

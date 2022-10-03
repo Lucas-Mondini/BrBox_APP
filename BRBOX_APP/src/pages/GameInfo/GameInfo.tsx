@@ -32,7 +32,7 @@ import {useRequest} from '../../Contexts/Request';
 
 const GameInfo = () => {
   const route = useRoute();
-  const {post, destroy} = useRequest();
+  const {post} = useRequest();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
@@ -114,7 +114,7 @@ const GameInfo = () => {
     if (isFocused && params.id) {
       loadGame(params.id, setMessageError);
     }
-  }, [isFocused]);
+  }, [isFocused, loadGame, params.id]);
 
   useEffect(() => {
     if (isFocused && !loading) {
@@ -126,7 +126,7 @@ const GameInfo = () => {
 
   useEffect(() => {
     deepLinking(navigation);
-  }, []);
+  }, [navigation, deepLinking]);
 
   return (
     <MainView
@@ -205,6 +205,7 @@ const GameInfo = () => {
             }}
           />
         )}
+        {renderLinks()}
       </ScrollView>
     </MainView>
   );

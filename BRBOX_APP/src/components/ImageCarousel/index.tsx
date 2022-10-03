@@ -1,5 +1,5 @@
 import React from 'react';
-import { ImageType } from '../../utils/types';
+import {ImageType} from '../../utils/types';
 
 import ImageCarouselPreview from './ImageCarouselPreview';
 import ImageCarousel from './ImageCarousel';
@@ -10,21 +10,16 @@ interface ImageCarouselProps {
   imageCarouselPreview?: boolean;
 }
 
-const ImageCarouselComponent: React.FC<ImageCarouselProps> = ({data, setData, imageCarouselPreview}) => {
+const ImageCarouselComponent: React.FC<ImageCarouselProps> = ({
+  data,
+  setData,
+  imageCarouselPreview,
+}) => {
   if (imageCarouselPreview && setData) {
-    return (
-      <ImageCarouselPreview
-        images={data}
-        setImages={setData}
-      />
-    );
+    return <ImageCarouselPreview images={data} setImages={setData} />;
   }
 
-  return (
-    <ImageCarousel
-      data={data}
-    />
-  )
+  return <ImageCarousel data={data} />;
 };
 
 export default ImageCarouselComponent;

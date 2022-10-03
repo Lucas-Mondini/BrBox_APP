@@ -7,7 +7,7 @@ export type Game = {
   votecount: number;
   uservotedcount: number;
   isDlc: boolean;
-}
+};
 
 export type User = {
   id: number;
@@ -15,7 +15,7 @@ export type User = {
   email: string;
   admin: boolean;
   auth_token: string;
-}
+};
 
 export type Params = {
   id?: number;
@@ -28,37 +28,37 @@ export type Params = {
   genres?: boolean;
   filterUser?: boolean;
   watchlist?: boolean;
-}
+};
 
 export type Evaluation = {
   id: number;
   tag: Tag;
   user: User;
   value: Value;
-}
+};
 
 export type ImageType = {
   id?: number;
   name: string;
   link: string;
-}
+};
 
 export type LinkType = {
   id: number;
   link: string;
   platform: number;
   platformName: string;
-}
+};
 
 export type NewLinkType = {
-  id: number,
-  platform: number,
-  platformName: string,
-  link: string,
-  imageURL: string,
-  promotion: boolean,
-  order: number
-}
+  id: number;
+  platform: number;
+  platformName: string;
+  link: string;
+  imageURL: string;
+  promotion?: boolean;
+  order?: number;
+};
 
 export type Tag = {
   id: number;
@@ -73,7 +73,7 @@ export type Tag = {
   description_positive?: string;
   description_neutral?: string;
   description_negative?: string;
-}
+};
 
 export type TagValue = {
   id: number;
@@ -91,38 +91,38 @@ export type TagValue = {
   description_positive?: string;
   description_neutral?: string;
   description_negative?: string;
-}
+};
 
 export type Platform = {
   id: number;
   platform: number;
   name: string;
   imageURL: string;
-}
+};
 
 export type GenreMode = {
   id: number;
   name: string;
   description?: string;
-}
+};
 
 export type BusinessModel = {
   id: number;
   name: string;
   description: string;
-}
+};
 
 export type Value = {
   id: number;
   name: string;
-}
+};
 
 export type RadioOption = {
   value: number;
   text: string;
-}
+};
 
 export type Message = {
   title: number;
   message: number;
-}
+};

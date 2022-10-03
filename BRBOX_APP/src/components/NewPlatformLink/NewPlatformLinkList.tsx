@@ -1,9 +1,9 @@
-import React from "react";
-import { Text, View } from "react-native";
+import React from 'react';
+import {Text, View} from 'react-native';
 
-import { LinkType, NewLinkType } from "../../utils/types";
+import {NewLinkType} from '../../utils/types';
 
-import styles from "./styles";
+import styles from './styles';
 import NewPlatformLink from '../NewPlatformLink';
 
 interface PlatformLinkListProps {
@@ -13,11 +13,13 @@ interface PlatformLinkListProps {
   setLinkList: (value: NewLinkType[]) => void;
 }
 
-export default function NewPlatformLinkList({linkList, allowRemove, setLinkList}: PlatformLinkListProps)
-{
-  function mapLinks()
-  {
-    console.log("\n\nNOVO\n\n\n");
+export default function NewPlatformLinkList({
+  linkList,
+  allowRemove,
+  setLinkList,
+}: PlatformLinkListProps) {
+  function mapLinks() {
+    console.log('\n\nNOVO\n\n\n');
     console.log(linkList);
     return linkList.map(link => (
       <NewPlatformLink
@@ -32,9 +34,7 @@ export default function NewPlatformLinkList({linkList, allowRemove, setLinkList}
 
   return (
     <View style={styles.linkContainer}>
-      <Text>
-        {mapLinks()}
-      </Text>
+      <Text>{mapLinks()}</Text>
     </View>
   );
 }
