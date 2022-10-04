@@ -587,6 +587,7 @@ export default class GameController extends Controller {
                 platformName: item.platform.name,
                 link: item.link,
                 imageURL: item.imageURL,
+                Youtube: item.Youtube,
                 promotion: item.promotion,
                 order: item.order
             }
