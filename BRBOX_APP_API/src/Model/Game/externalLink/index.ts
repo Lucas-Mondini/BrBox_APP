@@ -19,6 +19,9 @@ export default class ExternalLink {
     promotion: Boolean = false;
 
     @Column({nullable: true})
+    Youtube: Boolean = false;
+
+    @Column({nullable: true})
     order: Number = 0;
 
 }

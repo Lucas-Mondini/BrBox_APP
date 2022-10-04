@@ -35,6 +35,7 @@ export default class ExternalLinkListController extends Controller {
             externalLinkObj.link = element.link;
             externalLinkObj.imageURL = element.imageURL ? element.imageURL : "";
             externalLinkObj.promotion = element.promotion ? element.promotion : false;
+            externalLinkObj.Youtube = element.Youtube ? element.Youtube : false;
             externalLinkObj.order = element.order ? element.order : 0;
             externalLinkObj.platform = platform;
             
@@ -80,6 +81,7 @@ export default class ExternalLinkListController extends Controller {
             externalLinkObj.link = element.link;
             externalLinkObj.imageURL = element.imageURL ? element.imageURL : "";
             externalLinkObj.promotion = element.promotion ? element.promotion : false;
+            externalLinkObj.Youtube = element.Youtube ? element.Youtube : false;
             externalLinkObj.order = element.order ? element.order : 0;
             externalLinkObj.platform = platform;
             
@@ -127,6 +129,7 @@ export default class ExternalLinkListController extends Controller {
             externalLinkObj.link = element.link;
             externalLinkObj.imageURL = element.imageURL ? element.imageURL : "";
             externalLinkObj.promotion = element.promotion ? element.promotion : false;
+            externalLinkObj.Youtube = element.Youtube ? element.Youtube : false;
             externalLinkObj.order = element.order ? element.order : 0;
             externalLinkObj.platform = platform;
             
