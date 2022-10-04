@@ -9,17 +9,16 @@ import NewPlatformLink from '../NewPlatformLink';
 interface PlatformLinkListProps {
   linkList: NewLinkType[];
   allowRemove: boolean;
+  youtubeList: boolean;
 
   setLinkList: (value: NewLinkType[]) => void;
 }
 
-export default function NewPlatformLinkList({linkList, allowRemove, setLinkList}: PlatformLinkListProps)
+export default function NewPlatformLinkList({linkList, allowRemove, youtubeList = false, setLinkList}: PlatformLinkListProps)
 {
   function mapLinks()
   {
-    console.log("\n\nNOVO\n\n\n");
-    console.log(linkList);
-    return linkList.map(link => (
+    return linkList.filter(i => i.Youtube == youtubeList).sort(i => i.order).map(link => (
       <NewPlatformLink
         key={link.id}
         link={link}

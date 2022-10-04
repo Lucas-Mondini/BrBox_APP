@@ -126,7 +126,7 @@ const GameInfo = () => {
 
   useEffect(() => {
     deepLinking(navigation);
-  }, []);
+  }, [navigation, deepLinking]);
 
   return (
     <MainView
@@ -205,6 +205,7 @@ const GameInfo = () => {
             }}
           />
         )}
+        {renderLinks(false, true)}
       </ScrollView>
     </MainView>
   );

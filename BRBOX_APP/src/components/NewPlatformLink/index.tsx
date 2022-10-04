@@ -12,7 +12,6 @@ interface PlatformLinkProps {
   link: NewLinkType;
   linkList: NewLinkType[];
   allowRemove: boolean;
-
   setLinkList: (value: NewLinkType[]) => void;
 }
 
@@ -21,11 +20,14 @@ export default function NewPlatformLink({link, linkList, allowRemove, setLinkLis
   const { openUrl } = useLinking()
 
   function getPlatformImage(linkobj: any)
-  {
-    return <Image 
-      style={styles.image}    
-      source={{uri: linkobj.imageURL || ""}}/>
-  }
+  { 
+    if(!linkobj.Youtube){
+     return <Image style={styles.image} source={{uri: linkobj.imageURL || ""}}/>
+    }
+    if(linkobj.Youtube) {  
+      return <Image style={{width: 120, height: 120, borderRadius: 15}} source={{uri: linkobj.imageURL || ""}}/>
+    }
+    }
 
   return (
     <TouchableOpacity style={[styles.link]}

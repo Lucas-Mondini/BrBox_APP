@@ -52,10 +52,11 @@ export type LinkType = {
 
 export type NewLinkType = {
   id: number,
-  platform: number,
+  platform: number | null,
   platformName: string,
   link: string,
   imageURL: string,
+  Youtube: boolean,
   promotion: boolean,
   order: number
 }

@@ -12,7 +12,8 @@ const styles = StyleSheet.create({
   image: {
     width:80, height: 80,
     marginBottom: 5,
-    marginHorizontal: 3
+    marginHorizontal: 3,
+    borderRadius: 15,
   },
   linkContainer: {
     alignItems: "center",

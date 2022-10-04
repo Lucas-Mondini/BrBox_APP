@@ -29,6 +29,7 @@ type GameData = {
   link: string;
   isDlc: boolean | null;
   promotion: boolean | null;
+  Youtube: boolean | null;
   imageURL: string;
   order: number;
   images: ImageType[];
@@ -59,6 +60,7 @@ type GameData = {
   setLinkList: (value: NewLinkType[]) => void;
   setOrder: (value: any) => void;
   setPromotion: (value: boolean) => void;
+  setYoutube: (value: boolean) => void;
   setImageURL: (value: string) => void;
   setGenreList: (value: GenreMode[]) => void;
   setImageName: (value: string) => void;
@@ -76,7 +78,8 @@ type GameData = {
   deleteGame: (callback?: () => void, gameId?: number) => Promise<void>;
   addBusinessModel: () => void;
 
-  renderLinks: (allowRemove?: boolean) => React.ReactElement;
+  renderLinks: (allowRemove?: boolean, YoutubeList?: boolean) => React.ReactElement;
+  renderLinksEditMode: () => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
   renderBusinessModel: (
     isEdit?: boolean,
@@ -101,6 +104,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   const [id, setId] = useState(0);
   const [name, setName] = useState('');
   const [link, setLink] = useState('');
+  const [Youtube, setYoutube] = useState(false);
   const [imageURL, setImageURL] = useState('');
   const [promotion, setPromotion] = useState(false);
   const [order, setOrder] = useState(0);
@@ -133,7 +137,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   };
 
   function addLink() {
-    if (!platform) {
+    if (!platform && !Youtube) {
       return Alert.alert(getTerm(100063), getTerm(100064));
     }
 
@@ -145,12 +149,13 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
       ...linkList,
       {
         id: getMaxId(linkList),
-        platform: platform.id,
-        platformName: platform.name,
+        platform: platform ? platform.id : 0,
+        platformName: platform? platform.name : "Youtube",
         link: link,
-        imageURL: platform.imageURL,
+        Youtube: Youtube,
+        imageURL: imageURL || (platform? platform.imageURL :  "https://e7.pngegg.com/pngimages/125/937/png-clipart-youtube-logo-youtube-angle-logo-thumbnail.png"),
         promotion: promotion,
-        order: order
+        order: Number(order)
       },
     ]);
     setLink('');
@@ -183,11 +188,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
     setBusinessModel(null);
   }
 
-  function renderLinks(allowRemove = false) {
+  function renderLinksEditMode() {
+    return (
+      <>
+      {renderLinks(true, false)}
+      {renderLinks(true, true)}
+      </>
+    )
+  }
+
+  function renderLinks(allowRemove = false, YoutubeList = false) {
     const s = <NewPlatformLinkList
     linkList={linkList}
     setLinkList={setLinkList}
     allowRemove={allowRemove}
+    youtubeList={YoutubeList}
   />
     return (
       s  
@@ -403,7 +418,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
     }
   }
 
-  function validateGame(externalLinks: LinkType[], imageList: ImageType[]) {
+  function validateGame(externalLinks: NewLinkType[], imageList: ImageType[]) {
     if (!name.trim()) {
       Alert.alert(getTerm(100093), getTerm(100094));
       return false;
@@ -443,6 +458,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         imageURL,
         order,
         promotion,
+        Youtube,
         imageName,
         imageLink,
         loading,
@@ -473,6 +489,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         setPlatform,
         setImageURL,
         setPromotion,
+        setYoutube,
         setOrder,
         setBusinessModel,
         setTagValueList,
@@ -481,6 +498,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         addLink,
         addImage,
         renderLinks,
+        renderLinksEditMode,
         renderImages,
         renderBusinessModel,
         loadGame,

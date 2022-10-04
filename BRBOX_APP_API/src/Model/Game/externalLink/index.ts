@@ -6,14 +6,14 @@ export default class ExternalLink {
     @PrimaryGeneratedColumn()
     id: number
 
-    @ManyToOne(()=>Platform, {nullable: false})
-    platform: Platform = new Platform();
+    @ManyToOne(()=>Platform, {nullable: true})
+    platform: Platform | null = new Platform();
 
     @Column()
     link: string
 
     @Column({nullable: true})
-    imageURL: string = this.platform.imageURL;
+    imageURL: string = this.platform?.imageURL || "";
 
     @Column({nullable: true})
     promotion: Boolean = false;

@@ -9,6 +9,7 @@ import { useTheme } from "../../Contexts/Theme";
 interface InputProps extends TextInputProps {
   placeholderText?: number;
   extraStyles?: object;
+  keyboardType?: any;
 }
 
 export default function Input(props: InputProps)
@@ -24,6 +25,7 @@ export default function Input(props: InputProps)
         placeholder={getTerm(Number(props.placeholderText))}
         style={[textColor, styles.input, props.extraStyles]}
         placeholderTextColor={config.placeholdersColor}
+        keyboardType={props.keyboardType}
         {...props}
       />
     </View>
