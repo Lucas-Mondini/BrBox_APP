@@ -20,8 +20,7 @@ export default function NewPlatformLinkList({linkList, allowRemove, youtubeList 
   function mapLinks()
   {
     return (
-      
-    <ScrollView horizontal={true}> 
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{flex:1}}> 
       {linkList.filter(i => i.Youtube == youtubeList).sort(i => i.order).map(link => (
       <NewPlatformLink 
         key={link.id}
