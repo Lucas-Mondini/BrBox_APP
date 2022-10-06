@@ -5,6 +5,7 @@ import { LinkType, NewLinkType } from "../../utils/types";
 
 import styles from "./styles";
 import NewPlatformLink from '../NewPlatformLink';
+import { ScrollView } from "react-native-gesture-handler";
 
 interface PlatformLinkListProps {
   linkList: NewLinkType[];
@@ -18,15 +19,20 @@ export default function NewPlatformLinkList({linkList, allowRemove, youtubeList 
 {
   function mapLinks()
   {
-    return linkList.filter(i => i.Youtube == youtubeList).sort(i => i.order).map(link => (
-      <NewPlatformLink
+    return (
+      
+    <ScrollView horizontal={true}> 
+      {linkList.filter(i => i.Youtube == youtubeList).sort(i => i.order).map(link => (
+      <NewPlatformLink 
         key={link.id}
         link={link}
         linkList={linkList}
         allowRemove={allowRemove}
         setLinkList={setLinkList}
       />
-    ));
+    ))}
+    </ScrollView>
+    )
   }
 
   return (
