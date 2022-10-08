@@ -1,4 +1,4 @@
-package com.brbox_app.newarchitecture.modules;
+package com.brbox.gamescore.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

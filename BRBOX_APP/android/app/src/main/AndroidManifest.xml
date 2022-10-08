@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.brbox_app">
+  package="com.brbox.gamescore">
 
     <uses-permission android:name="android.permission.INTERNET" />
 

@@ -1,4 +1,4 @@
-package com.brbox_app;
+package com.brbox.gamescore;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
@@ -12,7 +12,7 @@ public class MainActivity extends ReactActivity {
    */
   @Override
   protected String getMainComponentName() {
-    return "BRBOX_APP";
+    return "brBox";
   }
 
   /**

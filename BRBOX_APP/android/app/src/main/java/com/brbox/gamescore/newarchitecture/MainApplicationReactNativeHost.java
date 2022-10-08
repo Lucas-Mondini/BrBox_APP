@@ -1,4 +1,4 @@
-package com.brbox_app.newarchitecture;
+package com.brbox.gamescore.newarchitecture;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
@@ -19,9 +19,9 @@ import com.facebook.react.fabric.CoreComponentsRegistry;
 import com.facebook.react.fabric.EmptyReactNativeConfig;
 import com.facebook.react.fabric.FabricJSIModuleProvider;
 import com.facebook.react.uimanager.ViewManagerRegistry;
-import com.brbox_app.BuildConfig;
-import com.brbox_app.newarchitecture.components.MainComponentsRegistry;
-import com.brbox_app.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
+import com.brbox.gamescore.BuildConfig;
+import com.brbox.gamescore.newarchitecture.components.MainComponentsRegistry;
+import com.brbox.gamescore.newarchitecture.modules.MainApplicationTurboModuleManagerDelegate;
 import java.util.ArrayList;
 import java.util.List;
 

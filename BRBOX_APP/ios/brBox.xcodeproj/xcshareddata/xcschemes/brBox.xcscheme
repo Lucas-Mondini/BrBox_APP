@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "BRBOX_APP.app"
-               BlueprintName = "BRBOX_APP"
-               ReferencedContainer = "container:BRBOX_APP.xcodeproj">
+               BuildableName = "brBox.app"
+               BlueprintName = "brBox"
+               ReferencedContainer = "container:brBox.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "BRBOX_APPTests.xctest"
-               BlueprintName = "BRBOX_APPTests"
-               ReferencedContainer = "container:BRBOX_APP.xcodeproj">
+               BuildableName = "brBoxTests.xctest"
+               BlueprintName = "brBoxTests"
+               ReferencedContainer = "container:brBox.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "BRBOX_APP.app"
-            BlueprintName = "BRBOX_APP"
-            ReferencedContainer = "container:BRBOX_APP.xcodeproj">
+            BuildableName = "brBox.app"
+            BlueprintName = "brBox"
+            ReferencedContainer = "container:brBox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "BRBOX_APP.app"
-            BlueprintName = "BRBOX_APP"
-            ReferencedContainer = "container:BRBOX_APP.xcodeproj">
+            BuildableName = "brBox.app"
+            BlueprintName = "brBox"
+            ReferencedContainer = "container:brBox.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

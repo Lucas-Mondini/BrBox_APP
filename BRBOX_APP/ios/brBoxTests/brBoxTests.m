@@ -7,11 +7,11 @@
 #define TIMEOUT_SECONDS 600
 #define TEXT_TO_LOOK_FOR @"Welcome to React"
 
-@interface BRBOX_APPTests : XCTestCase
+@interface brBoxTests : XCTestCase
 
 @end
 
-@implementation BRBOX_APPTests
+@implementation brBoxTests
 
 - (BOOL)findSubviewInView:(UIView *)view matching:(BOOL (^)(UIView *view))test
 {
