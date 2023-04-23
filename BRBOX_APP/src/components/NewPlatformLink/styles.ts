@@ -10,12 +10,13 @@ const styles = StyleSheet.create({
     top: -15
   },
   image: {
-    width:80, height: 80,
+    width: 80, height: 80,
     marginBottom: 5,
     marginHorizontal: 3,
     borderRadius: 15,
   },
   linkContainer: {
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     marginTop: 10,

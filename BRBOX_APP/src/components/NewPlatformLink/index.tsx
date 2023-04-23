@@ -14,39 +14,39 @@ const platformImage = new PlatformImage();
 interface PlatformLinkProps {
   link: NewLinkType;
   linkList: NewLinkType[];
-  allowRemove: boolean;
+  allowRemove?: boolean;
   setLinkList: (value: NewLinkType[]) => void;
 }
 
-export default function NewPlatformLink({link, linkList, allowRemove, setLinkList}: PlatformLinkProps)
-{
+export default function NewPlatformLink({ link, linkList, allowRemove, setLinkList }: PlatformLinkProps) {
+
   const { openUrl } = useLinking()
 
-  function getPlatformImage(linkobj: any)
-  {
-    let url = PlatformImage.getImage(linkobj.imageURL || "");
-    let inImage = PlatformImage.IsInternalImage(linkobj.imageURL || "");
+  function getPlatformImage(linkobj: any) {
+
+    let url = PlatformImage.getImage(linkobj.imageURL || "generic");
+    let inImage = PlatformImage.IsInternalImage(linkobj.imageURL || "generic");
     let img
-    if(!linkobj.Youtube){
+    if (!linkobj.Youtube) {
       if (!inImage) {
-        img = <ImageBackground style={[styles.image, {marginHorizontal: 5}]} source={{uri: url}}>{
-          linkobj.promotion? <Image style={[styles.image, {marginHorizontal: 5}]} source={PlatformImage.getImage('discount')}/> : null
+        img = <ImageBackground style={[styles.image, { marginHorizontal: 5 }]} source={url}>{
+          linkobj.promotion ? <Image style={[styles.image, { marginHorizontal: 5 }]} source={PlatformImage.getImage('discount')} /> : null
         }</ImageBackground>
       } else {
-        img = <ImageBackground style={[styles.image, {marginHorizontal: 5}]} source={url}>{
-          linkobj.promotion? <Image style={[styles.image, {marginHorizontal: 5}]} source={PlatformImage.getImage('discount')}/> : null
+        img = <ImageBackground style={[styles.image, { marginHorizontal: 5 }]} source={url}>{
+          linkobj.promotion ? <Image style={[styles.image, { marginHorizontal: 5 }]} source={PlatformImage.getImage('discount')} /> : null
         }</ImageBackground>
       }
     }
-    if(linkobj.Youtube) {
+    if (linkobj.Youtube) {
       if (!inImage) {
-        img = <ImageBackground style={{width: 120, height: 120, borderRadius: 15, marginHorizontal: 5}} source={{uri: url}}></ImageBackground>
+        img = <ImageBackground style={{ width: 120, height: 120, borderRadius: 15, marginHorizontal: 5 }} source={{ uri: url }}></ImageBackground>
       } else {
-        img = <ImageBackground style={{width: 120, height: 120, borderRadius: 15, marginHorizontal: 5}} source={url}></ImageBackground>
+        img = <ImageBackground style={{ width: 120, height: 120, borderRadius: 15, marginHorizontal: 5 }} source={url}></ImageBackground>
       }
     }
     return img;
-    }
+  }
 
   return (
     <TouchableOpacity style={[styles.link]}
@@ -61,7 +61,7 @@ export default function NewPlatformLink({link, linkList, allowRemove, setLinkLis
       {getPlatformImage(link)}
       {allowRemove &&
         <TouchableOpacity style={styles.xButton} onPress={() => removeObjectFromArray(link.id, linkList, setLinkList)}>
-          <Icon name="close" size={35} color={"#000"}/>
+          <Icon name="close" size={35} color={"#000"} />
         </TouchableOpacity>
       }
     </TouchableOpacity>

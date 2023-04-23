@@ -43,7 +43,7 @@ export default function PlatformsModal({visible, usedPlatforms, setModal, setPla
       const platformsList = await get("/platform", setLoading);
 
       for (const usedPlatform of platformsList) {
-        const [included] = usedPlatforms.filter((item: NewLinkType) => item.platform === usedPlatform.id);
+        const [included] = usedPlatforms.filter((item: NewLinkType) => item.platform === usedPlatform.plataform);
 
         if (!included) {
           notUsedPlatforms.push(usedPlatform);

@@ -41,11 +41,10 @@ export default class PlatformImage {
     public static windowsStore = require('./8_windowsStore.png');
     public static amazon = require('./9_amazon.png');
     public static discount = require('./discount.png');
+    public static generic = require('./generic.png');
 
     public static getImage(url: string) {
         switch (true) {
-            default:
-                return url;
             case url == "0_steam":
                 return PlatformImage.steam;
             case url == "10_battlenet":
@@ -130,7 +129,11 @@ export default class PlatformImage {
                 return PlatformImage.amazon;
             case url == "discount":
                 return PlatformImage.discount;
-          }
+            case url == "generic":
+                return PlatformImage.generic;
+            default:
+                return url;
+        }
     }
 
     public static IsInternalImage(url: any) {
@@ -179,7 +182,9 @@ export default class PlatformImage {
             case url == "8_windowsStore":
             case url == "9_amazon":
             case url == "discount":
+            case url == "generic":
                 return true;
-          }
+        }
     }
+
 }

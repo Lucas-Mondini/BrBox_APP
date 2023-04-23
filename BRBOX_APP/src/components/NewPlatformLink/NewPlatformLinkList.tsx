@@ -9,8 +9,8 @@ import { ScrollView } from "react-native-gesture-handler";
 
 interface PlatformLinkListProps {
   linkList: NewLinkType[];
-  allowRemove: boolean;
-  youtubeList: boolean;
+  allowRemove?: boolean;
+  youtubeList?: boolean;
 
   setLinkList: (value: NewLinkType[]) => void;
 }
@@ -21,15 +21,17 @@ export default function NewPlatformLinkList({
   youtubeList = false,
   setLinkList,
 }: PlatformLinkListProps) {
+
   function mapLinks() {
+
     return (
       <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 120 }}
+        contentContainerStyle={{ paddingHorizontal: 0}}
       >
         {linkList
-          .filter((i) => i.Youtube == youtubeList)
+          .filter((i) => (i.Youtube || false) == youtubeList)
           .sort((i) => i.order)
           .map((link) => (
             <NewPlatformLink
@@ -46,7 +48,7 @@ export default function NewPlatformLinkList({
 
   return (
     <View style={styles.linkContainer}>
-      <Text>{mapLinks()}</Text>
+      {mapLinks()}
     </View>
   );
 }
