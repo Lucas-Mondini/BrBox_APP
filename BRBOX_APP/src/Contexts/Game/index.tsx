@@ -1,9 +1,9 @@
-import React, {createContext, ReactNode, useContext, useState} from 'react';
-import {Alert, Text, View} from 'react-native';
+import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { Alert, Text, View } from 'react-native';
 
 import styles from './styles';
 import config from '../../../brbox.config.json';
-import {getMaxId, removeObjectFromArray} from '../../utils/functions';
+import { getMaxId, removeObjectFromArray } from '../../utils/functions';
 import {
   BusinessModel,
   GenreMode,
@@ -13,9 +13,9 @@ import {
   Platform,
 } from '../../utils/types';
 
-import {useTerm} from '../TermProvider';
-import {useRequest} from '../Request';
-import {useTheme} from '../Theme';
+import { useTerm } from '../TermProvider';
+import { useRequest } from '../Request';
+import { useTheme } from '../Theme';
 import ImageCarousel from '../../components/ImageCarousel';
 import BusinessModelCard from '../../components/BusinessModelCard';
 import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
@@ -96,9 +96,9 @@ type GameProviderProps = {
 
 const GameContext = createContext({} as GameData);
 
-export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
-  const {getTerm} = useTerm();
-  const {get, put, post, destroy} = useRequest();
+export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
+  const { getTerm } = useTerm();
+  const { get, put, post, destroy } = useRequest();
 
   const [rate, setRate] = useState(0);
   const [id, setId] = useState(0);
@@ -130,7 +130,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
 
   const [loading, setLoading] = useState(false);
 
-  const {darkMode} = useTheme();
+  const { darkMode } = useTheme();
 
   const textColorStyle = {
     color: darkMode ? '#fff' : config.dark,
@@ -150,11 +150,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
       {
         id: getMaxId(linkList),
         platform: platform ? platform.id : 0,
-        platformName: platform? platform.name : "Youtube",
-        link: link,
-        Youtube: Youtube,
-        imageURL: imageURL || (platform? platform.imageURL :  "https://e7.pngegg.com/pngimages/125/937/png-clipart-youtube-logo-youtube-angle-logo-thumbnail.png"),
-        promotion: promotion,
+        platformName: Youtube ? "Youtube" : platform ? platform.name : "Youtube",
+        link,
+        Youtube,
+        imageURL: imageURL || (platform ? platform.imageURL : "https://e7.pngegg.com/pngimages/125/937/png-clipart-youtube-logo-youtube-angle-logo-thumbnail.png"),
+        promotion,
         order: Number(order)
       },
     ]);
@@ -175,7 +175,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
     setImageLink('');
     setImages([
       ...images,
-      {id: getMaxId(images), name: imageName, link: imageLink},
+      { id: getMaxId(images), name: imageName, link: imageLink },
     ]);
   }
 
@@ -191,21 +191,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
   function renderLinksEditMode() {
     return (
       <>
-      {renderLinks(true, false)}
-      {renderLinks(true, true)}
+        {renderLinks(true, false)}
+        {renderLinks(true, true)}
       </>
     )
   }
 
-  function renderLinks(allowRemove = false, YoutubeList = false) {
+  function renderLinks(allowRemove?: boolean, YoutubeList?: boolean) {
     const s = <NewPlatformLinkList
-    linkList={linkList}
-    setLinkList={setLinkList}
-    allowRemove={allowRemove}
-    youtubeList={YoutubeList}
-  />
+      linkList={linkList}
+      setLinkList={setLinkList}
+      allowRemove={allowRemove}
+      youtubeList={YoutubeList}
+    />
     return (
-      s  
+      s
     );
   }
 
@@ -233,19 +233,19 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
           id={businessModel.id}
           key={businessModel.id}
           name={businessModel.name}
-          onPress={() => {}}
+          onPress={() => { }}
           disabled={!isEdit}
           description={businessModel.description}
           setLoading={setLoading}
           deleteCustomFunction={
             isEdit
               ? () =>
-                  removeObjectFromArray(
-                    businessModel.id,
-                    businessModelList,
-                    setBusinessModelList,
-                  )
-              : () => {}
+                removeObjectFromArray(
+                  businessModel.id,
+                  businessModelList,
+                  setBusinessModelList,
+                )
+              : () => { }
           }
         />
       ));
@@ -329,7 +329,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         text: getTerm(100040),
         onPress: async () => {
           try {
-            const defaultFunction = () => {};
+            const defaultFunction = () => { };
             await destroy(
               `game/destroy/${gameId || id}`,
               callback || defaultFunction,
@@ -340,7 +340,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
           }
         },
       },
-      {text: getTerm(100041)},
+      { text: getTerm(100041) },
     ]);
   }
 
@@ -348,6 +348,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
     try {
       const externalLinks = linkList.filter(link => link.link !== '');
       const imageList = images.filter(image => image.link !== '');
+
+      console.log(externalLinks)
 
       if (validateGame(externalLinks, imageList)) {
         const businessModel = businessModelList.map(
@@ -366,6 +368,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
           modes: modeList.map(mode => mode.id),
         });
 
+        console.log(response)
+
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
@@ -377,7 +381,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) => {
         setBusinessModelId(response.businessModelList.id);
         setBusinessModelList(response.businessModelList.businessModels);
       }
-    } catch (error) {
+    } catch (error: any) {
+
+      console.log(JSON.stringify(error))
       Alert.alert(getTerm(100075), getTerm(100076));
     }
   }
