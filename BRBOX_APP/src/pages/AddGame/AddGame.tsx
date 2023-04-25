@@ -32,9 +32,9 @@ import Checkbox from '../../components/Checkbox';
 
 const AddGame = () => {
   const {
-    id, name, link, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList, genreList, modeList,
-    setName, setLink, setPlatform, setImageName, setImageLink, setLoading, renderBusinessModel, addBusinessModel, setGenreList,
-    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinks, renderImages, setBusinessModel, setModeList,
+    id, name, link, imageURL, order, promotion, loading, imageName, imageLink, platform, businessModel, businessModelList, linkList, genreList, modeList, Youtube,
+    setName, setLink, setPlatform, setImageName, setImageURL, setPromotion, setYoutube, setOrder, setImageLink, setLoading, renderBusinessModel, addBusinessModel, setGenreList,
+    addLink, addImage, loadGame, createGame, updateGame, deleteGame, renderLinksEditMode, renderImages, setBusinessModel, setModeList,
     renderGenreMode, isDlc, setIsDlc
   } = useGame();
 
@@ -157,7 +157,7 @@ const AddGame = () => {
           title={100105}
           content={
             <>
-              {renderLinks(true)}
+              {renderLinksEditMode()}
 
               <Input
                 placeholderText={100049}
@@ -165,17 +165,43 @@ const AddGame = () => {
                 onChangeText={setLink}
                 onSubmitEditing={addLink}
               />
-
-              <TouchableOpacity onPress={() => showModal("Platforms")}>
-                <View pointerEvents="none">
-                  <Input
-                    placeholderText={100050}
-                    value={platform?.name}
-                    onSubmitEditing={addLink}
-                  />
-                </View>
-              </TouchableOpacity>
-
+               <Input
+                placeholderText={100175}
+                value={imageURL}
+                onChangeText={setImageURL}
+                onSubmitEditing={addLink}
+              />
+              {!Youtube ? (
+                <Checkbox
+                          text={100176}
+                          handleCheckbox={() => setPromotion(!promotion)}
+                          checked={promotion}
+                          extraText={promotion ? "!" : "?"}
+                        />) : null }
+            <Checkbox
+              text={100178}
+              handleCheckbox={() => setYoutube(!Youtube)}
+              checked={Youtube}
+              extraText={Youtube ? "!" : "?"}
+            />
+               <Input
+                placeholderText={100177}
+                value={String(order)}
+                onChangeText={setOrder}
+                onSubmitEditing={addLink}
+                keyboardType={'numeric'}
+              />
+                {!Youtube ? (
+                <TouchableOpacity onPress={() => showModal("Platforms")}>
+                  <View pointerEvents="none">
+                    <Input
+                      placeholderText={100050}
+                      value={platform?.name}
+                      onSubmitEditing={addLink}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ) : null}
               <Button
                 text={100048}
                 extraStyle={{marginBottom: 15}}

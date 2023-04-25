@@ -1,21 +1,18 @@
-import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import {
-  RefreshControl,
-  View
-} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {RefreshControl, View} from 'react-native';
 
 import BottomMenu from '../../components/BottomMenu';
 import MainView from '../../components/MainView';
 
 import styles from './styles';
 
-import { BusinessModel } from '../../utils/types';
-import { useRequest } from '../../Contexts/Request';
-import { useTerm } from '../../Contexts/TermProvider';
+import {BusinessModel} from '../../utils/types';
+import {useRequest} from '../../Contexts/Request';
+import {useTerm} from '../../Contexts/TermProvider';
 import BusinessModelCard from '../../components/BusinessModelCard';
-import { useLinking } from '../../Contexts/LinkingProvider';
+import {useLinking} from '../../Contexts/LinkingProvider';
 
 const BusinessModelList = () => {
   const isFocused = useIsFocused();
@@ -26,50 +23,48 @@ const BusinessModelList = () => {
   const {deepLinking} = useLinking();
 
   const [loading, setLoading] = useState(true);
-  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
+  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>(
+    [],
+  );
 
-  async function getBusinessModels()
-  {
+  async function getBusinessModels() {
     try {
-      const businessModelList = await get("/businessModel", setLoading);
+      const businessModelList = await get('/businessModel', setLoading);
 
       setBusinessModelList(businessModelList);
     } catch (err) {
-      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+      return navigation.reset({index: 0, routes: [{name: 'Home'}]});
     }
   }
 
-  function navigateToBusinessModelRegister()
-  {
-    return navigation.navigate("AddBusinessModel");
+  function navigateToBusinessModelRegister() {
+    return navigation.navigate('AddBusinessModel');
   }
 
-  function renderBusinessModels()
-  {
+  function renderBusinessModels() {
     return (
       <FlatList
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={getBusinessModels}/>
+          <RefreshControl refreshing={loading} onRefresh={getBusinessModels} />
         }
         data={businessModelList}
         keyExtractor={(tag: any) => tag.id}
-        renderItem={
-          ({item}: any) => {
-            return (
-              <BusinessModelCard
-                id={item.id}
-                name={item.name}
-                description={item.description}
-                setLoading={setLoading}
-                onDelete={getBusinessModels}
-              />
-            )
-          }
-        }
-      />);
+        renderItem={({item}: any) => {
+          return (
+            <BusinessModelCard
+              id={item.id}
+              name={item.name}
+              description={item.description}
+              setLoading={setLoading}
+              onDelete={getBusinessModels}
+            />
+          );
+        }}
+      />
+    );
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isFocused) getBusinessModels();
   }, [isFocused]);
 
@@ -82,13 +77,10 @@ const BusinessModelList = () => {
       showTitle
       headerTitle={getTerm(100118)}
       loading={loading}
-      headerAddButtonAction={navigateToBusinessModelRegister}
-    >
-      <View style={styles.container}>
-        {renderBusinessModels()}
-      </View>
+      headerAddButtonAction={navigateToBusinessModelRegister}>
+      <View style={styles.container}>{renderBusinessModels()}</View>
 
-      <BottomMenu/>
+      <BottomMenu />
     </MainView>
   );
 };

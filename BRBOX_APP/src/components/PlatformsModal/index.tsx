@@ -9,7 +9,7 @@ import {
 import styles from './styles';
 import config from "../../../brbox.config.json";
 
-import { LinkType, Platform } from '../../utils/types';
+import { LinkType, NewLinkType, Platform } from '../../utils/types';
 import { useRequest } from '../../Contexts/Request';
 import PlatformCard from '../../components/PlatformCard';
 import DefaultModal from '../DefaultModal';
@@ -17,7 +17,7 @@ import { useTheme } from '../../Contexts/Theme';
 
 interface PlatformsModalProps {
   visible: boolean;
-  usedPlatforms: LinkType[];
+  usedPlatforms: NewLinkType[];
 
   setModal: () => void;
   setPlatform: (platform: Platform) => void;
@@ -43,7 +43,7 @@ export default function PlatformsModal({visible, usedPlatforms, setModal, setPla
       const platformsList = await get("/platform", setLoading);
 
       for (const usedPlatform of platformsList) {
-        const [included] = usedPlatforms.filter((item: LinkType) => item.platform === usedPlatform.id);
+        const [included] = usedPlatforms.filter((item: NewLinkType) => item.platform === usedPlatform.plataform);
 
         if (!included) {
           notUsedPlatforms.push(usedPlatform);
@@ -74,7 +74,7 @@ export default function PlatformsModal({visible, usedPlatforms, setModal, setPla
                 name={item.name}
                 setLoading={setLoading}
                 onPress={() => {
-                  setPlatform({id: item.id, platform: item.id, name: item.name});
+                  setPlatform({id: item.id, platform: item.id, name: item.name, imageURL: item.imageURL});
                   setModal();
                 }}
               />

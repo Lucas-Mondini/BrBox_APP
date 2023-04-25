@@ -583,10 +583,11 @@ export default class GameController extends Controller {
         (<any>game.linkList.externalLinks) = game.linkList.externalLinks.map(item => {
             return (<any>item) = {  
                 id: item.id,
-                platform: item.platform.id,
-                platformName: item.platform.name,
+                platform: item.platform?.id,
+                platformName: item.platform?.name,
                 link: item.link,
                 imageURL: item.imageURL,
+                Youtube: item.Youtube,
                 promotion: item.promotion,
                 order: item.order
             }

@@ -29,14 +29,14 @@ export default class ExternalLinkListController extends Controller {
 
             if(!element.link)
             throw "invalid structure externalLinks.link"
-            if(!platform) 
-            throw "invalid platform id"
+            
             
             externalLinkObj.link = element.link;
             externalLinkObj.imageURL = element.imageURL ? element.imageURL : "";
             externalLinkObj.promotion = element.promotion ? element.promotion : false;
+            externalLinkObj.Youtube = element.Youtube ? element.Youtube : false;
             externalLinkObj.order = element.order ? element.order : 0;
-            externalLinkObj.platform = platform;
+            externalLinkObj.platform = platform || null;
             
             externalLinksArray.push(externalLinkObj);
         };
@@ -74,14 +74,14 @@ export default class ExternalLinkListController extends Controller {
 
             if(!element.link)
             throw "invalid structure externalLinks.link"
-            if(!platform) 
-            throw "invalid platform id"
+            
             
             externalLinkObj.link = element.link;
             externalLinkObj.imageURL = element.imageURL ? element.imageURL : "";
             externalLinkObj.promotion = element.promotion ? element.promotion : false;
+            externalLinkObj.Youtube = element.Youtube ? element.Youtube : false;
             externalLinkObj.order = element.order ? element.order : 0;
-            externalLinkObj.platform = platform;
+            externalLinkObj.platform = platform || null;
             
             externalLinksArray.push(externalLinkObj);
             
@@ -121,14 +121,14 @@ export default class ExternalLinkListController extends Controller {
 
             if(!element.link)
             throw "invalid structure externalLinks.link"
-            if(!platform) 
-            throw "invalid platform id"
+            
             
             externalLinkObj.link = element.link;
             externalLinkObj.imageURL = element.imageURL ? element.imageURL : "";
             externalLinkObj.promotion = element.promotion ? element.promotion : false;
+            externalLinkObj.Youtube = element.Youtube ? element.Youtube : false;
             externalLinkObj.order = element.order ? element.order : 0;
-            externalLinkObj.platform = platform;
+            externalLinkObj.platform = platform || null;
             
             externalLinkList.externalLinks.push(externalLinkObj);
         };

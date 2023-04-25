@@ -2,9 +2,16 @@ import React, { createContext, ReactNode, useContext, useState } from 'react';
 import { Alert, Text, View } from 'react-native';
 
 import styles from './styles';
-import config from "../../../brbox.config.json";
+import config from '../../../brbox.config.json';
 import { getMaxId, removeObjectFromArray } from '../../utils/functions';
-import { BusinessModel, GenreMode, ImageType, LinkType, Platform } from '../../utils/types';
+import {
+  BusinessModel,
+  GenreMode,
+  ImageType,
+  LinkType,
+  NewLinkType,
+  Platform,
+} from '../../utils/types';
 
 import { useTerm } from '../TermProvider';
 import { useRequest } from '../Request';
@@ -13,6 +20,7 @@ import ImageCarousel from '../../components/ImageCarousel';
 import BusinessModelCard from '../../components/BusinessModelCard';
 import PlatformLinkList from '../../components/PlatformLink/PlatformLinkList';
 import GenreModeCard from '../../components/GenreModeCard';
+import NewPlatformLinkList from '../../components/NewPlatformLink/NewPlatformLinkList'
 
 type GameData = {
   id: number;
@@ -20,9 +28,13 @@ type GameData = {
   name: string;
   link: string;
   isDlc: boolean | null;
+  promotion: boolean | null;
+  Youtube: boolean | null;
+  imageURL: string;
+  order: number;
   images: ImageType[];
   loading: boolean;
-  linkList: LinkType[];
+  linkList: NewLinkType[];
   gameTime: number | null;
   modeList: GenreMode[];
   platform: Platform | null;
@@ -34,6 +46,7 @@ type GameData = {
   businessModel: BusinessModel | null;
   businessModelId: number;
   businessModelList: BusinessModel[];
+  voteCount: number;
 
   setId: (value: number) => void;
   setIsDlc: (value: boolean) => void;
@@ -44,7 +57,11 @@ type GameData = {
   setGameTime: (value: number | null) => void;
   setPlatform: (value: Platform | null) => void;
   setModeList: (value: GenreMode[]) => void;
-  setLinkList: (value: LinkType[]) => void;
+  setLinkList: (value: NewLinkType[]) => void;
+  setOrder: (value: any) => void;
+  setPromotion: (value: boolean) => void;
+  setYoutube: (value: boolean) => void;
+  setImageURL: (value: string) => void;
   setGenreList: (value: GenreMode[]) => void;
   setImageName: (value: string) => void;
   setImageLink: (value: string) => void;
@@ -61,42 +78,54 @@ type GameData = {
   deleteGame: (callback?: () => void, gameId?: number) => Promise<void>;
   addBusinessModel: () => void;
 
-  renderLinks: (allowRemove?: boolean) => React.ReactElement;
+  renderLinks: (allowRemove?: boolean, YoutubeList?: boolean) => React.ReactElement;
+  renderLinksEditMode: () => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
-  renderBusinessModel: (isEdit?: boolean, showTitle?: boolean) => React.ReactElement;
+  renderBusinessModel: (
+    isEdit?: boolean,
+    showTitle?: boolean,
+  ) => React.ReactElement;
   renderGenreMode: (isGenre: boolean) => React.ReactElement;
 
   clearGameContext: () => void;
-}
+};
 
 type GameProviderProps = {
   children: ReactNode;
-}
+};
 
 const GameContext = createContext({} as GameData);
 
-export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
-{
-  const {getTerm} = useTerm();
-  const {get, put, post, destroy} = useRequest();
+export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
+  const { getTerm } = useTerm();
+  const { get, put, post, destroy } = useRequest();
 
   const [rate, setRate] = useState(0);
   const [id, setId] = useState(0);
-  const [name, setName] = useState("");
-  const [link, setLink] = useState("");
+  const [name, setName] = useState('');
+  const [link, setLink] = useState('');
+  const [Youtube, setYoutube] = useState(false);
+  const [imageURL, setImageURL] = useState('');
+  const [promotion, setPromotion] = useState(false);
+  const [order, setOrder] = useState(0);
   const [isDlc, setIsDlc] = useState<boolean | null>(null);
   const [images, setImages] = useState([] as ImageType[]);
   const [gameTime, setGameTime] = useState<number | null>(null);
-  const [linkList, setLinkList] = useState([] as LinkType[]);
+  const [linkList, setLinkList] = useState([] as NewLinkType[]);
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [modeList, setModeList] = useState<GenreMode[]>([]);
   const [genreList, setGenreList] = useState<GenreMode[]>([]);
-  const [imageName, setImageName] = useState("");
-  const [imageLink, setImageLink] = useState("");
+  const [imageName, setImageName] = useState('');
+  const [imageLink, setImageLink] = useState('');
+  const [voteCount, setVoteCount] = useState(0);
   const [tagValueList, setTagValueList] = useState(0);
-  const [businessModel, setBusinessModel] = useState<BusinessModel | null>(null);
+  const [businessModel, setBusinessModel] = useState<BusinessModel | null>(
+    null,
+  );
   const [businessModelId, setBusinessModelId] = useState(0);
-  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>([]);
+  const [businessModelList, setBusinessModelList] = useState<BusinessModel[]>(
+    [],
+  );
   const [watchList, setWatchList] = useState<boolean | null>(null);
 
   const [loading, setLoading] = useState(false);
@@ -104,11 +133,11 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   const { darkMode } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: darkMode ? '#fff' : config.dark,
   };
 
   function addLink() {
-    if (!platform) {
+    if (!platform && !Youtube) {
       return Alert.alert(getTerm(100063), getTerm(100064));
     }
 
@@ -116,8 +145,20 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       return Alert.alert(getTerm(100065), getTerm(100066));
     }
 
-    setLinkList([...linkList, {id: getMaxId(linkList), platform: platform.id, platformName: platform.name, link: link}]);
-    setLink("");
+    setLinkList([
+      ...linkList,
+      {
+        id: getMaxId(linkList),
+        platform: platform ? platform.id : 0,
+        platformName: Youtube ? "Youtube" : platform ? platform.name : "Youtube",
+        link,
+        Youtube,
+        imageURL: imageURL || (platform ? platform.imageURL : "https://e7.pngegg.com/pngimages/125/937/png-clipart-youtube-logo-youtube-angle-logo-thumbnail.png"),
+        promotion,
+        order: Number(order)
+      },
+    ]);
+    setLink('');
     setPlatform(null);
   }
 
@@ -130,13 +171,15 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       return Alert.alert(getTerm(100069), getTerm(100070));
     }
 
-    setImageName("");
-    setImageLink("");
-    setImages([...images, {id: getMaxId(images), name: imageName, link: imageLink}]);
+    setImageName('');
+    setImageLink('');
+    setImages([
+      ...images,
+      { id: getMaxId(images), name: imageName, link: imageLink },
+    ]);
   }
 
-  function addBusinessModel()
-  {
+  function addBusinessModel() {
     if (!businessModel) {
       return Alert.alert(getTerm(100125), getTerm(100126));
     }
@@ -145,18 +188,28 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setBusinessModel(null);
   }
 
-  function renderLinks(allowRemove = false) {
+  function renderLinksEditMode() {
     return (
-      <PlatformLinkList
-        linkList={linkList}
-        setLinkList={setLinkList}
-        allowRemove={allowRemove}
-      />
+      <>
+        {renderLinks(true, false)}
+        {renderLinks(true, true)}
+      </>
     )
   }
 
-  function renderImages(isEdit?: boolean)
-  {
+  function renderLinks(allowRemove?: boolean, YoutubeList?: boolean) {
+    const s = <NewPlatformLinkList
+      linkList={linkList}
+      setLinkList={setLinkList}
+      allowRemove={allowRemove}
+      youtubeList={YoutubeList}
+    />
+    return (
+      s
+    );
+  }
+
+  function renderImages(isEdit?: boolean) {
     if (images.length > 0) {
       return (
         <ImageCarousel
@@ -168,64 +221,58 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     }
   }
 
-  function renderBusinessModel(isEdit?: boolean, showTitle?: boolean)
-  {
+  function renderBusinessModel(isEdit?: boolean, showTitle?: boolean) {
     let content;
 
     if (businessModelList.length == 0) {
-      content = (
-        <Text
-          style={[styles.noContentText]}
-        >
-          {getTerm(100122)}
-        </Text>
-      );
+      content = <Text style={[styles.noContentText]}>{getTerm(100122)}</Text>;
     } else {
-      content = businessModelList.map((businessModel) => (
+      content = businessModelList.map(businessModel => (
         <BusinessModelCard
           hideBottom
           id={businessModel.id}
           key={businessModel.id}
           name={businessModel.name}
-          onPress={() => {}}
+          onPress={() => { }}
           disabled={!isEdit}
           description={businessModel.description}
           setLoading={setLoading}
-          deleteCustomFunction={isEdit ? () => removeObjectFromArray(businessModel.id, businessModelList, setBusinessModelList) : () => {}}
+          deleteCustomFunction={
+            isEdit
+              ? () =>
+                removeObjectFromArray(
+                  businessModel.id,
+                  businessModelList,
+                  setBusinessModelList,
+                )
+              : () => { }
+          }
         />
       ));
     }
 
     return (
       <View>
-        {showTitle &&
-          <Text
-            style={[styles.subtitle, textColorStyle]}
-          >
+        {showTitle && (
+          <Text style={[styles.subtitle, textColorStyle]}>
             {getTerm(100121)}:
-          </Text>}
+          </Text>
+        )}
 
         {content}
       </View>
     );
   }
 
-  function renderGenreMode(isGenre: boolean)
-  {
+  function renderGenreMode(isGenre: boolean) {
     let content;
 
     const list = isGenre ? genreList : modeList;
 
     if (list.length == 0) {
-      content = (
-        <Text
-          style={[styles.noContentText]}
-        >
-          {getTerm(100122)}
-        </Text>
-      );
+      content = <Text style={[styles.noContentText]}>{getTerm(100122)}</Text>;
     } else {
-      content = list.map((item) => (
+      content = list.map(item => (
         <GenreModeCard
           hideBottom
           id={item.id}
@@ -235,20 +282,21 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
           description={item.description}
           disabled={true}
           setLoading={setLoading}
-          deleteCustomFunction={() => removeObjectFromArray(item.id, isGenre ? genreList : modeList, isGenre ? setGenreList : setModeList)}
+          deleteCustomFunction={() =>
+            removeObjectFromArray(
+              item.id,
+              isGenre ? genreList : modeList,
+              isGenre ? setGenreList : setModeList,
+            )
+          }
         />
       ));
     }
 
-    return (
-      <View>
-        {content}
-      </View>
-    );
+    return <View>{content}</View>;
   }
 
-  async function loadGame(id: number, errorCallback: () => void)
-  {
+  async function loadGame(id: number, errorCallback: () => void) {
     setLoading(true);
 
     try {
@@ -267,6 +315,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
       setTagValueList(response.tagList.id);
       setBusinessModelId(response.businessModelList.id);
       setBusinessModelList(response.businessModelList.businessModels);
+      setVoteCount(response.votecount);
     } catch (error) {
       errorCallback();
     }
@@ -274,34 +323,52 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     setLoading(false);
   }
 
-  async function deleteGame(callback?: () => void, gameId?: number)
-  {
+  async function deleteGame(callback?: () => void, gameId?: number) {
     Alert.alert(getTerm(100061), getTerm(100154), [
-      {text: getTerm(100040), onPress: async () => {
-        try {
-          const defaultFunction = () => {};
-          await destroy(`game/destroy/${gameId || id}`, callback || defaultFunction, setLoading);
-        } catch (error) {
-          Alert.alert(getTerm(100073), getTerm(100074));
-        }
-      }},
-      {text: getTerm(100041)}
+      {
+        text: getTerm(100040),
+        onPress: async () => {
+          try {
+            const defaultFunction = () => { };
+            await destroy(
+              `game/destroy/${gameId || id}`,
+              callback || defaultFunction,
+              setLoading,
+            );
+          } catch (error) {
+            Alert.alert(getTerm(100073), getTerm(100074));
+          }
+        },
+      },
+      { text: getTerm(100041) },
     ]);
   }
 
-  async function updateGame()
-  {
+  async function updateGame() {
     try {
-      const externalLinks = linkList.filter(link => link.link !== "");
-      const imageList = images.filter(image => image.link !== "");
+      const externalLinks = linkList.filter(link => link.link !== '');
+      const imageList = images.filter(image => image.link !== '');
+
+      console.log(externalLinks)
 
       if (validateGame(externalLinks, imageList)) {
-        const businessModel = businessModelList.map(businessModel => businessModel.id);
+        const businessModel = businessModelList.map(
+          businessModel => businessModel.id,
+        );
 
         const response = await put(`/game/update`, setLoading, {
-          id, new_name: name, new_description: name, externalLinks, DLC: isDlc,
-          images: imageList, businessModel, genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
+          id,
+          new_name: name,
+          new_description: name,
+          externalLinks,
+          DLC: isDlc,
+          images: imageList,
+          businessModel,
+          genres: genreList.map(genre => genre.id),
+          modes: modeList.map(mode => mode.id),
         });
+
+        console.log(response)
 
         setId(response.id);
         setName(response.name);
@@ -314,23 +381,31 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
         setBusinessModelId(response.businessModelList.id);
         setBusinessModelList(response.businessModelList.businessModels);
       }
-    } catch (error) {
+    } catch (error: any) {
+
+      console.log(JSON.stringify(error))
       Alert.alert(getTerm(100075), getTerm(100076));
     }
   }
 
-  async function createGame()
-  {
+  async function createGame() {
     try {
-      const externalLinks = linkList.filter(link => link.link !== "");
-      const imageList = images.filter(image => image.link !== "");
+      const externalLinks = linkList.filter(link => link.link !== '');
+      const imageList = images.filter(image => image.link !== '');
 
       if (validateGame(externalLinks, imageList)) {
-        const businessModel = businessModelList.map(businessModel => businessModel.id);
+        const businessModel = businessModelList.map(
+          businessModel => businessModel.id,
+        );
 
         const response = await post(`/game/create`, setLoading, {
-          name, externalLinks, images: imageList, businessModel, DLC: isDlc,
-          genres: genreList.map(genre => genre.id), modes: modeList.map(mode => mode.id)
+          name,
+          externalLinks,
+          images: imageList,
+          businessModel,
+          DLC: isDlc,
+          genres: genreList.map(genre => genre.id),
+          modes: modeList.map(mode => mode.id),
         });
 
         setId(response.id);
@@ -349,8 +424,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     }
   }
 
-  function validateGame(externalLinks: LinkType[], imageList: ImageType[])
-  {
+  function validateGame(externalLinks: NewLinkType[], imageList: ImageType[]) {
     if (!name.trim()) {
       Alert.alert(getTerm(100093), getTerm(100094));
       return false;
@@ -369,10 +443,9 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
     return true;
   }
 
-  function clearGameContext()
-  {
+  function clearGameContext() {
     setId(0);
-    setName("");
+    setName('');
     setImages([]);
     setLinkList([]);
     setLoading(true);
@@ -383,19 +456,72 @@ export const GameProvider: React.FC<GameProviderProps> = ({children}) =>
   }
 
   return (
-    <GameContext.Provider value={{
-      id, name, link, imageName, imageLink, loading, images, linkList, platform, genreList, isDlc,
-      tagValueList,businessModel, businessModelList, businessModelId, gameTime, modeList, rate, watchList,
-      setId, setName, setLink, setImageName, setImageLink, setLoading, setImages, setGameTime, setWatchList,
-      setLinkList, setPlatform, setBusinessModel, setTagValueList, setBusinessModelList, setGenreList,
-      addLink, addImage, renderLinks, renderImages, renderBusinessModel, loadGame, renderGenreMode,
-      createGame, updateGame, deleteGame, clearGameContext, addBusinessModel, setModeList, setIsDlc
-    }}>
+    <GameContext.Provider
+      value={{
+        id,
+        name,
+        link,
+        imageURL,
+        order,
+        promotion,
+        Youtube,
+        imageName,
+        imageLink,
+        loading,
+        images,
+        linkList,
+        platform,
+        genreList,
+        isDlc,
+        tagValueList,
+        businessModel,
+        businessModelList,
+        businessModelId,
+        gameTime,
+        modeList,
+        rate,
+        watchList,
+        voteCount,
+        setId,
+        setName,
+        setLink,
+        setImageName,
+        setImageLink,
+        setLoading,
+        setImages,
+        setGameTime,
+        setWatchList,
+        setLinkList,
+        setPlatform,
+        setImageURL,
+        setPromotion,
+        setYoutube,
+        setOrder,
+        setBusinessModel,
+        setTagValueList,
+        setBusinessModelList,
+        setGenreList,
+        addLink,
+        addImage,
+        renderLinks,
+        renderLinksEditMode,
+        renderImages,
+        renderBusinessModel,
+        loadGame,
+        renderGenreMode,
+        createGame,
+        updateGame,
+        deleteGame,
+        clearGameContext,
+        addBusinessModel,
+        setModeList,
+        setIsDlc
+      }}>
       {children}
     </GameContext.Provider>
   );
-}
+};
 
-export const useGame = ()=> {
+export const useGame = () => {
   return useContext(GameContext);
 };

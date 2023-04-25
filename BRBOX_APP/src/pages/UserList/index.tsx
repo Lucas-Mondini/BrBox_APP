@@ -1,22 +1,19 @@
-import { FlatList } from 'react-native-gesture-handler';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import {
-  RefreshControl,
-  View
-} from 'react-native';
+import {FlatList} from 'react-native-gesture-handler';
+import {useIsFocused, useNavigation} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
+import {RefreshControl, View} from 'react-native';
 
 import BottomMenu from '../../components/BottomMenu';
 import UserCard from '../../components/UserCard';
 import MainView from '../../components/MainView';
 import styles from './styles';
 
-import { Game } from '../../utils/types';
-import { useRequest } from '../../Contexts/Request';
-import { useLinking } from '../../Contexts/LinkingProvider';
+import {Game} from '../../utils/types';
+import {useRequest} from '../../Contexts/Request';
+import {useLinking} from '../../Contexts/LinkingProvider';
 
 const UserList = () => {
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
   const [users, setUsers] = useState<Game[]>([]);
@@ -25,49 +22,45 @@ const UserList = () => {
   const {get} = useRequest();
   const {deepLinking} = useLinking();
 
-  async function getUsers()
-  {
+  async function getUsers() {
     try {
-      const users = await get("/user", setLoading);
+      const users = await get('/user', setLoading);
 
       setUsers(users);
     } catch (err) {
-      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+      return navigation.reset({index: 0, routes: [{name: 'Home'}]});
     }
   }
 
-  async function navigateToAddUser()
-  {
-    return navigation.navigate("Profile", {new: true});
+  async function navigateToAddUser() {
+    return navigation.navigate('Profile', {new: true});
   }
 
-  function renderUsers()
-  {
+  function renderUsers() {
     return (
       <FlatList
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={getUsers}/>
+          <RefreshControl refreshing={loading} onRefresh={getUsers} />
         }
         data={users}
         keyExtractor={(user: any) => user.id}
-        renderItem={
-          ({item}: any) => {
-            return (
-              <UserCard
-                id={item.id}
-                username={item.username}
-                email={item.email}
-                admin={item.admin}
-                setLoading={setLoading}
-                callback={getUsers}
-              />
-            )
-          }
-        }
-      />);
+        renderItem={({item}: any) => {
+          return (
+            <UserCard
+              id={item.id}
+              username={item.username}
+              email={item.email}
+              admin={item.admin}
+              setLoading={setLoading}
+              callback={getUsers}
+            />
+          );
+        }}
+      />
+    );
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     if (isFocused) getUsers();
   }, [isFocused]);
 
@@ -80,13 +73,10 @@ const UserList = () => {
       showTitle
       loading={loading}
       headerTitle={100031}
-      headerAddButtonAction={navigateToAddUser}
-    >
-      <View style={styles.container}>
-        {renderUsers()}
-      </View>
+      headerAddButtonAction={navigateToAddUser}>
+      <View style={styles.container}>{renderUsers()}</View>
 
-      <BottomMenu/>
+      <BottomMenu />
     </MainView>
   );
 };

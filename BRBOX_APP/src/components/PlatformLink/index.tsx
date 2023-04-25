@@ -2,18 +2,18 @@ import React from "react";
 import { Linking, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { LinkType } from "../../utils/types";
+import { LinkType, NewLinkType } from "../../utils/types";
 import { removeObjectFromArray } from "../../utils/functions";
 
 import styles from "./styles";
 import { useLinking } from "../../Contexts/LinkingProvider";
 
 interface PlatformLinkProps {
-  link: LinkType;
-  linkList: LinkType[];
+  link: NewLinkType;
+  linkList: NewLinkType[];
   allowRemove: boolean;
 
-  setLinkList: (value: LinkType[]) => void;
+  setLinkList: (value: NewLinkType[]) => void;
 }
 
 export default function PlatformLink({link, linkList, allowRemove, setLinkList}: PlatformLinkProps)

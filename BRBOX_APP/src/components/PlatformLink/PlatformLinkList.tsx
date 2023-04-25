@@ -1,16 +1,16 @@
 import React from "react";
 import { Text, View } from "react-native";
 
-import { LinkType } from "../../utils/types";
+import { LinkType, NewLinkType } from "../../utils/types";
 
 import styles from "./styles";
 import PlatformLink from ".";
 
 interface PlatformLinkListProps {
-  linkList: LinkType[];
+  linkList: NewLinkType[];
   allowRemove: boolean;
 
-  setLinkList: (value: LinkType[]) => void;
+  setLinkList: (value: NewLinkType[]) => void;
 }
 
 export default function PlatformLinkList({linkList, allowRemove, setLinkList}: PlatformLinkListProps)

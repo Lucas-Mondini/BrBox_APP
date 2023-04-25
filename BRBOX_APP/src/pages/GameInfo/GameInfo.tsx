@@ -1,47 +1,58 @@
-import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
+import React, {useEffect, useState} from 'react';
 import {
   Alert,
   RefreshControl,
   ScrollView,
-  Share,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 
 import MainView from '../../components/MainView';
-import { useGame } from '../../Contexts/Game';
+import {useGame} from '../../Contexts/Game';
 
-import config from "../../../brbox.config.json";
+import config from '../../../brbox.config.json';
 import styles from './styles';
 
-import { Message, Params, Tag } from '../../utils/types';
+import {Message, Params, Tag} from '../../utils/types';
 
-import { useTheme } from '../../Contexts/Theme';
+import {useTheme} from '../../Contexts/Theme';
 import TagsContainers from '../../components/TagsContainers';
-import { useTerm } from '../../Contexts/TermProvider';
+import {useTerm} from '../../Contexts/TermProvider';
 import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { useLinking } from '../../Contexts/LinkingProvider';
+import {useLinking} from '../../Contexts/LinkingProvider';
 import GameAssocInfoModal from '../../components/GameAssocInfoModal';
 import MessageModal from '../../components/MessageModal';
 import Button from '../../components/Button';
-import { useRequest } from '../../Contexts/Request';
+import {useRequest} from '../../Contexts/Request';
 
 const GameInfo = () => {
   const route = useRoute();
-  const { post, destroy } = useRequest();
+  const {post, destroy} = useRequest();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
-  const { share } = useLinking();
-  const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const {share} = useLinking();
+  const {getTerm} = useTerm();
+  const {darkMode} = useTheme();
   const {
-    name, loading, id, businessModelList, genreList, modeList, isDlc,
-    watchList, setWatchList, loadGame, renderLinks, renderImages,
+    name,
+    loading,
+    id,
+    businessModelList,
+    genreList,
+    modeList,
+    isDlc,
+    watchList,
+    setWatchList,
+    loadGame,
+    renderLinks,
+    renderImages,
+    voteCount,
   } = useGame();
 
   const [modal, setModal] = useState(false);
@@ -54,45 +65,48 @@ const GameInfo = () => {
   const {deepLinking} = useLinking();
   const params = route.params as Params;
 
-  const color = darkMode ? "#fff" : config.mainIconColor;
+  const color = darkMode ? '#fff' : config.mainIconColor;
 
-  async function shareGame()
-  {
+  async function shareGame() {
     try {
-      const message = getTerm(100141).replace("%1", name);
+      const message = getTerm(100141).replace('%1', name);
 
-      await share(message, "api", `gameUtils/gameInfoOpenApp?gameId=${id}`);
+      await share(message, 'api', `gameUtils/gameInfoOpenApp?gameId=${id}`);
     } catch (error) {
-      Alert.alert(getTerm(100108), getTerm(100109))
+      Alert.alert(getTerm(100108), getTerm(100109));
     }
   }
 
-  async function saveWatchList()
-  {
+  async function saveWatchList() {
     try {
-      const response = await post(`/watchlist/${!watchList ? "addGame" : "removeGame"}`, () => {}, {gameid: id});
+      const response = await post(
+        `/watchlist/${!watchList ? 'addGame' : 'removeGame'}`,
+        () => {},
+        {gameid: id},
+      );
 
       setWatchList(response);
     } catch (error) {
-      Alert.alert(getTerm(100108), getTerm(100109))
+      Alert.alert(getTerm(100108), getTerm(100109));
     }
   }
 
-  function renderNamesFromArray(list: any[] | null, nameProperty: string)
-  {
+  function renderNamesFromArray(list: any[] | null, nameProperty: string) {
     if (!list || list.length === 0) return null;
 
     const textColor = darkMode ? config.mediumGreen : config.darkGreen;
 
     const listComp = list.map((item, index) => (
-      <Text key={index} style={[styles.infoText, {color: textColor}]}>{item[nameProperty]} {(list.length > 1 && list.length !== index + 1) && "| "}</Text>
+      <Text key={index} style={[styles.infoText, {color: textColor}]}>
+        {item[nameProperty]}{' '}
+        {list.length > 1 && list.length !== index + 1 && '| '}
+      </Text>
     ));
 
-    return <Text>{listComp}</Text>
+    return <Text>{listComp}</Text>;
   }
 
-  function setMessageError()
-  {
+  function setMessageError() {
     setMessage({title: 100071, message: 100072});
   }
 
@@ -105,27 +119,24 @@ const GameInfo = () => {
   useEffect(() => {
     if (isFocused && !loading) {
       setTagsContainer(
-        <TagsContainers
-          setEvaluationTags={setEvaluationTags}
-        />
+        <TagsContainers setEvaluationTags={setEvaluationTags} />,
       );
     }
   }, [isFocused, loading]);
 
   useEffect(() => {
     deepLinking(navigation);
-  }, []);
+  }, [navigation, deepLinking]);
 
   return (
     <MainView
       loading={loading}
       showTitle
       showBottom
-      headerTitle={(`${name} ${isDlc ? "(DLC)" : ""}`) || ""}
-      headerAddButtonIcon={watchList ? "star" : "star-outline"}
+      headerTitle={`${name} ${isDlc ? '(DLC)' : ''}` || ''}
+      headerAddButtonIcon={watchList ? 'star' : 'star-outline'}
       headerAddButtonAction={saveWatchList}
-      menuButtonColor={config.yellowBright}
-    >
+      menuButtonColor={config.yellowBright}>
       <MessageModal
         visible={!!message}
         message={message}
@@ -133,14 +144,11 @@ const GameInfo = () => {
         buttonCustomText={100149}
         buttonCustomFunction={() => {
           setMessage(null);
-          navigation.reset({index: 0, routes: [{name: "Home"}]});
+          navigation.reset({index: 0, routes: [{name: 'Home'}]});
         }}
       />
 
-      <GameTimeModal
-        visible={modal}
-        setModal={() => setModal(!modal)}
-      />
+      <GameTimeModal visible={modal} setModal={() => setModal(!modal)} />
 
       <GameAssocInfoModal
         visible={modalAssoc}
@@ -150,48 +158,70 @@ const GameInfo = () => {
       <ScrollView
         style={[styles.container]}
         refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={() => loadGame(id, setMessageError)}/>
-        }
-      >
+          <RefreshControl
+            refreshing={loading}
+            onRefresh={() => loadGame(id, setMessageError)}
+          />
+        }>
         {renderImages()}
 
         {renderLinks()}
 
-        {(modeList.length > 0 || genreList.length > 0 || businessModelList.length > 0) &&
+        {(modeList.length > 0 ||
+          genreList.length > 0 ||
+          businessModelList.length > 0) && (
           <TouchableOpacity
             style={[styles.infoContainer]}
-            onPress={() => setModalAssoc(!modalAssoc)}
-          >
-            <Icon
-              name="information-outline"
-              size={35}
-              color={color}
-            />
+            onPress={() => setModalAssoc(!modalAssoc)}>
+            <Icon name="information-outline" size={35} color={color} />
 
             <View style={[styles.information]}>
-              {modeList.length > 0 && renderNamesFromArray(modeList, "name")}
-              {genreList.length > 0 && renderNamesFromArray(genreList, "name")}
-              {businessModelList.length > 0 && renderNamesFromArray(businessModelList, "name")}
+              {modeList.length > 0 && renderNamesFromArray(modeList, 'name')}
+              {genreList.length > 0 && renderNamesFromArray(genreList, 'name')}
+              {businessModelList.length > 0 &&
+                renderNamesFromArray(businessModelList, 'name')}
             </View>
           </TouchableOpacity>
-        }
+        )}
 
-        {!!id && <GameTimeCard onPress={() => setModal(!modal)}/>}
+        <View style={style.voteCount}>
+          <Icon name="account" size={32} color={color} />
+          <Text style={style.text}>{voteCount}</Text>
+        </View>
 
-        {(tagsContainer && !!id) && tagsContainer}
+        {!!id && <GameTimeCard onPress={() => setModal(!modal)} />}
 
-        {!!id &&
+        {tagsContainer && !!id && tagsContainer}
+
+        {!!id && (
           <Button
             text={100004}
             onPress={shareGame}
             buttonColor="transparent"
             extraStyle={{marginBottom: 70}}
-            extraTextStyle={{textDecorationLine: "underline", color: darkMode ? "#fff" : config.dark}}
+            extraTextStyle={{
+              textDecorationLine: 'underline',
+              color: darkMode ? '#fff' : config.dark,
+            }}
           />
-        }
+        )}
+        {renderLinks(false, true)}
       </ScrollView>
     </MainView>
   );
 };
 
 export default GameInfo;
+
+const style = StyleSheet.create({
+  voteCount: {
+    flexDirection: 'row',
+    marginLeft: 'auto',
+    paddingHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FF6600',
+    borderRadius: 20,
+  },
+  text: {color: 'white', fontSize: 22, fontWeight: 'bold'},
+});

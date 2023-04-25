@@ -50,6 +50,17 @@ export type LinkType = {
   platformName: string;
 }
 
+export type NewLinkType = {
+  id: number,
+  platform: number | null,
+  platformName: string,
+  link: string,
+  imageURL: string,
+  Youtube: boolean,
+  promotion: boolean,
+  order: number
+}
+
 export type Tag = {
   id: number;
   icon: number;
@@ -87,6 +98,7 @@ export type Platform = {
   id: number;
   platform: number;
   name: string;
+  imageURL: string;
 }
 
 export type GenreMode = {

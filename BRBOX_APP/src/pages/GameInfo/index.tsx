@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameProvider } from '../../Contexts/Game';
+import {GameProvider} from '../../Contexts/Game';
 import GameInfo from './GameInfo';
 
 const GameInfoPage = () => {
