@@ -18,7 +18,7 @@ interface PlatformLinkListProps {
 export default function NewPlatformLinkList({
   linkList,
   allowRemove,
-  youtubeList = false,
+  youtubeList,
   setLinkList,
 }: PlatformLinkListProps) {
 
@@ -31,7 +31,7 @@ export default function NewPlatformLinkList({
         contentContainerStyle={{ paddingHorizontal: 0}}
       >
         {linkList
-          .filter((i) => (i.Youtube || false) == youtubeList)
+          .filter((i) => i.Youtube === youtubeList)
           .sort((i) => i.order)
           .map((link) => (
             <NewPlatformLink
