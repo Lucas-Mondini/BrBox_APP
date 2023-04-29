@@ -40,9 +40,9 @@ export default function NewPlatformLink({ link, linkList, allowRemove, setLinkLi
     }
     if (linkobj.Youtube) {
       if (!inImage) {
-        img = <ImageBackground style={{ width: 120, height: 120, borderRadius: 15, marginHorizontal: 5 }} source={{ uri: url }}></ImageBackground>
+        img = <ImageBackground style={{ width: 120, height: 120, borderRadius: 15, marginHorizontal: 5 }} source={{uri:url}}></ImageBackground>
       } else {
-        img = <ImageBackground style={{ width: 120, height: 120, borderRadius: 15, marginHorizontal: 5 }} source={url}></ImageBackground>
+        img = <ImageBackground style={{ width: 120, height: 120, borderRadius: 15, marginHorizontal: 5 }} source={{uri:url}}></ImageBackground>
       }
     }
     return img;

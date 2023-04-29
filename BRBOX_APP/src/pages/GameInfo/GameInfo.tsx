@@ -165,7 +165,7 @@ const GameInfo = () => {
         }>
         {renderImages()}
 
-        {renderLinks()}
+        {renderLinks(false,false)}
 
         {(modeList.length > 0 ||
           genreList.length > 0 ||

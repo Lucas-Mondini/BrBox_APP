@@ -77,8 +77,7 @@ type GameData = {
   updateGame: () => Promise<void>;
   deleteGame: (callback?: () => void, gameId?: number) => Promise<void>;
   addBusinessModel: () => void;
-
-  renderLinks: (allowRemove?: boolean, YoutubeList?: boolean) => React.ReactElement;
+  renderLinks: (allowRemove: boolean, YoutubeList: boolean) => React.ReactElement;
   renderLinksEditMode: () => React.ReactElement;
   renderImages: (allowRemove?: boolean) => React.ReactElement | undefined;
   renderBusinessModel: (
@@ -93,6 +92,9 @@ type GameData = {
 type GameProviderProps = {
   children: ReactNode;
 };
+
+
+const OFICIAL_PLATAFORM_ID = 1
 
 const GameContext = createContext({} as GameData);
 
@@ -137,6 +139,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   };
 
   function addLink() {
+
     if (!platform && !Youtube) {
       return Alert.alert(getTerm(100063), getTerm(100064));
     }
@@ -149,10 +152,10 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       ...linkList,
       {
         id: getMaxId(linkList),
-        platform: platform ? platform.id : 0,
+        platform: platform ? platform.id : OFICIAL_PLATAFORM_ID,
         platformName: Youtube ? "Youtube" : platform ? platform.name : "Youtube",
         link,
-        Youtube,
+        Youtube: Youtube,
         imageURL: imageURL || (platform ? platform.imageURL : "https://e7.pngegg.com/pngimages/125/937/png-clipart-youtube-logo-youtube-angle-logo-thumbnail.png"),
         promotion,
         order: Number(order)
@@ -197,7 +200,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     )
   }
 
-  function renderLinks(allowRemove?: boolean, YoutubeList?: boolean) {
+  function renderLinks(allowRemove: boolean, YoutubeList: boolean) {
+
     const s = <NewPlatformLinkList
       linkList={linkList}
       setLinkList={setLinkList}
@@ -349,8 +353,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       const externalLinks = linkList.filter(link => link.link !== '');
       const imageList = images.filter(image => image.link !== '');
 
-      console.log(externalLinks)
-
       if (validateGame(externalLinks, imageList)) {
         const businessModel = businessModelList.map(
           businessModel => businessModel.id,
@@ -368,8 +370,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           modes: modeList.map(mode => mode.id),
         });
 
-        console.log(response)
-
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
@@ -382,8 +382,6 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         setBusinessModelList(response.businessModelList.businessModels);
       }
     } catch (error: any) {
-
-      console.log(JSON.stringify(error))
       Alert.alert(getTerm(100075), getTerm(100076));
     }
   }
