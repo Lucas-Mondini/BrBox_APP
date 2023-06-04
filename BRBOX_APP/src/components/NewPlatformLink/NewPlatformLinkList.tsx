@@ -32,7 +32,7 @@ export default function NewPlatformLinkList({
       >
         {linkList
           .filter((i) => i.Youtube === youtubeList)
-          .sort((i) => i.order)
+          .sort((a,b) => b.order - a.order)
           .map((link) => (
             <NewPlatformLink
               key={link.id}

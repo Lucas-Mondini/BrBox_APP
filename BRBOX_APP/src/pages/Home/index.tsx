@@ -1,199 +1,102 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native-gesture-handler';
-import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
-import {RefreshControl, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import {
+  RefreshControl,
+  ScrollView,
+  Text
+} from 'react-native';
 
 import GameCard from '../../components/GameCard';
 import MainView from '../../components/MainView';
 
-import {useTerm} from '../../Contexts/TermProvider';
-import {useRequest} from '../../Contexts/Request';
-import {Game, Params} from '../../utils/types';
+import { Game } from '../../utils/types';
+import { useTerm } from '../../Contexts/TermProvider';
+import { useRequest } from '../../Contexts/Request';
 
-import Input from '../../components/Input';
-import Loading from '../../components/Loading';
+import { useTheme } from '../../Contexts/Theme';
+import { useLinking } from '../../Contexts/LinkingProvider';
 
 import styles from './styles';
-import useDelay from '../../hooks/Delay';
-import {useLinking} from '../../Contexts/LinkingProvider';
+import config from "../../../brbox.config.json";
 
 const Home = () => {
-  const route = useRoute();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
-  const params = route.params as Params;
-
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(true);
-  const [loadingNoMore, setLoadingNoMore] = useState(false);
 
-  const [amount] = useState(10);
-  const [order] = useState('name');
-  const [page, setPage] = useState(1);
+  const [top3, setTop3] = useState<Game[]>([]);
+  const [top5, setTop5] = useState<Game[]>([]);
 
-  const [games, setGames] = useState<Game[]>([]);
-  const [gameName, setGameName] = useState('');
-  const [gameSearch, setGameSearch] = useState('');
+  const { post } = useRequest();
+  const { getTerm } = useTerm();
+  const { darkMode } = useTheme();
+  const { deepLinking } = useLinking();
 
-  const [hideButton, setHideButton] = useState(false);
+  const color = darkMode ? config.subTitleMainColor : config.dark;
 
-  const {get, post} = useRequest();
-  const {getTerm} = useTerm();
-  const {deepLinking, gameId, removeLinkingListener} = useLinking();
-
-  function getTitle() {
-    if (params) {
-      if (params.watchlist) return 100173;
-      else if (params.filterUser) return 100001;
-    }
-  }
-
-  async function getGames(loadingMoreGames: boolean = false) {
+  async function getGames()
+  {
     try {
-      let response: any;
+      let response = null;
 
-      if (loadingNoMore) {
-        setLoadingMore(false);
-        setLoading(false);
-        return;
-      }
+      response = await post(`/game/userTop3`, () => {}, {});
 
-      if (params && params.filterUser) {
-        response = await post(
-          `/game/userRatings?page=${page}&name=${gameName}&ammount=${amount}&order=${order}`,
-          loadingMoreGames ? setLoadingMore : setLoading,
-          {},
-        );
-      } else if (params && params.watchlist) {
-        response = await get(
-          `/watchlist?page=${page}&ammount=${amount}&order=${order}`,
-          loadingMoreGames ? setLoadingMore : setLoading,
-        );
-      } else {
-        response = await get(
-          `/game?page=${
-            gameName ? 1 : page
-          }&name=${gameName}&ammount=${amount}&order=${order}`,
-          loadingMoreGames ? setLoadingMore : setLoading,
-        );
-      }
+      setTop3(response.games);
 
-      const gamesList = gameName ? [] : games;
+      response = await post(`/game/top5`, () => {}, {});
 
-      if (response.games.length < amount) {
-        setLoadingNoMore(true);
-      }
-
-      setGames([...gamesList, ...response.games]);
-      setPage(page + 1);
+      setTop5(response.games);
     } catch (err) {
-      params && navigation.reset({index: 0, routes: [{name: 'Home'}]});
+      return;
     }
 
     setLoading(false);
   }
 
-  function resetGameList() {
-    setGames([]);
-    setLoading(true);
-    setLoadingMore(true);
-    setPage(1);
-    setGameName('');
-  }
-
-  function renderGames() {
-    return (
-      <FlatList
-        data={games}
-        refreshControl={
-          <RefreshControl refreshing={loading} onRefresh={getGames} />
-        }
-        keyExtractor={(game: any) => game.id}
-        renderItem={({item}: any) => {
-          return (
-            <GameCard
-              id={item.id}
-              title={item.name}
-              tags={item.tags}
-              imgUri={item.image}
-              score={Number(item.score)}
-              voteCount={item.votecount}
-              watchlist={item.watchlist}
-              showWatchlist={!params || !params.watchlist}
-              extraCallbackOnNavigate={!params ? resetGameList : undefined}
-            />
-          );
-        }}
-        onEndReached={() => getGames(true)}
-        onEndReachedThreshold={0.1}
-        ListFooterComponent={
-          loadingMore && !loadingNoMore ? (
-            <Loading styles={{marginBottom: 15}} />
-          ) : null
-        }
+  function renderGames(gameList: Game[])
+  {
+    return gameList.sort((a, b) => b.score - a.score).map(game => (
+      <GameCard
+        id={game.id}
+        key={game.id}
+        tags={game.tags}
+        title={game.name}
+        score={game.score}
+        imgUri={game.image}
+        voteCount={game.votecount}
       />
-    );
-  }
-
-  function toggleSearch() {
-    setGameName('');
-    setHideButton(!hideButton);
-  }
-
-  function header() {
-    if (!hideButton) {
-      return;
-    }
-
-    return (
-      <View style={[styles.inputView]}>
-        <Input
-          autoFocus
-          placeholder={getTerm(100110)}
-          extraStyles={styles.input}
-          value={gameName}
-          onChangeText={setGameName}
-        />
-      </View>
-    );
+    ));
   }
 
   useEffect(() => {
-    if (isFocused) {
-      setLoadingNoMore(false);
-      getGames();
-    }
-  }, [isFocused, gameSearch]);
+    if (isFocused) getGames();
+  }, [isFocused]);
 
   useEffect(() => {
-    setLoadingNoMore(false);
-
-    useDelay(gameName, setGameSearch);
-  }, [gameName]);
-
-  useEffect(() => {
-    if (!loading && isFocused) {
-      if (gameId) {
-        removeLinkingListener();
-        navigation.navigate('GameInfo', {id: gameId});
-      } else {
-        deepLinking(navigation);
-      }
-    }
-  }, [loading, isFocused]);
+    deepLinking(navigation);
+  }, [isFocused]);
 
   return (
     <MainView
       showTitle
-      showBottom
       loading={loading}
-      headerTitle={getTitle()}
-      customHeader={header()}
-      hideMenuButton={hideButton}
-      headerAddButtonAction={!params ? toggleSearch : undefined}
-      headerAddButtonIcon={hideButton ? 'close' : 'magnify'}>
-      <View style={styles.container}>{renderGames()}</View>
+      headerTitle={100002}
+      showBottom
+    >
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={false} onRefresh={getGames}/>
+        }
+        style={styles.container}
+      >
+        <Text style={[styles.title, {color}]}>{getTerm(100172)}</Text>
+        {renderGames(top5)}
+
+        <Text style={[styles.title, {color}]}>{getTerm(100171)}</Text>
+        {renderGames(top3)}
+      </ScrollView>
+
     </MainView>
   );
 };

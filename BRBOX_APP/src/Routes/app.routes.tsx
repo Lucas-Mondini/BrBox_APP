@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import Home from '../pages/Home';
+import MostRated from '../pages/MostRated';
 import GameInfo from '../pages/GameInfo';
 import Profile from '../pages/Profile';
 import TagRegister from '../pages/TagRegister';
@@ -19,7 +19,7 @@ import GenresModesList from '../pages/GenresModesList';
 import AddGenreMode from '../pages/AddGenreMode';
 import Search from '../pages/Search';
 import Recommended from '../pages/Reccomended';
-import MostRated from '../pages/MostRated';
+import Home from '../pages/Home';
 
 const App = createStackNavigator();
 

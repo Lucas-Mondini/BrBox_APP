@@ -65,12 +65,14 @@ const AddPlatform = () => {
 
       if (!params && !platform.id) {
         response = await post(`/platform/create`, setLoadingRequest, {
-          name: platform.name
+          name: platform.name,
+          imageURL: platform.imageURL
         });
       } else {
         response = await put(`/platform/update`, setLoadingRequest, {
           id: platform.id,
-          new_name: platform.name
+          new_name: platform.name,
+          new_imageURL: platform.imageURL
         });
       }
 
@@ -106,6 +108,11 @@ const AddPlatform = () => {
           placeholderText={100013}
           value={platform?.name}
           onChangeText={name => setPlatform({...platform, name})}
+        />
+        <Input
+          placeholderText={100052}
+          value={platform?.imageURL}
+          onChangeText={imageURL => setPlatform({...platform, imageURL})}
         />
 
         <View style={styles.buttonView}>
