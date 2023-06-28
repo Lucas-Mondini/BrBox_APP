@@ -39,3 +39,9 @@ O carregamento das rotas se inicia em "app.use(mainRouter)" no ponto de partida 
 
 ### Model
 - O model é puramente a entidade do objeto, isto é, a instancia do objeto no banco de dados e na linguagem de programação
+
+## COMO RODAR
+
+- Instale as dependencias necessárias com ```npm install```
+- Pode ser rodada em desenvolvimento usando ```npm run dev```
+- Ou faça o build da aplicação usando ```npm run build```, isso irá gerar uma pasta build, certifique-se que ela tenha o arquivo *.env*, a pasta */views* e a pasta */mails*. Após isso, rode arquivo *app.js* com o comando ```node app.js```
