@@ -110,7 +110,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
   const [imageURL, setImageURL] = useState('');
   const [promotion, setPromotion] = useState(false);
   const [order, setOrder] = useState(0);
-  const [isDlc, setIsDlc] = useState<boolean | null>(null);
+  const [isDlc, setIsDlc] = useState<boolean>(false);
   const [images, setImages] = useState([] as ImageType[]);
   const [gameTime, setGameTime] = useState<number | null>(null);
   const [linkList, setLinkList] = useState([] as NewLinkType[]);
@@ -213,6 +213,22 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
     );
   }
 
+  async function validateLinks(links: NewLinkType[]): Promise<any> {
+
+
+    const plataforms = await get('/platform') as NewLinkType[];
+    
+    const newLinks = links.map(link => {
+
+      if (link.platform && link.imageURL === "")
+        return { ...link, imageURL: plataforms.find((p) => p.id === link.platform)?.imageURL  || ""};
+      else return link
+    })
+
+    return newLinks
+
+  }
+
   function renderImages(isEdit?: boolean) {
     if (images.length > 0) {
       return (
@@ -305,6 +321,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
 
     try {
       const response = await get(`/game/${id}`);
+      const links = await validateLinks(response.linkList.externalLinks)
 
       setRate(Number(response.score) || 0);
       setWatchList(response.watchlist);
@@ -314,7 +331,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
       setImages(response.imageList.images);
       setModeList(response.modes);
       setGameTime(response.gameTime);
-      setLinkList(response.linkList.externalLinks);
+      setLinkList(links);
       setGenreList(response.genres);
       setTagValueList(response.tagList.id);
       setBusinessModelId(response.businessModelList.id);
@@ -369,13 +386,15 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           genres: genreList.map(genre => genre.id),
           modes: modeList.map(mode => mode.id),
         });
+        const links = await validateLinks(response.linkList.externalLinks)
+
 
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
         setModeList(response.modes);
         setGameTime(response.gameTime);
-        setLinkList(response.linkList.externalLinks);
+        setLinkList(links);
         setGenreList(response.genres);
         setTagValueList(response.tagList.id);
         setBusinessModelId(response.businessModelList.id);
@@ -406,6 +425,7 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
           modes: modeList.map(mode => mode.id),
         });
 
+
         setId(response.id);
         setName(response.name);
         setImages(response.imageList.images);
@@ -417,7 +437,8 @@ export const GameProvider: React.FC<GameProviderProps> = ({ children }) => {
         setBusinessModelId(response.businessModelList.id);
         setBusinessModelList(response.businessModelList.businessModels);
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.log(error);
       Alert.alert(getTerm(100077), getTerm(100078));
     }
   }

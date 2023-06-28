@@ -21,7 +21,7 @@
   "placeholdersColor": "#7f7f7f",
   "subTitleMainColor": "#BFBFBF",
 
-  "apiUrl": "http://ec2-52-67-163-62.sa-east-1.compute.amazonaws.com/",
+  "apiUrl": "http://ec2-18-230-88-186.sa-east-1.compute.amazonaws.com/",
 
 
   "isDarkModeDefault": "true",

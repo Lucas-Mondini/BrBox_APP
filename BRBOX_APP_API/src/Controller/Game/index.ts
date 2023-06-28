@@ -67,6 +67,10 @@ export default class GameController extends Controller {
             
             
             await AppDataSource.getRepository(Game).save(game);
+
+            const score = new Score();
+            score.game = game;
+            await AppDataSource.getRepository(Score).save(score);
             
             return {status: 200, value: {
                 ...this.linkFormatter(game)
@@ -139,9 +143,7 @@ export default class GameController extends Controller {
         }
         catch (e : any) {
             //XGH axioma 2
-            return {status: 200, value: {
-                games: []
-            }};
+            return {status: 500, value: {message: {"something went wrong" : (e.detail || e.message || e)}}};
         }
     }
                 
@@ -719,7 +721,7 @@ export default class GameController extends Controller {
         games.map((i: any)=> {
             i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
             i.uservotedcount = Number(uservotedcount.filter((j:any) => j.gameid == i.id)[0].uservotedcount)
-            i.score = score.filter((j:any) => j.gameId == i.id)[0].value
+            i.score = score.filter((j:any) => j.gameId == i.id)[0]?.value || "NA"
             i.genres = genres.filter((j: any) => j.gameid == i.id).map((j: any) => {
                 j = {
                     id: j.genreid,
@@ -960,7 +962,7 @@ export default class GameController extends Controller {
             games.map((i: any)=> {
                 i.votecount = Number(votecount.filter((j:any) => j.gameid == i.id)[0].votecount)
                 i.uservotedcount = Number(uservotedcount.filter((j:any) => j.gameid == i.id)[0].uservotedcount)
-                i.score = score.filter((j:any) => j.gameId == i.id)[0].value
+                i.score = score.filter((j:any) => j.gameId == i.id)[0]?.value || "NA"
                 i.genres = genres.filter((j: any) => j.gameid == i.id).map((j: any) => {
                     j = {
                         id: j.genreid,

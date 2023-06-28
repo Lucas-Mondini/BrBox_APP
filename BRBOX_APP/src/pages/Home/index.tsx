@@ -35,16 +35,15 @@ const Home = () => {
 
   const color = darkMode ? config.subTitleMainColor : config.dark;
 
-  async function getGames()
-  {
+  async function getGames() {
     try {
       let response = null;
 
-      response = await post(`/game/userTop3`, () => {}, {});
+      response = await post(`/game/userTop3`, () => { }, {});
 
       setTop3(response.games);
 
-      response = await post(`/game/top5`, () => {}, {});
+      response = await post(`/game/top5`, () => { }, {});
 
       setTop5(response.games);
     } catch (err) {
@@ -54,9 +53,16 @@ const Home = () => {
     setLoading(false);
   }
 
-  function renderGames(gameList: Game[])
-  {
-    return gameList.sort((a, b) => b.score - a.score).map(game => (
+  function renderGames(gameList: Game[]) {
+    return gameList.sort((a, b) => {
+      if (a.votecount < b.votecount) {
+        return 1;
+      } else if (a.votecount > b.votecount) {
+        return -1;
+      } else { 
+        return b.score - a.score;
+      }
+    }).map(game => (
       <GameCard
         id={game.id}
         key={game.id}
@@ -81,19 +87,19 @@ const Home = () => {
     <MainView
       showTitle
       loading={loading}
-      headerTitle={100002}
+      headerTitle={100007}
       showBottom
     >
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={false} onRefresh={getGames}/>
+          <RefreshControl refreshing={false} onRefresh={getGames} />
         }
         style={styles.container}
       >
-        <Text style={[styles.title, {color}]}>{getTerm(100172)}</Text>
+        <Text style={[styles.title, { color }]}>{getTerm(100172)}</Text>
         {renderGames(top5)}
 
-        <Text style={[styles.title, {color}]}>{getTerm(100171)}</Text>
+        <Text style={[styles.title, { color }]}>{getTerm(100171)}</Text>
         {renderGames(top3)}
       </ScrollView>
 

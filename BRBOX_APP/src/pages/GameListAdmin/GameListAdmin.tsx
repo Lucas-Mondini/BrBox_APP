@@ -32,7 +32,7 @@ const GameListAdmin = () => {
   const [loadingMore, setLoadingMore] = useState(true);
   const [loadingNoMore, setLoadingNoMore] = useState(false);
 
-  const [amount] = useState(10);
+  const [amount] = useState(300);
   const [order] = useState("name");
   const [page, setPage] = useState(1);
 
@@ -58,6 +58,7 @@ const GameListAdmin = () => {
         `/game?page=${gameName ? 1 : page}&name=${gameName}&ammount=${amount}&order=${order}&userId=${params && params.filterUser ? user?.id : ""}`,
         loadingMoreGames ? setLoadingMore : setLoading
       );
+      
 
       const gamesList = gameName ? [] : games;
 

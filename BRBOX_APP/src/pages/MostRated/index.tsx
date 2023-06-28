@@ -28,8 +28,8 @@ const MostRated = () => {
   const [loadingMore, setLoadingMore] = useState(true);
   const [loadingNoMore, setLoadingNoMore] = useState(false);
 
-  const [amount] = useState(100);
-  const [order] = useState('name');
+  const [amount] = useState(500);
+  const [order] = useState('id');
   const [page, setPage] = useState(1);
 
   const [games, setGames] = useState<Game[]>([]);
@@ -45,8 +45,9 @@ const MostRated = () => {
   function getTitle() {
     if (params) {
       if (params.watchlist) return 100173;
-      else if (params.filterUser) return 100001;
+      else if (params.filterUser) return 100002;
     }
+    else return 100001
   }
 
   async function getGames(loadingMoreGames: boolean = false) {
@@ -104,7 +105,15 @@ const MostRated = () => {
   function renderGames() {
     return (
       <FlatList
-        data={games.sort((a, b) => b.uservotedcount - a.uservotedcount).sort((a, b) => b.score - a.score)}
+        data={games.sort((a, b) => {
+          if (a.votecount < b.votecount) {
+            return 1;
+          } else if (a.votecount > b.votecount) {
+            return -1;
+          } else {
+            return b.score - a.score;
+          }
+        })}
         refreshControl={
           <RefreshControl refreshing={loading} onRefresh={getGames} />
         }
