@@ -85,7 +85,7 @@ export default class GameController extends Controller {
 
     Index = async (req: Request) => {
         try {
-            const { page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = "", tagsIds = null, modesIds = null, genresIds = null } = req.query
+            const { page = "1", ammount = "25", order = "name", AscDesc = "ASC", name: game_name = "", tagsIds = null, modesIds = null, genresIds = null, tagSearchMode = 'OR' } = req.query
 
             //reccomend(req.user.id);
 
@@ -127,18 +127,90 @@ export default class GameController extends Controller {
                     games = await GameController.getGamesFormatted(req, where, "", "1", 99999, 0, 0, "");
 
                 if (modesIds) {
-                    const modes = (<string>modesIds).split(',').map((item: any) => parseInt(item));
-                    games = games.filter((g: any) => {
-                        const gameModes = g.modes.map((mode: any) => mode.id);
-                        return gameModes.filter((i: any) => modes.includes(i)) > 0
-                    })
+                    const modes = (<string>modesIds).split(',').map((item: any) => parseInt(item)).sort();
+                    if(modes.length > 1) {
+                        games = games.filter((g: any) => {
+                            const gameModes = g.modes.map((mode: any) => mode.id).filter(
+                                (item: any, index: any, self: any) => self.indexOf(item) === index
+                            ).sort();
+                            if(modes.length !== gameModes.length)
+                                return false
+    
+                            for (let i = 0; i < modes.length; i++) {
+                                if (modes[i] !== gameModes[i]) {
+                                return false;
+                                }
+                            }
+                            return true;
+                        })
+                    } else {
+                        games = games.filter((g: any) => {
+                            const gameModes = g.modes.map((mode: any) => mode.id).filter(
+                                (item: any, index: any, self: any) => self.indexOf(item) === index
+                            ).sort();
+                            
+                            for (let i = 0; i < modes.length; i++) {
+                                if (gameModes.includes(modes[i])) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })
+                    }
                 }
                 if (genresIds) {
-                    const genres = (<string>genresIds).split(',').map((item: any) => parseInt(item));
-                    games = games.filter((g: any) => {
-                        const gameModes = g.genres.map((genre: any) => genre.id);
-                        return gameModes.filter((i: any) => genres.includes(i)) > 0
-                    })
+                    const genres = (<string>genresIds).split(',').map((item: any) => parseInt(item)).sort();
+                    if(genres.length > 1) {
+                        games = games.filter((g: any) => {
+                            const gameGenresIds = g.genres.map((genre: any) => genre.id).filter(
+                                (item: any, index: any, self: any) => self.indexOf(item) === index
+                            ).sort()
+                            if(genres.length !== gameGenresIds.length)
+                                return false
+    
+                            for (let i = 0; i < genres.length; i++) {
+                                if (genres[i] !== gameGenresIds[i]) {
+                                return false;
+                                }
+                            }
+                            return true;
+                        })
+                    } else {
+                        games = games.filter((g: any) => {
+                            const gameGenresIds = g.genres.map((genre: any) => genre.id).filter(
+                                (item: any, index: any, self: any) => self.indexOf(item) === index
+                            ).sort()
+                            
+                            for (let i = 0; i < genres.length; i++) {
+                                if (gameGenresIds.includes(genres[i])) {
+                                    return true;
+                                }
+                            }
+                            return false;
+                        })
+                    }
+                }
+                if(tagsIds) {
+                    const tags = (<string>tagsIds).split(',').map((item: any) => parseInt(item)).sort();
+                    if (tags.length > 1) {
+                        const gameObjs = await AppDataSource.getRepository(Game).find({where: {id: In(games.map((g: any) => parseInt(g.id)))}, relations: ['tagList', 'tagList.tagValues', 'tagList.tagValues.tag']});
+                        games = games.filter((game: any) => {
+                            const gameObj = gameObjs.filter(g => g.id == game.id);
+                            const gametags = gameObj[0].tagList.tagValues.map(tv => tv.tag.id).filter(
+                                (item, index, self) => self.indexOf(item) === index
+                            ).sort()
+                            if(tags.length !== gametags.length)
+                                return false
+
+                                for (let i = 0; i < tags.length; i++) {
+                                    if (tags[i] !== gametags[i]) {
+                                    return false;
+                                    }
+                                }
+                            return true;
+
+                        });         
+                    }
                 }
                 return {
                     status: 200, value: {
@@ -721,12 +793,11 @@ export default class GameController extends Controller {
             }
             return game
         });
-
         const votecount = await AppDataSource.query(`
             select game.id gameid, count(tv."userId") voteCount from game
             left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
             left join tag_value tv on tv.id  = tvl."tagValueId" 
-            where game.id in (${games.map((i: any) => i.id).toString()})
+            where game.id in (${ games && games.length > 0 ? games.map((i: any) => i.id).toString() : "-1"})
             group by game.id
             order by voteCount desc, gameid asc
             `)
@@ -734,31 +805,31 @@ export default class GameController extends Controller {
             select game.id gameid, count(distinct tv."userId") userVotedCount from game
             left join tag_value_list_tag_values_tag_value tvl on tvl."tagValueListId"  = game."tagListId" 
             left join tag_value tv on tv.id  = tvl."tagValueId" 
-            where game.id in (${games.map((i: any) => i.id).toString()})
+            where game.id in (${games && games.length > 0 ? games.map((i: any) => i.id).toString() : "-1"})
             group by game.id
             order by userVotedCount desc, gameid asc
             `)
         const score = await AppDataSource.query(`
             select * from score s 
-            where s."gameId" in (${games.map((i: any) => i.id).toString()})`
+            where s."gameId" in (${games && games.length > 0 ? games.map((i: any) => i.id).toString() : "-1"})`
         )
         const genres = await AppDataSource.query(`
                 select g2.id as gameid, g.id as genreid, g.name from genre g 
                 inner join game_genres_genre ggg on ggg."genreId" = g.id 
                 inner join game g2 on g2.id = ggg."gameId"
-                where g2.id in (${games.map((i: any) => i.id).toString()})`
+                where g2.id in (${games && games.length > 0 ? games.map((i: any) => i.id).toString() : "-1"})`
         )
         const modes = await AppDataSource.query(`
                 select g.id as gameid, m.id as modeid, m.name from "mode" m 
                 inner join game_modes_mode gmm on gmm."modeId" = m.id 
                 inner join game g on g.id = gmm."gameId" 
-                where g.id in (${games.map((i: any) => i.id).toString()})`
+                where g.id in (${games && games.length > 0 ? games.map((i: any) => i.id).toString() : "-1"})`
         )
         const watchlist = await AppDataSource.query(`
             select g.id as gameid from watchlist w
             inner join watchlist_games_game wgg on wgg."watchlistId" = w.id 
             inner join game g on g.id = wgg."gameId"
-            where "userId" = ${req.user.id} and g.id in (${games.map((i: any) => i.id).toString()})`
+            where "userId" = ${req.user.id} and g.id in (${games && games.length > 0 ? games.map((i: any) => i.id).toString() : "-1"})`
         )
 
 
