@@ -39,10 +39,10 @@ const TagRegister = () => {
   const [loadingRequest, setLoadingRequest] = useState(false);
   const [tag, setTag] = useState({} as Tag);
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   async function loadTag()

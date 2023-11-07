@@ -16,8 +16,9 @@ interface UserCardProps {
 
 export default function UserCard({images, setImages}: UserCardProps)
 {
-  const { darkMode } = useTheme();
-  const color = darkMode ? "#fff" : config.dark;
+  const { light } = useTheme();
+  const color =  light
+;
 
   return (
     <View style={styles.container}>

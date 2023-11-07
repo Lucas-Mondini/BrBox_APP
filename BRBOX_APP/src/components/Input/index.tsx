@@ -14,16 +14,16 @@ interface InputProps extends TextInputProps {
 
 export default function Input(props: InputProps)
 {
-  const { darkMode } = useTheme();
+  const { textColor } = useTheme();
   const {getTerm} = useTerm();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark}
+  const textColorStyle = {color: textColor}
 
   return (
     <View>
       <TextInput
         placeholder={getTerm(Number(props.placeholderText))}
-        style={[textColor, styles.input, props.extraStyles]}
+        style={[textColorStyle, styles.input, props.extraStyles]}
         placeholderTextColor={config.placeholdersColor}
         keyboardType={props.keyboardType}
         {...props}

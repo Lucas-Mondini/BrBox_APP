@@ -24,11 +24,11 @@ interface GameAssocInfoModalProps {
 
 export default function GameAssocInfoModal({visible, setModal}: GameAssocInfoModalProps) {
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const { dark,light} = useTheme();
   const { businessModelList, renderBusinessModel, genreList, modeList } = useGame();
 
-  const color = darkMode ? config.dark : "#fff";
-  const titleColor = darkMode ? "#fff" : config.dark;
+  const color = dark;
+  const titleColor = light;
 
   function renderGenreMode(isGenre?: boolean)
   {

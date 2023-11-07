@@ -1,5 +1,5 @@
-import {useIsFocused, useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   RefreshControl,
@@ -11,34 +11,34 @@ import {
 } from 'react-native';
 
 import MainView from '../../components/MainView';
-import {useGame} from '../../Contexts/Game';
+import { useGame } from '../../Contexts/Game';
 
 import config from '../../../brbox.config.json';
 import styles from './styles';
 
-import {Message, Params, Tag} from '../../utils/types';
+import { Message, Params, Tag } from '../../utils/types';
 
-import {useTheme} from '../../Contexts/Theme';
+import { useTheme } from '../../Contexts/Theme';
 import TagsContainers from '../../components/TagsContainers';
-import {useTerm} from '../../Contexts/TermProvider';
+import { useTerm } from '../../Contexts/TermProvider';
 import GameTimeModal from '../../components/GameTimeModal';
 import GameTimeCard from '../../components/GameTimeCard';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useLinking} from '../../Contexts/LinkingProvider';
+import { useLinking } from '../../Contexts/LinkingProvider';
 import GameAssocInfoModal from '../../components/GameAssocInfoModal';
 import MessageModal from '../../components/MessageModal';
 import Button from '../../components/Button';
-import {useRequest} from '../../Contexts/Request';
+import { useRequest } from '../../Contexts/Request';
 
 const GameInfo = () => {
   const route = useRoute();
-  const {post, destroy} = useRequest();
+  const { post, destroy } = useRequest();
   const isFocused = useIsFocused();
   const navigation = useNavigation<any>();
 
-  const {share} = useLinking();
-  const {getTerm} = useTerm();
-  const {darkMode} = useTheme();
+  const { share } = useLinking();
+  const { getTerm } = useTerm();
+  const { mainIconColor, mediumGreen, light } = useTheme();
   const {
     name,
     loading,
@@ -62,10 +62,10 @@ const GameInfo = () => {
 
   const [message, setMessage] = useState<Message | null>(null);
 
-  const {deepLinking} = useLinking();
+  const { deepLinking } = useLinking();
   const params = route.params as Params;
 
-  const color = darkMode ? '#fff' : config.mainIconColor;
+  const color = mainIconColor;
 
   async function shareGame() {
     try {
@@ -81,8 +81,8 @@ const GameInfo = () => {
     try {
       const response = await post(
         `/watchlist/${!watchList ? 'addGame' : 'removeGame'}`,
-        () => {},
-        {gameid: id},
+        () => { },
+        { gameid: id },
       );
 
       setWatchList(response);
@@ -94,10 +94,10 @@ const GameInfo = () => {
   function renderNamesFromArray(list: any[] | null, nameProperty: string) {
     if (!list || list.length === 0) return null;
 
-    const textColor = darkMode ? config.mediumGreen : config.darkGreen;
+    const textColor = mediumGreen;
 
     const listComp = list.map((item, index) => (
-      <Text key={index} style={[styles.infoText, {color: textColor}]}>
+      <Text key={index} style={[styles.infoText, { color: textColor }]}>
         {item[nameProperty]}{' '}
         {list.length > 1 && list.length !== index + 1 && '| '}
       </Text>
@@ -107,7 +107,7 @@ const GameInfo = () => {
   }
 
   function setMessageError() {
-    setMessage({title: 100071, message: 100072});
+    setMessage({ title: 100071, message: 100072 });
   }
 
   useEffect(() => {
@@ -144,7 +144,7 @@ const GameInfo = () => {
         buttonCustomText={100149}
         buttonCustomFunction={() => {
           setMessage(null);
-          navigation.reset({index: 0, routes: [{name: 'Home'}]});
+          navigation.reset({ index: 0, routes: [{ name: 'Home' }] });
         }}
       />
 
@@ -165,24 +165,24 @@ const GameInfo = () => {
         }>
         {renderImages()}
 
-        {renderLinks(false,false)}
+        {renderLinks(false, false)}
 
         {(modeList.length > 0 ||
           genreList.length > 0 ||
           businessModelList.length > 0) && (
-          <TouchableOpacity
-            style={[styles.infoContainer]}
-            onPress={() => setModalAssoc(!modalAssoc)}>
-            <Icon name="information-outline" size={35} color={color} />
+            <TouchableOpacity
+              style={[styles.infoContainer]}
+              onPress={() => setModalAssoc(!modalAssoc)}>
+              <Icon name="information-outline" size={35} color={color} />
 
-            <View style={[styles.information]}>
-              {modeList.length > 0 && renderNamesFromArray(modeList, 'name')}
-              {genreList.length > 0 && renderNamesFromArray(genreList, 'name')}
-              {businessModelList.length > 0 &&
-                renderNamesFromArray(businessModelList, 'name')}
-            </View>
-          </TouchableOpacity>
-        )}
+              <View style={[styles.information]}>
+                {modeList.length > 0 && renderNamesFromArray(modeList, 'name')}
+                {genreList.length > 0 && renderNamesFromArray(genreList, 'name')}
+                {businessModelList.length > 0 &&
+                  renderNamesFromArray(businessModelList, 'name')}
+              </View>
+            </TouchableOpacity>
+          )}
 
         <View style={style.voteCount}>
           <Icon name="account" size={32} color={color} />
@@ -198,10 +198,10 @@ const GameInfo = () => {
             text={100004}
             onPress={shareGame}
             buttonColor="transparent"
-            extraStyle={{marginBottom: 70}}
+            extraStyle={{ marginBottom: 70 }}
             extraTextStyle={{
               textDecorationLine: 'underline',
-              color: darkMode ? '#fff' : config.dark,
+              color: light
             }}
           />
         )}
@@ -223,5 +223,5 @@ const style = StyleSheet.create({
     backgroundColor: '#FF6600',
     borderRadius: 20,
   },
-  text: {color: 'white', fontSize: 22, fontWeight: 'bold'},
+  text: { color: 'white', fontSize: 22, fontWeight: 'bold' },
 });

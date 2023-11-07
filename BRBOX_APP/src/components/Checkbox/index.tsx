@@ -15,11 +15,10 @@ interface CheckboxProps {
   checked?: boolean | null;
 }
 
-const Checkbox: React.FC<CheckboxProps> = ({text, extraText, checked, handleCheckbox}) => {
+const Checkbox: React.FC<CheckboxProps> = ({ text, extraText, checked, handleCheckbox }) => {
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const { subTitleMainColor } = useTheme();
 
-  const color = darkMode ? config.subTitleMainColor : config.dark;
 
   return (
     <TouchableOpacity
@@ -29,13 +28,13 @@ const Checkbox: React.FC<CheckboxProps> = ({text, extraText, checked, handleChec
       <View style={[
         styles.checkboxEl,
         checked ? {
-        borderWidth: 1,
-        borderColor: "#22AB5A",
-        backgroundColor: "#01C650"
-      }:{}]}>
-        <Icon name="check" size={20} color={checked ? "#FFF" :"#686868"}/>
+          borderWidth: 1,
+          borderColor: "#22AB5A",
+          backgroundColor: "#01C650"
+        } : {}]}>
+        <Icon name="check" size={20} color={checked ? "#FFF" : "#686868"} />
       </View>
-      <Text style={[styles.CheckboxLabel, {color}]}>{getTerm(text)}{extraText || ""}</Text>
+      <Text style={[styles.CheckboxLabel, { color: subTitleMainColor }]}>{getTerm(text)}{extraText || ""}</Text>
     </TouchableOpacity>
   );
 }

@@ -24,6 +24,7 @@ import config from "../../../brbox.config.json";
 import Tab from '../../components/Tabs';
 import TagFilter from '../../components/TagFilter';
 import Button from '../../components/Button';
+import { useTheme } from '../../Contexts/Theme';
 
 const Search = () => {
   const isFocused = useIsFocused();
@@ -51,8 +52,7 @@ const Search = () => {
   const { getTerm } = useTerm();
   const { deepLinking } = useLinking();
 
-  async function getGames(newSearch?: boolean)
-  {
+  async function getGames(newSearch?: boolean) {
     try {
       if (!newSearch && loadingNoMore) {
         setLoading(false);
@@ -71,7 +71,7 @@ const Search = () => {
       }
 
       setGames([...gamesList, ...response.games]);
-      setPage(page+1);
+      setPage(page + 1);
     } catch (err) {
       return;
     }
@@ -79,9 +79,9 @@ const Search = () => {
     setLoading(false);
   }
 
-  function renderFilterTags(index: number, list: any[], idList: number[], idListSetter: (value: number[]) => void)
-  {
-    const sorted = list.sort((a,b) => a.name.length - b.name.length);
+  function renderFilterTags(index: number, list: any[], idList: number[], idListSetter: (value: number[]) => void) {
+    const { greenBar} = useTheme()
+    const sorted = list.sort((a, b) => a.name.length - b.name.length);
 
     const tags = sorted.map((tag, i) => (
       <TagFilter
@@ -95,7 +95,7 @@ const Search = () => {
     ));
 
     return (
-      <View style={[styles.filterContainer, {borderColor: tab === index ? config.greenBar : "transparent", display: tab === index ?  "flex" : "none", zIndex: tab === index ? 999 : 1}]}>
+      <View style={[styles.filterContainer, { borderColor: tab === index ? greenBar : "transparent", display: tab === index ? "flex" : "none", zIndex: tab === index ? 999 : 1 }]}>
         <Text style={styles.filterTags}>
           {tags}
         </Text>
@@ -103,8 +103,7 @@ const Search = () => {
     );
   }
 
-  function searchOption()
-  {
+  function searchOption() {
     return (
       <View style={[styles.inputView2]}>
         <Input
@@ -118,16 +117,16 @@ const Search = () => {
         <View>
           <Tab
             options={[
-              {title: getTerm(100155), state: 1},
-              {title: getTerm(100156), state: 2},
-              {title: getTerm(100030), state: 3}
+              { title: getTerm(100155), state: 1 },
+              { title: getTerm(100156), state: 2 },
+              { title: getTerm(100030), state: 3 }
             ]}
             setState={setTab}
           />
 
-          {renderFilterTags(1, genres, genresFilterList,setGenresFilterList)}
-          {renderFilterTags(2, modes, modesFilterList,setModesFilterList)}
-          {renderFilterTags(3, tags, tagsFilterList,setTagsFilterList)}
+          {renderFilterTags(1, genres, genresFilterList, setGenresFilterList)}
+          {renderFilterTags(2, modes, modesFilterList, setModesFilterList)}
+          {renderFilterTags(3, tags, tagsFilterList, setTagsFilterList)}
         </View>
 
         <Button
@@ -139,8 +138,7 @@ const Search = () => {
     );
   }
 
-  function renderGames()
-  {
+  function renderGames() {
     return games.map(game => (
       <GameCard
         id={game.id}
@@ -154,21 +152,20 @@ const Search = () => {
     ));
   }
 
-  async function fetchData(route: string, setData: (value: any[]) => void, last?: boolean)
-  {
+  async function fetchData(route: string, setData: (value: any[]) => void, last?: boolean) {
     try {
-      const data = await get(route, () => {});
+      const data = await get(route, () => { });
 
 
       setData(data);
     } catch (err) {
-      return navigation.reset({index: 0, routes: [{name: "Home"}]});
+      return navigation.reset({ index: 0, routes: [{ name: "Home" }] });
     }
 
     last && setLoading(false);
   }
 
-  const isCloseToBottom = ({layoutMeasurement, contentOffset, contentSize}: any) => {
+  const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: any) => {
     const paddingToBottom = 20;
     return layoutMeasurement.height + contentOffset.y >=
       contentSize.height - paddingToBottom;
@@ -198,10 +195,10 @@ const Search = () => {
     >
       <ScrollView
         refreshControl={
-          <RefreshControl refreshing={false} onRefresh={() => getGames(true)}/>
+          <RefreshControl refreshing={false} onRefresh={() => getGames(true)} />
         }
         style={styles.container}
-        onScroll={({nativeEvent}) => {
+        onScroll={({ nativeEvent }) => {
           if (isCloseToBottom(nativeEvent)) {
             getGames();
           }

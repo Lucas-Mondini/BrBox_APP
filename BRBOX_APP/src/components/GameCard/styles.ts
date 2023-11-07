@@ -48,7 +48,6 @@ const styles = StyleSheet.create({
     bottom: 5,
     right: 5,
     fontFamily: config.fontFamilyBold,
-    color: config.greenBar
   },
   rateBig: {
     fontSize: 20,

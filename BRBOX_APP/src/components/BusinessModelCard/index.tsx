@@ -22,20 +22,19 @@ interface BusinessModelCardProps {
   deleteCustomFunction?: () => void;
 }
 
-export default function BusinessModelCard({id, name, disabled, description, hideBottom, setLoading, onDelete, deleteCustomFunction, onPress}: BusinessModelCardProps)
-{
-  const { darkMode } = useTheme();
+export default function BusinessModelCard({ id, name, disabled, description, hideBottom, setLoading, onDelete, deleteCustomFunction, onPress }: BusinessModelCardProps) {
+  const { greenLight, subTitleMainColor } = useTheme();
   const navigation = useNavigation<any>();
-  const {destroy} = useRequest();
-  const {getTerm} = useTerm();
+  const { destroy } = useRequest();
+  const { getTerm } = useTerm();
 
-  const {width} = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
 
-  const textColor = {color: darkMode ? "#fff" : config.dark, width: name.length > 30 ? (width >= 400 ? "29%" : "25%") : "100%"};
-  const descriptionColor = {color: darkMode ? config.subTitleMainColor : config.dark};
+  const textStyle = { color: greenLight, width: name.length > 30 ? (width >= 400 ? "29%" : "25%") : "100%" };
+  const descriptionColor = { color: subTitleMainColor };
 
   function navigateToBusinessModelInfo() {
-    return navigation.navigate("AddBusinessModel", {id});
+    return navigation.navigate("AddBusinessModel", { id });
   }
 
   async function deleteBusinessModel() {
@@ -43,15 +42,17 @@ export default function BusinessModelCard({id, name, disabled, description, hide
 
     if (!onDelete) return;
 
-    Alert.alert(getTerm(100123), getTerm(100124),[
-      {text: getTerm(100040), onPress: async () => {
-        try {
-          await destroy(`/businessModel/destroy/${id}`, onDelete, setLoading);
-        } catch (error) {
-          return Alert.alert(getTerm(100073), getTerm(100074));
+    Alert.alert(getTerm(100123), getTerm(100124), [
+      {
+        text: getTerm(100040), onPress: async () => {
+          try {
+            await destroy(`/businessModel/destroy/${id}`, onDelete, setLoading);
+          } catch (error) {
+            return Alert.alert(getTerm(100073), getTerm(100074));
+          }
         }
-      }},
-      {text: getTerm(100041)}
+      },
+      { text: getTerm(100041) }
     ])
   }
 
@@ -62,8 +63,8 @@ export default function BusinessModelCard({id, name, disabled, description, hide
       onPress={onPress || navigateToBusinessModelInfo}
     >
       <View>
-        <Text style={[styles.title, textColor]}>{name}</Text>
-        <View style={{width: (onDelete || deleteCustomFunction) && !disabled && description.length > 40 ? "93%" : "100%"}}>
+        <Text style={[styles.title, textStyle]}>{name}</Text>
+        <View style={{ width: (onDelete || deleteCustomFunction) && !disabled && description.length > 40 ? "93%" : "100%" }}>
           <Text style={[styles.description, descriptionColor]}>{description}</Text>
         </View>
       </View>

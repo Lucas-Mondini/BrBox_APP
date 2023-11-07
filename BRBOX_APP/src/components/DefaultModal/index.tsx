@@ -20,8 +20,8 @@ const DefaultModal: React.FC<ModalProps> = ({visible, loading, setModal, childre
 {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
-  const { darkMode } = useTheme();
-  const color = darkMode ? "#fff" : config.dark;
+  const { light } = useTheme();
+  const color = light;
 
   const fadeIn = () => {
     Animated.timing(fadeAnim, {

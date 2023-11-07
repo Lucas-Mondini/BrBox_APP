@@ -23,19 +23,18 @@ interface GenreModeCardProps {
   deleteCustomFunction?: () => void;
 }
 
-export default function GenreModeCard({id, name, description, genre, disabled, hideBottom, setLoading, onPress, onDelete, deleteCustomFunction}: GenreModeCardProps)
-{
+export default function GenreModeCard({ id, name, description, genre, disabled, hideBottom, setLoading, onPress, onDelete, deleteCustomFunction }: GenreModeCardProps) {
   const navigation = useNavigation<any>();
 
-  const { darkMode } = useTheme();
-  const {destroy} = useRequest();
-  const {getTerm} = useTerm();
+  const { light, subTitleMainColor } = useTheme();
+  const { destroy } = useRequest();
+  const { getTerm } = useTerm();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark};
-  const descriptionColor = {color: darkMode ? config.subTitleMainColor : config.dark};
+  const textColor = { color: light };
+  const descriptionColor = { color: subTitleMainColor };
 
   function navigateToInfo() {
-    return navigation.navigate("AddGenreMode", {id, genres: genre});
+    return navigation.navigate("AddGenreMode", { id, genres: genre });
   }
 
   async function deleteData() {
@@ -43,15 +42,17 @@ export default function GenreModeCard({id, name, description, genre, disabled, h
 
     if (!onDelete) return;
 
-    Alert.alert(getTerm(genre ? 100159 : 100157), getTerm(genre ? 100160 : 100158),[
-      {text: getTerm(100040), onPress: async () => {
-        try {
-          await destroy(`/${genre ? "genre" : "mode"}/destroy/${id}`, onDelete, setLoading);
-        } catch (error) {
-          return Alert.alert(getTerm(100073), getTerm(100074));
+    Alert.alert(getTerm(genre ? 100159 : 100157), getTerm(genre ? 100160 : 100158), [
+      {
+        text: getTerm(100040), onPress: async () => {
+          try {
+            await destroy(`/${genre ? "genre" : "mode"}/destroy/${id}`, onDelete, setLoading);
+          } catch (error) {
+            return Alert.alert(getTerm(100073), getTerm(100074));
+          }
         }
-      }},
-      {text: getTerm(100041)}
+      },
+      { text: getTerm(100041) }
     ]);
   }
 
@@ -61,11 +62,11 @@ export default function GenreModeCard({id, name, description, genre, disabled, h
       onPress={onPress || navigateToInfo}
       disabled={disabled}
     >
-      <View style={{width: "85%"}}>
+      <View style={{ width: "85%" }}>
         <Text style={[styles.title, textColor]}>{name}</Text>
 
         {genre &&
-          <View style={{width: (onDelete || deleteCustomFunction) && !disabled && description && description.length > 40 ? "93%" : "100%"}}>
+          <View style={{ width: (onDelete || deleteCustomFunction) && !disabled && description && description.length > 40 ? "93%" : "100%" }}>
             <Text style={[styles.description, descriptionColor]}>{description}</Text>
           </View>
         }

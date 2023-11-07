@@ -5,7 +5,6 @@ import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import styles from "./styles";
 import { useTheme } from "../../Contexts/Theme";
 
-import config from "../../../brbox.config.json";
 import { useTerm } from "../../Contexts/TermProvider";
 
 interface ToggleContentProps {
@@ -16,10 +15,10 @@ interface ToggleContentProps {
 
 export default function ToggleContent({content, title, colapseOnStart}: ToggleContentProps)
 {
-  const { darkMode } = useTheme();
+  const { subTitleMainColor } = useTheme();
   const { getTerm } = useTerm();
 
-  const color = darkMode ? config.subTitleMainColor : config.dark;
+  const color = subTitleMainColor;
 
   const [showContent, setShowContent] = useState(!colapseOnStart);
 

@@ -23,13 +23,13 @@ import getImage from '../../utils/getImage';
 
 const Main = () => {
   const navigation = useNavigation<any>();
-  const { darkMode } = useTheme();
+  const { light ,mediumGreen} = useTheme();
   const {firstLoad} = useAuth();
   const {getTerm} = useTerm();
   const [title, setTitle] = useState({first: "BR", last: "BOX"});
 
   const registerTextColorStyle = {
-    color: !darkMode ? config.dark : config.mediumGreen,
+    color: mediumGreen,
   };
 
 
@@ -43,9 +43,9 @@ const Main = () => {
     <MainView>
       <ImageBackground source={getImage("loginbackground")} style={[styles.container]} resizeMode='cover'>
         <View style={[styles.titleContainer]}>
-          <Text style={[styles.title, {color: !darkMode ? config.dark : "#fff"}]}>{title.first}</Text>
+          <Text style={[styles.title, {color: light}]}>{title.first}</Text>
           <View  style={[styles.last]}>
-            <Text style={[styles.title, {color: darkMode ? config.dark : "#fff"}]}>{title.last}</Text>
+            <Text style={[styles.title, {color: light}]}>{title.last}</Text>
           </View>
         </View>
 

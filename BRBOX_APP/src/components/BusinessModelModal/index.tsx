@@ -24,9 +24,7 @@ interface BusinessModelModalProps {
 }
 
 export default function BusinessModelModal({visible, usedBusinessModels, setModal, setBusinessModel}: BusinessModelModalProps) {
-  const { darkMode } = useTheme();
-
-  const color = darkMode ? config.dark : "#fff";
+  const { dark } = useTheme();
 
   const navigation = useNavigation<any>();
   const [loading, setLoading] = useState(true);
@@ -91,7 +89,7 @@ export default function BusinessModelModal({visible, usedBusinessModels, setModa
       setModal={setModal}
       visible={visible}
       loading={loading}
-      style={{backgroundColor: color, ...styles.container}}
+      style={{backgroundColor:dark, ...styles.container}}
     >
       {renderPlatforms()}
     </DefaultModal>

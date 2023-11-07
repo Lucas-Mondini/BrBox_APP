@@ -1,10 +1,9 @@
 import React from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 import Loading from '../Loading';
 
-import config from '../../../brbox.config.json';
 import Header from '../Header';
-import {useTheme} from '../../Contexts/Theme';
+import { useTheme } from '../../Contexts/Theme';
 import BottomMenu from '../BottomMenu';
 
 interface MainViewProps {
@@ -32,15 +31,15 @@ export default function MainView({
   menuButtonColor,
   headerAddButtonAction,
 }: MainViewProps) {
-  const {darkMode} = useTheme();
+  const { dark } = useTheme();
 
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        backgroundColor: darkMode ? config.dark : '#fff',
+        backgroundColor: dark,
       }}>
-      <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar barStyle={'dark-content'} />
 
       {showTitle && (
         <Header

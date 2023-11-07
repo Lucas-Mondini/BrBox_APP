@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 
 import styles from './styles';
-import config from "../../../brbox.config.json";
 
 import DefaultModal from '../DefaultModal';
 import { useTheme } from '../../Contexts/Theme';
@@ -26,16 +25,19 @@ interface TagInfoModalProps {
   tagInfo: TagValue;
 }
 
-export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInfoModalProps) {
+export default function TagInfoModal({ setModal, reloadGameInfo, tagInfo }: TagInfoModalProps) {
+
+  const { greenBar, yellow, red, dark, light, mainIconColor, subTitleMainColor, darkGray, darkGreen } = useTheme();
+
+
   const iconColors: any = {
     0: "#FFF",
-    1: config.greenBar,
-    2: config.yellow,
-    3: config.red,
+    1: greenBar,
+    2: yellow,
+    3: red,
   }
 
   const { post } = useRequest();
-  const { darkMode } = useTheme();
   const { tagValueList } = useGame();
 
   const [tagInformation, setTagInformation] = useState(tagInfo);
@@ -43,19 +45,19 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
   const [evaluationId, setEvaluationId] = useState(tagInformation.userVoteId || 0);
   const [userEvaluation, setUserEvaluation] = useState(tagInformation.userVoteValue || 0);
 
-  const color = darkMode ? config.dark : "#fff";
-  const titleColor = darkMode ? "#fff" : config.dark;
-  const actionsColor = darkMode ? "#fff" : config.mainIconColor;
-  const descriptionColor = darkMode ? config.subTitleMainColor : config.dark;
-  const iconColor = (value: number) => darkMode || userEvaluation === value ? "#fff" : config.mainIconColor;
+  const color = dark;
+  const titleColor = light;
+  const actionsColor = mainIconColor;
+  const descriptionColor = subTitleMainColor;
+  const iconColor = (value: number) => userEvaluation === value ? light : mainIconColor;
 
-  const {getTerm} = useTerm();
+  const { getTerm } = useTerm();
 
   async function saveVote(vote: number) {
     setLoading(vote);
 
     try {
-      const response = await post("tagValue/add", () =>{}, {
+      const response = await post("tagValue/add", () => { }, {
         tagValueListId: tagValueList, tag: tagInformation.id, value: vote
       });
 
@@ -73,10 +75,10 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
     setLoading(4);
 
     try {
-      await post("tagValue/remove", ()=>{}, {
+      await post("tagValue/remove", () => { }, {
         tagValueListId: tagValueList, tagValueId: evaluationId
       });
-    } catch (e : any) {
+    } catch (e: any) {
     }
 
     setLoading(0);
@@ -86,12 +88,11 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
     reloadGameInfo();
   }
 
-  function description(vote: "up" | "up-down" | "down")
-  {
+  function description(vote: "up" | "up-down" | "down") {
     const backgroundColor = {
-      "up": config.darkGreen,
-      "up-down": config.yellow,
-      "down": config.red,
+      "up": darkGreen,
+      "up-down": yellow,
+      "down": red,
     }
 
     const description = {
@@ -107,20 +108,19 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
             disabled
             iconName={`arrow-${vote}`}
             iconLibrary="MaterialCommunityIcons"
-            style={{backgroundColor: backgroundColor[vote]}}
+            style={{ backgroundColor: backgroundColor[vote] }}
           />
         </View>
 
-        <Text style={[styles.descriptionText, {color: descriptionColor, textAlign: "left", paddingLeft: 10}]}>{description[vote]}</Text>
+        <Text style={[styles.descriptionText, { color: descriptionColor, textAlign: "left", paddingLeft: 10 }]}>{description[vote]}</Text>
       </View>
     );
   }
 
-  function evaluations(count: number, term: number)
-  {
+  function evaluations(count: number, term: number) {
     return (
       <View style={[styles.descriptionContainer]}>
-        <Text style={[styles.descriptionText, {color: descriptionColor, width: "100%"}]}>{count} {getTerm(term)}</Text>
+        <Text style={[styles.descriptionText, { color: descriptionColor, width: "100%" }]}>{count} {getTerm(term)}</Text>
       </View>
     );
   }
@@ -132,10 +132,10 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
       loading={false}
       style={{}}
     >
-      <ScrollView style={[styles.container, {backgroundColor: color}]}>
+      <ScrollView style={[styles.container, { backgroundColor: color }]}>
         <View style={[styles.titleContainer]}>
-          <Text style={[styles.title, {width: "65%", color: titleColor}]}>{tagInformation.name}</Text>
-          <View style={[styles.icon, {backgroundColor: darkMode ? config.darkGray : config.light}]}>
+          <Text style={[styles.title, { width: "65%", color: titleColor }]}>{tagInformation.name}</Text>
+          <View style={[styles.icon, { backgroundColor: darkGray }]}>
             <Icon
               name={getIcon(tagInformation.icon)}
               size={40}
@@ -144,17 +144,17 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
           </View>
         </View>
 
-        <Text style={[styles.subTitle, {color: titleColor}]}>{getTerm(100114)}:</Text>
+        <Text style={[styles.subTitle, { color: titleColor }]}>{getTerm(100114)}:</Text>
         {description("up")}
         {description("up-down")}
         {description("down")}
 
         {!tagInformation.count
-          ? <Text style={[styles.subTitle, {color: descriptionColor, textAlign: "center"}]}>{getTerm(100151)}</Text>
+          ? <Text style={[styles.subTitle, { color: descriptionColor, textAlign: "center" }]}>{getTerm(100151)}</Text>
           : <>
             <Bar
               counts={[tagInformation.upVotes, tagInformation.neutralVotes, tagInformation.downVotes]}
-              colors={[config.darkGreen, config.yellow, config.red]}
+              colors={[darkGreen, yellow, red]}
             />
 
             <View style={[styles.evaluations]}>
@@ -166,7 +166,7 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
         }
 
         <View>
-          <Text style={[styles.title, styles.evaluationTitles, {color: titleColor}]}>{getTerm(100150)}:</Text>
+          <Text style={[styles.title, styles.evaluationTitles, { color: titleColor }]}>{getTerm(100150)}:</Text>
 
           <View style={[styles.evaluationContainer]}>
             <CardsButton
@@ -175,7 +175,7 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
               iconName={`arrow-up`}
               iconColor={iconColor(1)}
               iconLibrary="MaterialCommunityIcons"
-              style={{backgroundColor: userEvaluation === 1 && !loading ? config.greenBar : "transparent"}}
+              style={{ backgroundColor: userEvaluation === 1 && !loading ? greenBar : "transparent" }}
             />
             <CardsButton
               onPress={() => saveVote(2)}
@@ -183,7 +183,7 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
               iconName={`arrow-up-down`}
               iconColor={iconColor(2)}
               iconLibrary="MaterialCommunityIcons"
-              style={{backgroundColor: userEvaluation === 2 && !loading ? config.yellow : "transparent"}}
+              style={{ backgroundColor: userEvaluation === 2 && !loading ? yellow : "transparent" }}
             />
             <CardsButton
               onPress={() => saveVote(3)}
@@ -191,7 +191,7 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
               iconName={`arrow-down`}
               iconColor={iconColor(3)}
               iconLibrary="MaterialCommunityIcons"
-              style={{backgroundColor: userEvaluation === 3 && !loading ? config.red : "transparent"}}
+              style={{ backgroundColor: userEvaluation === 3 && !loading ? red : "transparent" }}
             />
 
             {Boolean(evaluationId) &&
@@ -210,8 +210,8 @@ export default function TagInfoModal({setModal, reloadGameInfo, tagInfo}: TagInf
           <Button
             text={100025}
             onPress={setModal}
-            extraStyle={[{marginTop: 10}]}
-            extraTextStyle={{textDecorationLine: 'underline', color: titleColor}}
+            extraStyle={[{ marginTop: 10 }]}
+            extraTextStyle={{ textDecorationLine: 'underline', color: titleColor }}
             buttonColor={"transparent"}
             disabled={false}
           />

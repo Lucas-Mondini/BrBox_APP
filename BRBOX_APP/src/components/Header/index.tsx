@@ -20,12 +20,12 @@ interface HeaderProps {
 export default function Header({title, buttonIcon, customHeader, hideMenuButton, menuButtonColor, addAction}: HeaderProps)
 {
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const [ dropDownMenu, setDropDownMenu ] = useState(false);
   const [ hideMenu, setHideMenu ] = useState(false);
 
-  const color = !darkMode ? config.darkGreen : config.mediumGreen;
+  const color = light;
 
   return (
     <View style={[styles.headerContainer, {borderBottomColor: color}]}>

@@ -30,10 +30,10 @@ const Home = () => {
 
   const { post } = useRequest();
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const { subTitleMainColor } = useTheme();
   const { deepLinking } = useLinking();
 
-  const color = darkMode ? config.subTitleMainColor : config.dark;
+  const color = subTitleMainColor;
 
   async function getGames() {
     try {

@@ -16,21 +16,27 @@ interface TagLargeProps {
   callback?: () => void;
 }
 
-export default function TagLarge({tag, userVoteValue, callback}: TagLargeProps)
-{
-  const { darkMode } = useTheme();
+export default function TagLarge({ tag, userVoteValue, callback }: TagLargeProps) {
 
-  const color = darkMode ? config.subTitleMainColor : config.dark;
+  const {
+    greenBar,
+    yellow,
+    red,
+    subTitleMainColor,
+    darkGray,
+    darkGreen,
+    lightRed } = useTheme();
+
+  const color = subTitleMainColor;
 
   const bg = {
     0: "#696969",
-    1: config.greenBar,
-    2: config.yellow,
-    3: config.red,
+    1: greenBar,
+    2: yellow,
+    3: red,
   }
-  function formatVotes(vote: number): string
-  {
-    return String(vote >= 1000 ? (vote >= 1000000 ? vote/1000000 + "M" : vote/1000 + "K") : vote);
+  function formatVotes(vote: number): string {
+    return String(vote >= 1000 ? (vote >= 1000000 ? vote / 1000000 + "M" : vote / 1000 + "K") : vote);
   }
 
   if (!tag) return null;
@@ -39,11 +45,11 @@ export default function TagLarge({tag, userVoteValue, callback}: TagLargeProps)
     <TouchableOpacity
       onPress={callback}
       disabled={!callback}
-      style={[styles.tagContainer, {backgroundColor: darkMode ? config.darkGray : config.light}]}
+      style={[styles.tagContainer, { backgroundColor: darkGray }]}
     >
       <View style={styles.imgContainer}>
         <View
-          style={[styles.img, {backgroundColor: bg[userVoteValue || 0]}]}
+          style={[styles.img, { backgroundColor: bg[userVoteValue || 0] }]}
         >
           <Icon
             size={18}
@@ -52,7 +58,7 @@ export default function TagLarge({tag, userVoteValue, callback}: TagLargeProps)
           />
         </View>
 
-        <Text style={[styles.tagName, {color}]}>{tag.name}</Text>
+        <Text style={[styles.tagName, { color }]}>{tag.name}</Text>
       </View>
 
       <View style={styles.container}>
@@ -60,13 +66,13 @@ export default function TagLarge({tag, userVoteValue, callback}: TagLargeProps)
           style={[styles.tag]}
         >
           <View style={styles.bar}>
-            <View style={{backgroundColor: tag.count ? config.darkGreen : bg[0], flex: tag.count ? tag.upVotes : 1}}/>
-            <View style={{backgroundColor: config.yellow, flex: tag.neutralVotes}}/>
-            <View style={{backgroundColor: config.lightRed, flex: tag.downVotes}}/>
+            <View style={{ backgroundColor: tag.count ? darkGreen : bg[0], flex: tag.count ? tag.upVotes : 1 }} />
+            <View style={{ backgroundColor: yellow, flex: tag.neutralVotes }} />
+            <View style={{ backgroundColor: lightRed, flex: tag.downVotes }} />
           </View>
         </View>
 
-        <Text style={[styles.evaluations, {color}]}>{formatVotes(tag.upVotes)}/{formatVotes(tag.neutralVotes)}/{formatVotes(tag.downVotes)}</Text>
+        <Text style={[styles.evaluations, { color }]}>{formatVotes(tag.upVotes)}/{formatVotes(tag.neutralVotes)}/{formatVotes(tag.downVotes)}</Text>
       </View>
     </TouchableOpacity>
   );

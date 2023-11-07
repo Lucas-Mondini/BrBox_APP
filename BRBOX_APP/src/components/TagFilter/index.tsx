@@ -12,13 +12,12 @@ interface TagFilterProps {
   idListSetter: (value: number[]) => void;
 }
 
-export default function TagFilter({ id, text, idList, hideText, idListSetter }: TagFilterProps)
-{
+export default function TagFilter({ id, text, idList, hideText, idListSetter }: TagFilterProps) {
   const [selected, setSelected] = useState(false);
 
-  const { darkMode } = useTheme();
+  const { light, orange, dark } = useTheme();
 
-  const bgColor = darkMode && !selected ? "#fff" : selected ? config.orange : config.light;
+  const bgColor = !selected ? light : selected ? orange : light;
 
   useEffect(() => {
     if (selected) {
@@ -34,10 +33,10 @@ export default function TagFilter({ id, text, idList, hideText, idListSetter }: 
       setSelected(!selected);
     }}>
       <Text style={[{
-        margin: 2, backgroundColor: bgColor, paddingHorizontal: 5, borderRadius: 8, minHeight: 30, maxWidth: "50%", justifyContent:"center", alignItems: "center",
-        textAlign: "center", color: config.dark, fontFamily: config.fontFamilyBold, display: hideText ? "none" : "flex"
+        margin: 2, backgroundColor: bgColor, paddingHorizontal: 5, borderRadius: 8, minHeight: 30, maxWidth: "50%", justifyContent: "center", alignItems: "center",
+        textAlign: "center", color: dark, fontFamily: config.fontFamilyBold, display: hideText ? "none" : "flex"
       }]}>
-          {text}
+        {text}
       </Text>
     </TouchableOpacity>
   );
