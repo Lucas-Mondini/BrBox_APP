@@ -21,7 +21,9 @@ const Themes = () => {
     }, []);
 
     const mapList = themes.map((theme, index) => {
-        return <Pressable key={`themes${index}`} onPress={() => setTheme(theme)} style={({ pressed }) => pressed ? styles.styleBox : styles.styleBox1}>
+        return <Pressable key={`themes${index}`} onPress={() => setTheme(theme)} style={({ pressed }) => pressed ? 
+        {...styles.styleBox, backgroundColor: theme.light} : 
+        {...styles.styleBox1, backgroundColor: theme.dark}}>
 
             <Text> {theme.name}</Text>
 

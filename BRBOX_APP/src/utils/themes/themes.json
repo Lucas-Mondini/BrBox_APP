@@ -1,6 +1,6 @@
 [
   {
-    "name":"first theme",
+    "name":"theme 1",
     "dark": "#191A19",
     "darkGray": "#242424",
     "mediumGray": "#3A3A3A",
@@ -19,7 +19,7 @@
     "subTitleMainColor": "#BFBFBF"
   },
   {
-    "name":"second theme",
+    "name":"theme 2",
     "dark": "#1a1c2c",
     "darkGray": "#5d275d",
     "mediumGray": "#b13e53",
@@ -38,7 +38,7 @@
     "subTitleMainColor": "#333c57"
   },
   {
-    "name":"third theme",
+    "name":"theme 3",
     "dark": "#70061f",
     "darkGray": "#55ba38",
     "mediumGray": "#ff1238",
@@ -57,8 +57,8 @@
     "subTitleMainColor": "#dea894"
   },
   {
-    "name":"number 4",
-    "dark": "#f5eebo",
+    "name":"theme 4",
+    "dark": "#f5eeb0",
     "darkGray": "#fabf61",
     "mediumGray": "#e08d51",
     "light": "#8a5865",
@@ -95,7 +95,7 @@
     "subTitleMainColor": "#ab9b8e"
   },
   {
-    "name":"6 theme",
+    "name":"theme 6",
     "dark": "#213b25",
     "darkGray": "#3a604a",
     "mediumGray": "#4f7754",
@@ -114,7 +114,7 @@
     "subTitleMainColor": "#c0d1cc"
   },
   {
-    "name":"7 theme",
+    "name":"theme 7",
     "dark": "#000000",
     "darkGray": "#1D2B53",
     "mediumGray": "#7E2553",
