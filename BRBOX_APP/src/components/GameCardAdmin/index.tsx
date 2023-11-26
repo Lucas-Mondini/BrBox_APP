@@ -16,19 +16,18 @@ interface GameCardAdminProps {
   reload: () => void;
 }
 
-export default function GameCardAdmin({id, title, imgUri, reload, extraCallbackOnNavigate}: GameCardAdminProps)
-{
-  const { darkMode } = useTheme();
+export default function GameCardAdmin({ id, title, imgUri, reload, extraCallbackOnNavigate }: GameCardAdminProps) {
+  const { light, darkGray } = useTheme();
   const navigation = useNavigation<any>();
   const { deleteGame } = useGame();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark}
-  const cardBackgroundColor = {backgroundColor: darkMode ? config.darkGray : config.light}
+  const textColor = { color: light }
+  const cardBackgroundColor = { backgroundColor: darkGray }
 
   function navigateToGameInfo() {
     extraCallbackOnNavigate();
 
-    return navigation.navigate("AddGame", {id});
+    return navigation.navigate("AddGame", { id });
   }
 
   function destroyGame() {
@@ -42,7 +41,7 @@ export default function GameCardAdmin({id, title, imgUri, reload, extraCallbackO
     >
       <View style={styles.container}>
         <View>
-          <Image style={styles.img} source={{uri: imgUri}} />
+          <Image style={styles.img} source={{ uri: imgUri }} />
         </View>
         <View style={styles.info}>
           <View>

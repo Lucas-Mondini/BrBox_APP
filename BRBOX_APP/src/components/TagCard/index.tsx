@@ -22,12 +22,12 @@ interface TagCardProps {
 
 export default function TagCard({id, icon, title, description, setLoading, onDelete}: TagCardProps)
 {
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
   const navigation = useNavigation<any>();
   const { destroy } = useRequest();
   const { getTerm } = useTerm();
 
-  const color = darkMode ? "#fff" : config.dark;
+  const color = light
 
   const { width } = Dimensions.get('window');
 

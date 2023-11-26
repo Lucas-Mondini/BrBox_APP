@@ -22,10 +22,10 @@ const Register = () => {
   const {register, loading} = useAuth();
   const {getTerm} = useTerm();
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const titleColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   const [username, setUserName] = useState("");

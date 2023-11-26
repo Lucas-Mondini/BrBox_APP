@@ -19,14 +19,14 @@ interface PlatformCardProps {
 
 export default function PlatformCard({id, name, setLoading, onDelete, onPress}: PlatformCardProps)
 {
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
   const navigation = useNavigation<any>();
   const {destroy} = useRequest();
   const {getTerm} = useTerm();
 
   const {width} = Dimensions.get('window');
 
-  const textColor = {color: darkMode ? "#fff" : config.dark, width: name.length > 30 ? (width >= 400 ? "29%" : "25%") : "100%"}
+  const textColor = {color: light, width: name.length > 30 ? (width >= 400 ? "29%" : "25%") : "100%"}
 
   function navigateToPlatformInfo() {
     return navigation.navigate("AddPlatform", {id});

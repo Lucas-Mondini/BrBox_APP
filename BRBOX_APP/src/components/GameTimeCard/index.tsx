@@ -15,10 +15,10 @@ interface GameTimeCardProps {
 
 export default function GameTimeCard({onPress}: GameTimeCardProps) {
   const {getTerm} = useTerm();
-  const {darkMode} = useTheme();
+  const { subTitleMainColor} = useTheme();
   const {gameTime, rate} = useGame();
 
-  const color = darkMode ? config.subTitleMainColor : config.dark;
+  const color = subTitleMainColor;
 
   function formatGameTime() {
     if (!gameTime) return;

@@ -26,7 +26,7 @@ const Login = () => {
   const navigation = useNavigation<any>();
   const { post } = useRequest();
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const { textColor } = useTheme();
   const { signIn, loading, setLoading } = useAuth();
 
   const [mail, setMail] = useState("");
@@ -35,7 +35,7 @@ const Login = () => {
   const [forgotPassword, setForgotPassword] = useState(false);
 
   const titleColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: textColor
   };
 
   async function login()

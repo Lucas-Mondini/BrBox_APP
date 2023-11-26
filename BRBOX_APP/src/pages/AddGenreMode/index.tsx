@@ -37,10 +37,10 @@ const AddGenreMode = () => {
   const [loadingRequest, setLoadingRequest] = useState(false);
   const [data, setData] = useState({} as GenreMode);
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   async function loadData()

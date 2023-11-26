@@ -14,7 +14,6 @@ import MainView from '../../components/MainView';
 import { useRequest } from '../../Contexts/Request';
 import { useTerm } from '../../Contexts/TermProvider';
 
-import config from "../../../brbox.config.json";
 import styles from './styles';
 import { Params, BusinessModel } from '../../utils/types';
 import { useTheme } from '../../Contexts/Theme';
@@ -34,10 +33,10 @@ const AddBusinessModel = () => {
   const [loadingRequest, setLoadingRequest] = useState(false);
   const [businessModel, setBusinessModel] = useState({} as BusinessModel);
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   async function loadTag()

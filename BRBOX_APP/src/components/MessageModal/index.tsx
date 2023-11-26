@@ -19,9 +19,9 @@ type MessageModalProps = {
 const MessageModal: React.FC<MessageModalProps> = ({message, visible, setModal, buttonCustomText, buttonCustomFunction}) =>
 {
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
-  const backgroundColor = darkMode ? config.dark : "#fff";
-  const textColor = !darkMode ? config.dark : "#fff";
+  const { dark ,light} = useTheme();
+  const backgroundColor = dark
+  const textColor = light
 
   if (!message) return null;
 

@@ -37,9 +37,9 @@ export default function DropDownMenu({visible, setModal, setHideMenu}: DropDownM
     }).start();
   };
 
-  const { darkMode } = useTheme();
+  const { dark,mediumGreen } = useTheme();
 
-  const backgroundColor = !darkMode ? "#fff" : config.darkGray;
+  const backgroundColor =dark
 
   useEffect(() => {
     if (show) grow();
@@ -66,7 +66,7 @@ export default function DropDownMenu({visible, setModal, setHideMenu}: DropDownM
       onRequestClose={() => setShow(false)}
     >
       <TouchableOpacity style={styles.menuCloseButton} onPress={()=>{setShow(false)}}>
-        <Icon name={show ? "close" : "menu"} color={darkMode ? config.mediumGreen : config.darkGreen} size={35}/>
+        <Icon name={show ? "close" : "menu"} color={mediumGreen} size={35}/>
       </TouchableOpacity>
 
       <Animated.View

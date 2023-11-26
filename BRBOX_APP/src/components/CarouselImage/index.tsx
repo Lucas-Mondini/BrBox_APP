@@ -13,8 +13,8 @@ interface CarouselImageProps {
 
 export default function CarouselImage({imageUri, allowRemove, callback}: CarouselImageProps)
 {
-  const { darkMode } = useTheme();
-  const color = darkMode ? "#fff" : config.dark;
+  const { dark } = useTheme();
+  const color = dark;
 
   return (
     <View style={styles.carousel}>

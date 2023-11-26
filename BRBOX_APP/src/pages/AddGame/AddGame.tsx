@@ -16,7 +16,6 @@ import MainView from '../../components/MainView';
 import { useGame } from '../../Contexts/Game';
 import { useTerm } from '../../Contexts/TermProvider';
 
-import config from "../../../brbox.config.json";
 import styles from './styles';
 
 import { Params } from '../../utils/types';
@@ -48,10 +47,10 @@ const AddGame = () => {
 
   const [modal, setModal] = useState<React.ReactElement | null>(null);
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   function deleteGameCallback()

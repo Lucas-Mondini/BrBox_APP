@@ -26,11 +26,11 @@ const Register = () => {
 
   const { post } = useRequest();
   const { getTerm } = useTerm();
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
   const { loading, setUser, setLoading } = useAuth();
 
   const titleColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   const [code, setCode] = useState("");

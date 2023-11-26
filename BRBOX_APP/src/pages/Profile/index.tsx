@@ -46,10 +46,10 @@ const Profile = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState<Message | null>(null);
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   async function loadUser()
@@ -244,7 +244,7 @@ const Profile = () => {
                 style={styles.exitButton}
                 onPress={signOut}
               >
-                <Icon name="exit-run" size={20} color={darkMode ? "#fff" : config.dark}/>
+                <Icon name="exit-run" size={20} color={light}/>
                 <Text
                   style={[styles.exitButtonText, textColorStyle]}
                 >

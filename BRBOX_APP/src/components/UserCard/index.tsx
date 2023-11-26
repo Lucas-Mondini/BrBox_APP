@@ -21,12 +21,12 @@ interface UserCardProps {
 
 export default function UserCard({id, username, email, admin, setLoading, callback}: UserCardProps)
 {
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
   const navigation = useNavigation<any>();
   const {destroy, post} = useRequest();
   const {getTerm} = useTerm();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark}
+  const textColor = {color: light}
 
   const {width} = Dimensions.get('window');
 

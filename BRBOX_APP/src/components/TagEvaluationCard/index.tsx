@@ -27,7 +27,7 @@ interface TagEvaluationCardProps {
 }
 
 export default function TagEvaluationCard(
-  {id, evaluationId, title, icon, value, descriptionNegative, descriptionNeutral, descriptionPositive, tagValueListId, remove, extraCallback}: TagEvaluationCardProps
+  { id, evaluationId, title, icon, value, descriptionNegative, descriptionNeutral, descriptionPositive, tagValueListId, remove, extraCallback }: TagEvaluationCardProps
 ) {
   const iconColors: any = {
     0: "#FFF",
@@ -36,7 +36,7 @@ export default function TagEvaluationCard(
     3: config.red,
   }
 
-  const { darkMode } = useTheme();
+  const { light, subTitleMainColor, mainIconColor, darkGray } = useTheme();
   const [selectedEvaluationVote, setSelectedEvaluationVote] = useState(value || 0);
   const [loading, setLoading] = useState(false);
   const [loadingVote, setLoadingVote] = useState(0);
@@ -49,11 +49,11 @@ export default function TagEvaluationCard(
   const { post } = useRequest();
   const { getTerm } = useTerm();
 
-  const textColor = {color: darkMode ? "#fff" : config.dark}
-  const descriptionColor = {color: darkMode ? config.subTitleMainColor : config.dark}
-  const iconColor = (value: number) => darkMode || selectedEvaluationVote === value ? "#fff" : config.mainIconColor;
-  const actionsColor = darkMode ? "#fff" : config.mainIconColor;
-  const {width} = Dimensions.get('window');
+  const textColor = { color: light }
+  const descriptionColor = { color: subTitleMainColor }
+  const iconColor = (value: number) => selectedEvaluationVote === value ? mainIconColor : mainIconColor
+  const actionsColor = mainIconColor
+  const { width } = Dimensions.get('window');
 
   async function saveVote(vote: number) {
     setLoading(true);
@@ -88,7 +88,7 @@ export default function TagEvaluationCard(
           tagValueListId, tagValueId: evalId
         });
       }
-    } catch (e : any) {
+    } catch (e: any) {
     }
 
     setLoading(false);
@@ -96,13 +96,11 @@ export default function TagEvaluationCard(
     remove();
   }
 
-  function toggleButtons()
-  {
+  function toggleButtons() {
     setShowButtons(!showButtons);
   }
 
-  function getImage()
-  {
+  function getImage() {
     return (
       <Icon
         color={iconColors[selectedEvaluationVote] || "#FFF"}
@@ -112,16 +110,15 @@ export default function TagEvaluationCard(
     );
   }
 
-  function returnInfoButton(text: number, backgroundColor: string, callback: () => void, deleteButton?: boolean)
-  {
+  function returnInfoButton(text: number, backgroundColor: string, callback: () => void, deleteButton?: boolean) {
     if (showInfo) {
       return (
         <Button
           text={text}
           onPress={callback}
           loading={deleteButton && loadingDelete}
-          extraStyle={[loading ? {marginTop: 10} : {marginTop: 10}]}
-          extraTextStyle={!deleteButton ? [textColor, {textDecorationLine: 'underline'}] : {}}
+          extraStyle={[loading ? { marginTop: 10 } : { marginTop: 10 }]}
+          extraTextStyle={!deleteButton ? [textColor, { textDecorationLine: 'underline' }] : {}}
           buttonColor={backgroundColor}
           disabled={loading}
         />
@@ -136,16 +133,15 @@ export default function TagEvaluationCard(
         iconColor={actionsColor}
         iconLibrary={"Ionicons"}
         onPress={callback}
-        style={loading ? {opacity: 0} : {}}
+        style={loading ? { opacity: 0 } : {}}
         disabled={loading}
       />
     );
   }
 
-  function returnButton(desc: string, icon: string, iconLibrary: any, buttonIndex: number)
-  {
+  function returnButton(desc: string, icon: string, iconLibrary: any, buttonIndex: number) {
     return (
-      <View  style={showInfo ? styles.infoButtonView: {}}>
+      <View style={showInfo ? styles.infoButtonView : {}}>
         {showInfo &&
           <View style={styles.descriptionsView}>
             <Text style={[styles.description, styles.descriptionInfo, descriptionColor]}>{desc}</Text>
@@ -153,14 +149,14 @@ export default function TagEvaluationCard(
         }
         <View style={showInfo ? styles.button : {}}>
           {loadingVote === buttonIndex
-            ? <Loading styles={{width: 45, height: 40}}/>
+            ? <Loading styles={{ width: 45, height: 40 }} />
             : <CardsButton
-                iconName={icon}
-                iconLibrary={iconLibrary}
-                iconColor={iconColor(buttonIndex)}
-                onPress={() => saveVote(buttonIndex)}
-                style={selectedEvaluationVote === buttonIndex ? {backgroundColor: iconColors[buttonIndex]} : {}}
-              />
+              iconName={icon}
+              iconLibrary={iconLibrary}
+              iconColor={iconColor(buttonIndex)}
+              onPress={() => saveVote(buttonIndex)}
+              style={selectedEvaluationVote === buttonIndex ? { backgroundColor: iconColors[buttonIndex] } : {}}
+            />
           }
         </View>
       </View>
@@ -170,7 +166,7 @@ export default function TagEvaluationCard(
   return (
     <TouchableOpacity style={[showInfo ? styles.tagCardFull : styles.tagCard]} disabled={showInfo} onPress={() => setShowInfo(!showInfo)}>
       {(!showButtons || showInfo) &&
-        <View style={[showInfo ? styles.axesViewInfo : styles.axesView, showInfo ? {} : {backgroundColor: darkMode ? config.darkGray : config.light}]}>
+        <View style={[showInfo ? styles.axesViewInfo : styles.axesView, showInfo ? {} : { backgroundColor: darkGray }]}>
           {getImage()}
         </View>
       }
@@ -189,41 +185,41 @@ export default function TagEvaluationCard(
         }
       </View>
 
-      <View style={[showInfo ? styles.buttonViewFull : styles.buttonView, {backgroundColor: !darkMode ? "#fff" : config.dark}]}>
-      {showButtons || showInfo ?
-        <>{loading && !showInfo
-          ? <Loading
-              styles={{paddingRight: 35}}
+      <View style={[showInfo ? styles.buttonViewFull : styles.buttonView, { backgroundColor: light }]}>
+        {showButtons || showInfo ?
+          <>{loading && !showInfo
+            ? <Loading
+              styles={{ paddingRight: 35 }}
             />
-          : <>
-            {returnButton(descriptionPositive, "arrow-up", "MaterialCommunityIcons", 1)}
-            {returnButton(descriptionNeutral, "arrow-up-down", "MaterialCommunityIcons", 2)}
-            {returnButton(descriptionNegative, "arrow-down", "MaterialCommunityIcons", 3)}
+            : <>
+              {returnButton(descriptionPositive, "arrow-up", "MaterialCommunityIcons", 1)}
+              {returnButton(descriptionNeutral, "arrow-up-down", "MaterialCommunityIcons", 2)}
+              {returnButton(descriptionNegative, "arrow-down", "MaterialCommunityIcons", 3)}
 
-            {returnInfoButton(100032, config.red, deleteVote, true)}
-            {returnInfoButton(100112, "transparent", () => setShowInfo(!showInfo))}
-          </>}
+              {returnInfoButton(100032, config.red, deleteVote, true)}
+              {returnInfoButton(100112, "transparent", () => setShowInfo(!showInfo))}
+            </>}
 
-          {!showInfo &&
-            <CardsButton
-              iconColor={actionsColor}
-              iconName="close"
-              iconLibrary="MaterialIcons"
-              onPress={toggleButtons}
-              style={loading ? {opacity: 0} : {}}
-              disabled={loading}
+            {!showInfo &&
+              <CardsButton
+                iconColor={actionsColor}
+                iconName="close"
+                iconLibrary="MaterialIcons"
+                onPress={toggleButtons}
+                style={loading ? { opacity: 0 } : {}}
+                disabled={loading}
               />
-          }
-            </>
+            }
+          </>
           : <CardsButton
-              iconColor={actionsColor}
-              iconName="options-vertical"
-              iconLibrary="SimpleLineIcons"
-              onPress={toggleButtons}
-              style={loading ? {opacity: 0} : {}}
-              disabled={loading}
-            />
-      }
+            iconColor={actionsColor}
+            iconName="options-vertical"
+            iconLibrary="SimpleLineIcons"
+            onPress={toggleButtons}
+            style={loading ? { opacity: 0 } : {}}
+            disabled={loading}
+          />
+        }
       </View>
     </TouchableOpacity>
   );

@@ -19,10 +19,10 @@ export default function DarkZone({title, message, itemName, buttonText, callback
 {
   const {getTerm} = useTerm();
 
-  const { darkMode } = useTheme();
+  const { greenLight } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: greenLight
   };
 
   return (

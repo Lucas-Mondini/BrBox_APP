@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, Text, TouchableOpacity } from "react-native";
+import { Alert, Animated, Text, TouchableOpacity } from "react-native";
 
 import { useTerm } from "../../Contexts/TermProvider";
 import styles from "./styles";
@@ -40,10 +40,7 @@ export default function DropDownMenuButtons({ visible, setHideMenu }: DropDownMe
   const { share } = useLinking();
   const { getTerm } = useTerm();
   const { signOut, user } = useAuth();
-  const { darkMode, setDarkMode } = useTheme();
-
-  const textColor = darkMode ? "#fff" : config.dark;
-  const backgroundColorOption = !darkMode ? config.light : config.mediumGray;
+  const { light, dark } = useTheme();
 
   function callNavigationFunction(route: string, specificFunction?: Function) {
     setHideMenu(true);
@@ -74,113 +71,118 @@ export default function DropDownMenuButtons({ visible, setHideMenu }: DropDownMe
 
   return (
     <Animated.ScrollView style={[styles.menuOptionsContainer, { opacity: fadeAnim }]}>
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("", () => navigation.reset({ index: 0, routes: [{ name: "Home" }] }));
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100007).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100007).toUpperCase()}</Text>
       </TouchableOpacity>
       {/* Mais avaliados */}
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
-        callNavigationFunction("", () => navigation.reset({ index: 0, routes: [{ name: "MostRated"}] }));
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
+        callNavigationFunction("", () => navigation.reset({ index: 0, routes: [{ name: "MostRated" }] }));
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100001).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100001).toUpperCase()}</Text>
       </TouchableOpacity>
       {/* Minhas Estrelas */}
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("", () => navigation.reset({ index: 0, routes: [{ name: "MostRated", params: { watchlist: true } }] }));
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100173).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100173).toUpperCase()}</Text>
       </TouchableOpacity>
 
       {/* Suas avaliações */}
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("", () => navigation.reset({ index: 0, routes: [{ name: "MostRated", params: { filterUser: true } }] }));
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100002).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100002).toUpperCase()}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("Recommended");
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100003).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100003).toUpperCase()}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={shareApp}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100004).toUpperCase()}</Text>
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={shareApp}>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100004).toUpperCase()}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("", () => navigation.reset({ index: 0, routes: [{ name: "SearchGame" }] }));
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100000).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100000).toUpperCase()}</Text>
       </TouchableOpacity>
 
       {user?.admin && <>
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           callNavigationFunction("GameListAdmin");
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100153).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100153).toUpperCase()}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           goTo("GenresModes", { genres: true });
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100155).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100155).toUpperCase()}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           callNavigationFunction("GenresModes");
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100156).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100156).toUpperCase()}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           callNavigationFunction("BusinessModelList");
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100118).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100118).toUpperCase()}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           callNavigationFunction("TagList");
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100030).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100030).toUpperCase()}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           callNavigationFunction("UserList");
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100031).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100031).toUpperCase()}</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+        <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
           callNavigationFunction("Platforms");
         }}>
-          <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100056).toUpperCase()}</Text>
+          <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100056).toUpperCase()}</Text>
         </TouchableOpacity>
       </>}
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("Profile");
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100046).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100046).toUpperCase()}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
-        setDarkMode(!darkMode);
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
+        console.log("Essa opção não está mais disponível")
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(darkMode ? 100081 : 100082).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100082).toUpperCase()}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
         callNavigationFunction("Suggestion");
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100006).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100006).toUpperCase()}</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark }]} onPress={() => {
+        callNavigationFunction("Themes");
+      }}>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100179).toUpperCase()}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.menuButton, { backgroundColor: backgroundColorOption, marginBottom: 15 }]} onPress={() => {
+      <TouchableOpacity style={[styles.menuButton, { backgroundColor: dark, marginBottom: 15 }]} onPress={() => {
         callNavigationFunction("", signOut);
       }}>
-        <Text style={[styles.menuButtonText, { color: textColor }]}>{getTerm(100045).toUpperCase()}</Text>
+        <Text style={[styles.menuButtonText, { color: light }]}>{getTerm(100045).toUpperCase()}</Text>
       </TouchableOpacity>
     </Animated.ScrollView>
   );

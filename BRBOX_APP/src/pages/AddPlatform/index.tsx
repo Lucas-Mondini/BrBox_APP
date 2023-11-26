@@ -34,10 +34,10 @@ const AddPlatform = () => {
   const [loadingRequest, setLoadingRequest] = useState(false);
   const [platform, setPlatform] = useState({} as Platform);
 
-  const { darkMode } = useTheme();
+  const { light } = useTheme();
 
   const textColorStyle = {
-    color: darkMode ? "#fff" : config.dark,
+    color: light
   };
 
   async function loadTag()

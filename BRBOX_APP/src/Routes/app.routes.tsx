@@ -20,6 +20,7 @@ import AddGenreMode from '../pages/AddGenreMode';
 import Search from '../pages/Search';
 import Recommended from '../pages/Reccomended';
 import Home from '../pages/Home';
+import Themes from '../pages/Themes';
 
 const App = createStackNavigator();
 
@@ -36,6 +37,7 @@ const AppRoutes: React.FC = () => {
       <App.Screen name="Share" component={GameInfo} />
       <App.Screen name="Profile" component={Profile} />
       <App.Screen name="Suggestion" component={Suggestion} />
+      <App.Screen name="Themes" component={Themes} />
 
       {user?.admin && (
         <>

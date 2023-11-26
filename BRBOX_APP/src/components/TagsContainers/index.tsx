@@ -42,9 +42,9 @@ export default function TagsContainers({setEvaluationTags}: TagContainersProps)
   const [evaluatedTags, setEvaluatedTags] = useState([] as Tag[]);
   const [loadingEvaluatedTags, setEvaluatedTagsLoading] = useState(true);
 
-  const { darkMode } = useTheme();
+  const { subTitleMainColor } = useTheme();
 
-  const color = darkMode ? config.subTitleMainColor : config.dark;
+  const color = subTitleMainColor;
 
   async function getTags(setTagsState: boolean = true) {
     try {

@@ -6,6 +6,7 @@ import styles from "./styles";
 
 import config from "../../../brbox.config.json"
 import Loading from "../Loading";
+import { useTheme } from "../../Contexts/Theme";
 
 interface ButtonProps extends TouchableOpacityProps {
   text: number;
@@ -19,8 +20,9 @@ interface ButtonProps extends TouchableOpacityProps {
 export default function Button({text, onPress, buttonColor, extraStyle, extraTextStyle, loading}: ButtonProps)
 {
   const {getTerm} = useTerm();
+  const {mediumGreen} = useTheme()
 
-  const buttonColorStyle = {backgroundColor: buttonColor || config.mediumGreen}
+  const buttonColorStyle = {backgroundColor: buttonColor || mediumGreen}
 
   return (
     <View style={styles.buttonContainer}>

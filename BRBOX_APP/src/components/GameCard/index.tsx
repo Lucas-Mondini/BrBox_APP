@@ -1,13 +1,13 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 
 import styles from './styles';
 import config from '../../../brbox.config.json';
-import {TagValue} from '../../utils/types';
-import {splitText} from '../../utils/functions';
-import {useTheme} from '../../Contexts/Theme';
-import {useAuth} from '../../Contexts/Auth';
+import { TagValue } from '../../utils/types';
+import { splitText } from '../../utils/functions';
+import { useTheme } from '../../Contexts/Theme';
+import { useAuth } from '../../Contexts/Auth';
 import TopTags from '../TopTags';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -34,21 +34,23 @@ export default function GameCard({
   showWatchlist,
   extraCallbackOnNavigate,
 }: GameCardProps) {
-  const {darkMode} = useTheme();
-  const {user} = useAuth();
+  const { light, darkGray, greenBar } = useTheme();
+  const { user } = useAuth();
   const navigation = useNavigation<any>();
 
-  const {width} = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
 
-  const textColor = {color: darkMode ? '#fff' : config.dark};
+  const textColor = {
+    color: light
+  };
   const cardBackgroundColor = {
-    backgroundColor: darkMode ? config.darkGray : config.light,
+    backgroundColor: darkGray
   };
 
   function navigateToGameInfo(editGame?: boolean) {
     if (extraCallbackOnNavigate) extraCallbackOnNavigate();
 
-    return navigation.navigate(editGame ? 'AddGame' : 'GameInfo', {id, tags});
+    return navigation.navigate(editGame ? 'AddGame' : 'GameInfo', { id, tags });
   }
 
   return (
@@ -66,10 +68,10 @@ export default function GameCard({
               size={30}
             />
           )}
-          <Image style={styles.img} source={{uri: imgUri}} />
+          <Image style={styles.img} source={{ uri: imgUri }} />
         </View>
         <View style={styles.info}>
-          <View style={{width: '89%'}}>
+          <View style={{ width: '89%' }}>
             <Text style={[styles.title, textColor]}>
               {splitText(title, width >= 400 ? 25 : 18)}
             </Text>
@@ -77,7 +79,7 @@ export default function GameCard({
             <TopTags tags={tags} home voteCount={voteCount} />
 
             {tags.length > 0 && (
-              <Text style={[styles.rate]}>
+              <Text style={[styles.rate, { color: greenBar }]}>
                 <Text style={[styles.rateBig]}>{score || 0}</Text>/10
               </Text>
             )}

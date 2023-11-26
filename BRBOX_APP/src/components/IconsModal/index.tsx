@@ -22,15 +22,14 @@ import icons from '../../utils/tagsIcons.json';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { getIcon } from '../../utils/functions';
 
-export default function IconsModal({setModal, visible, setIcon}: IconsModalProps) {
-  const { darkMode } = useTheme();
+export default function IconsModal({ setModal, visible, setIcon }: IconsModalProps) {
+  const { dark, light } = useTheme();
 
-  const color = darkMode ? config.dark : "#fff";
+  const color = dark
 
-  const {width} = Dimensions.get('window');
+  const { width } = Dimensions.get('window');
 
-  function renderIcons()
-  {
+  function renderIcons() {
     let iconList = [];
 
     for (let index in icons) {
@@ -47,7 +46,7 @@ export default function IconsModal({setModal, visible, setIcon}: IconsModalProps
           <Icon
             name={iconName}
             size={width >= 400 ? 45 : 35}
-            color={darkMode ? "#fff" :config.dark}
+            color={light}
           />
         </TouchableOpacity>
       );
@@ -69,7 +68,7 @@ export default function IconsModal({setModal, visible, setIcon}: IconsModalProps
     >
       <ScrollView
         contentContainerStyle={styles.container}
-        style={[{backgroundColor: color}]}
+        style={[{ backgroundColor: color }]}
       >
         {renderIcons()}
       </ScrollView>

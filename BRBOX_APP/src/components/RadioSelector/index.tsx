@@ -18,8 +18,8 @@ interface RadioSelectorProps {
 }
 
 export default function RadioSelector({options, selectedOption, setOption}: RadioSelectorProps) {
-  const { darkMode } = useTheme();
-  const color = darkMode ? "#fff" : config.dark;
+  const { light } = useTheme();
+  const color = light;
 
   function renderOptions()
   {

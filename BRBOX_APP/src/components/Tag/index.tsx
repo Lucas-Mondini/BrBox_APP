@@ -6,6 +6,7 @@ import config from '../../../brbox.config.json';
 import {TagValue} from '../../utils/types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {getIcon} from '../../utils/functions';
+import { useTheme } from '../../Contexts/Theme';
 
 interface TagProps {
   tag: TagValue;
@@ -32,8 +33,11 @@ export default function Tag({
   callback,
   extraStyles,
 }: TagProps) {
+  
+  const theme = useTheme()
+  
   // @ts-ignore
-  const bg = specificStyle && topTags ? config[specificStyle] : config.greenBar;
+  const bg = specificStyle && topTags ? theme[specificStyle] : theme.greenBar;
 
   function formatVotes(vote: number): string {
     return String(
@@ -108,13 +112,13 @@ export default function Tag({
         {!noEvaluations && (
           <>
             <View
-              style={{backgroundColor: config.darkGreen, flex: tag.upVotes}}
+              style={{backgroundColor: theme.darkGreen, flex: tag.upVotes}}
             />
             <View
-              style={{backgroundColor: config.yellow, flex: tag.neutralVotes}}
+              style={{backgroundColor: theme.yellow, flex: tag.neutralVotes}}
             />
             <View
-              style={{backgroundColor: config.lightRed, flex: tag.downVotes}}
+              style={{backgroundColor: theme.lightRed, flex: tag.downVotes}}
             />
           </>
         )}
