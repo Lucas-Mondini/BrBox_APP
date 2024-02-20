@@ -36,6 +36,8 @@ import Score from './Model/Game/Score';
 import Mode from './Model/Game/classification/mode';
 import Genre from './Model/Game/classification/genre';
 import Watchlist from './Model/Game/watchlist';
+import Region from './Model/Game/regions';
+import GameITAD_IDs from './Model/Game/gameITAD_IDs/gameITAD_IDs';
 
 const host = process.env.DATABASE_HOST;
 const port = Number(process.env.DATABASE_PORT);
@@ -73,7 +75,9 @@ export const AppDataSource = new DataSource({
         Score,
         Mode,
         Genre,
-        Watchlist
+        Watchlist,
+        Region,
+        GameITAD_IDs
     ],
     subscribers: [],
     migrations: [],

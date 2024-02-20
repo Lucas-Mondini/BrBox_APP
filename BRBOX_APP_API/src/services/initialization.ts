@@ -9,6 +9,8 @@ import SteamLoader from "./loadGames/steam";
 import Platform from "../Model/Game/platform";
 import Game from "../Model/Game";
 import Score from "../Model/Game/Score";
+import { fetchDataAndSaveRegion } from "./loadRegions";
+import { getAllStoresFindAllGames } from "./loadStores";
 
 async function initializeUser() {
     console.log("trying to find users");
@@ -106,10 +108,12 @@ const initializeScores = async () => {
 }
 
 export default async function () {
+    await fetchDataAndSaveRegion();
+    await getAllStoresFindAllGames();
     await initializeUser();
     await initalizeAvaliationValues();
-    await initializePlatform();
-    await new SteamLoader().Run();
+    //await initializePlatform();
+    //await new SteamLoader().Run();
     await initializeScores();
     
 }

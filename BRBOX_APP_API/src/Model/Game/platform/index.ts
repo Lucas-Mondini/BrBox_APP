@@ -5,6 +5,9 @@ export default class Platform {
     @PrimaryGeneratedColumn()
     id: number
 
+    @Column({ nullable: true })
+    ITADId: string;
+
     @Column({unique: true})
     name: string;
 

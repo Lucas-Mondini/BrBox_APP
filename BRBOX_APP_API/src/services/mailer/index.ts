@@ -66,9 +66,6 @@ export default class Mailer {
         auth: {
           user: process.env.MAIL,
           pass: process.env.MAIL_PASS
-        }, 
-        tls: {
-          rejectUnauthorized: false
         }
       }
     }

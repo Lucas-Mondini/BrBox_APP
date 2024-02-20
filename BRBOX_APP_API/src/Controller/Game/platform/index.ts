@@ -12,9 +12,10 @@ export default class PlatformController extends Controller {
     //@ts-ignore
     Create = async (req: Request) => {
         try {
-            const {name, imageURL} = req.body;
+            const {name, ITADId, imageURL} = req.body;
             
             const platform = await new Platform();
+            platform.ITADId = ITADId;
             platform.name        = name;
             platform.imageURL    = imageURL;
             await AppDataSource.getRepository(Platform).save(platform);
@@ -30,12 +31,13 @@ export default class PlatformController extends Controller {
     //@ts-ignore
     Update = async (req: Request) => {
         try {
-            const {id, new_name, new_imageURL} = req.body
+            const {id, new_name, new_ITADId, new_imageURL} = req.body
             const platform = await AppDataSource.getRepository(Platform).findOneBy({id: Number(id)});
 
             if(!platform)
                 return { status: 404, value: {message: "platform not found" }};
 
+            platform.ITADId = new_ITADId || platform.ITADId;
             platform.name = new_name || platform.name;
             platform.imageURL = new_imageURL || platform.imageURL;
             

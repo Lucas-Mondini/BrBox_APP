@@ -9,13 +9,16 @@ import Image from '../../../Model/Game/image';
 import ImageList from '../../../Model/Game/image/imageList';
 import Platform from '../../../Model/Game/platform';
 import TagValueList from '../../../Model/Game/tag/tagValueList';
+import axios from 'axios';
 
 export default class SteamLoader {
     dataList = new Array();
     games : any
+    apiUrl : string;
     
     constructor() {
-        this.games = require('../../../../games-heroku.json')
+        this.games = require('../../../../games-heroku.json');
+        this.apiUrl = 'https://api.isthereanydeal.com/v01/game/plain/list/?key=f564a5b303fe89f61a284b527155ceb937899ad0&shops=steam';
     }
     loadFromJSON = async () => {
         let counter = 0
@@ -77,6 +80,17 @@ export default class SteamLoader {
             counter++;
         }
         
+    }
+    
+
+    loadFromAPI = async (apiUrl: string) => {
+        try {
+            const response = await axios.get(apiUrl);
+            const gamesFromAPI = response.data;
+
+        } catch (error) {
+            console.error('Erro ao fazer requisição para a API:');
+        }
     }
     
     saveIndividually = async (games: Game[], id: Number) =>{
